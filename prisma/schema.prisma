@@ -1,0 +1,200 @@
+// Build Bright University — Lost & Found (Phase 1)
+// https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  /// Pooled (e.g. Neon `*-pooler.*`) for the app; optional separate direct URL for migrations.
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum UserRole {
+  STUDENT
+  STAFF
+  ADMIN
+}
+
+enum ItemType {
+  LOST
+  FOUND
+}
+
+enum ItemStatus {
+  OPEN
+  RESOLVED
+  CLOSED
+}
+
+enum ItemCategory {
+  ELECTRONICS
+  DOCUMENTS
+  KEYS
+  CLOTHING
+  BOOKS
+  ACCESSORIES
+  SPORTS
+  STATIONERY
+  BAGS
+  OTHER
+}
+
+enum FoundDisposition {
+  STILL_HAVE
+  SUBMITTED_SECURITY
+  LEFT_WHERE_FOUND
+}
+
+model Item {
+  id          String   @id @default(cuid())
+  type        ItemType
+  status      ItemStatus @default(OPEN)
+  /// Poster (listings created while signed in)
+  userId      String?
+  user        User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
+  title       String
+  description String  @db.Text
+  category    ItemCategory
+  building    String
+  roomHint    String?
+  contactName String
+  contactEmail String?
+  contactPhone String?
+  /// Legacy single image; if `imageUrls` is empty, this is still shown in the gallery
+  imageUrl    String?
+  /// Additional or primary gallery images (full URLs)
+  imageUrls   String[] @default([])
+  color       String?
+  brand       String?
+  viewCount   Int      @default(0)
+  /// When the item was lost or when it was found (user-facing date)
+  eventDate   DateTime
+  /// For lost listings: approximate time (free text, e.g. "2–4 PM")
+  timeApprox  String?
+  /// For found listings: where the item is now
+  foundDisposition FoundDisposition?
+  reward         String?
+  notifyOnMatch  Boolean  @default(true)
+  allowContact   Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  claims Claim[]
+
+  @@index([type, status, eventDate])
+  @@index([category, building])
+  @@index([userId, type, status])
+}
+
+enum ClaimType {
+  FINDER
+  OWNER
+}
+
+enum ClaimStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model Claim {
+  id             String      @id @default(cuid())
+  itemId         String
+  userId         String
+  type           ClaimType
+  message        String      @db.Text
+  proofImageUrls String[]    @default([])
+  status         ClaimStatus @default(PENDING)
+  adminNote      String?     @db.Text
+  reviewedAt     DateTime?
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+
+  item Item @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([itemId, userId])
+  @@index([itemId, status])
+}
+
+// ——— NextAuth / Auth.js + app profile ———
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  password      String?
+  role          UserRole  @default(STUDENT)
+  studentId     String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  items          Item[]
+  accounts Account[]
+  sessions Session[]
+  notifications Notification[]
+  claims         Claim[]
+}
+
+enum NotificationKind {
+  SYSTEM
+  MATCH
+  CLAIM
+  ITEM
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  kind      NotificationKind @default(SYSTEM)
+  /// In-app path e.g. /items/abc or /claims
+  link      String?
+  title     String
+  message   String   @db.Text
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, read])
+  @@index([userId, createdAt])
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+
+  @@unique([identifier, token])
+}

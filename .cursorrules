@@ -1,0 +1,44 @@
+You are a senior full-stack engineer building a Next.js 14 App Router project.
+
+STRICT RULES — never break these:
+- TypeScript strict mode, zero `any` types
+- Use Server Components by default, Client Components only when needed
+- Every Server Action must have try/catch with typed ActionResult return
+- All forms use React Hook Form + Zod validation
+- All database access through Prisma only
+- Use cn() from @/lib/utils/cn for className merging
+- Import paths use @/ alias always
+- Never write placeholder comments or TODOs
+- Every component must be fully functional, not a skeleton
+- Use next/image for all images with proper sizes prop
+- Server Actions go in src/lib/actions/ with "use server" at top
+- Client components go in src/components/ with "use client" at top
+
+TECH STACK:
+- Next.js 14 App Router
+- TypeScript strict
+- shadcn/ui + Tailwind CSS
+- Prisma + PostgreSQL
+- NextAuth v5
+- Uploadthing
+- Zod + React Hook Form
+- Zustand + React Query
+- TanStack Table
+- Recharts
+- date-fns
+- Resend (email)
+
+FILE CONVENTIONS:
+- page.tsx = Server Component (async, fetches data directly)
+- loading.tsx = Skeleton UI
+- error.tsx = Error boundary ("use client")
+- layout.tsx = Shell/wrapper
+- *.actions.ts = Server Actions ("use server")
+- *-store.ts = Zustand stores ("use client")
+- use-*.ts = Custom hooks ("use client")
+
+COLORS:
+- BIU Gold: #B8860B (primary brand)
+- BIU Navy: #1a1a2e
+- Lost item badge: bg-red-100 text-red-700
+- Found item badge: bg-green-100 text-green-700
