@@ -27,6 +27,7 @@ TECH STACK:
 - Recharts
 - date-fns
 - Resend (email)
+- 
 
 FILE CONVENTIONS:
 - page.tsx = Server Component (async, fetches data directly)
