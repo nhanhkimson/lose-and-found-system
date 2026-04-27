@@ -10,6 +10,7 @@ datasource db {
   /// Pooled (e.g. Neon `*-pooler.*`) for the app; optional separate direct URL for migrations.
   url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
+  
 }
 
 enum UserRole {
