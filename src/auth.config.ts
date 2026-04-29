@@ -10,7 +10,8 @@ export const authBase: Pick<
   "trustHost" | "secret" | "session" | "pages"
 > = {
   trustHost: true,
-  secret: process.env.AUTH_SECRET,
+  /** NextAuth v5 accepts AUTH_SECRET; many projects only set NEXTAUTH_SECRET. */
+  secret: process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET,
   session: { strategy: "jwt", maxAge: 30 * 24 * 60 * 60 },
   pages: {
     signIn: "/login",

@@ -26,9 +26,9 @@ type FormValues = z.infer<typeof claimFormSchema>;
 function pickProofUrl(
   f: { url?: string; ufsUrl?: string } & Record<string, unknown>,
 ): string {
-  if (typeof f.url === "string") return f.url;
-  if (typeof f.ufsUrl === "string") return f.ufsUrl;
-  if (typeof f.fileUrl === "string") return f.fileUrl;
+  if (typeof f.ufsUrl === "string" && f.ufsUrl) return f.ufsUrl;
+  if (typeof f.url === "string" && f.url) return f.url;
+  if (typeof f.fileUrl === "string" && f.fileUrl) return f.fileUrl;
   return "";
 }
 

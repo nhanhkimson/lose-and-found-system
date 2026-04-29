@@ -1,6 +1,14 @@
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 import type { NextConfig } from "next";
 
+/** Lockfiles under parent dirs (e.g. `~/package-lock.json`) must not become Turbopack's root. */
+const turbopackRoot = path.dirname(fileURLToPath(import.meta.url));
+
 const nextConfig: NextConfig = {
+  turbopack: {
+    root: turbopackRoot,
+  },
   transpilePackages: ["swagger-ui-react"],
   images: {
     remotePatterns: [

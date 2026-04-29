@@ -16,8 +16,8 @@ const MAX_MB = 4;
 function pickFileUrl(f: unknown): string {
   if (typeof f !== "object" || f === null) return "";
   const o = f as Record<string, unknown>;
-  if (typeof o.url === "string" && o.url) return o.url;
   if (typeof o.ufsUrl === "string" && o.ufsUrl) return o.ufsUrl;
+  if (typeof o.url === "string" && o.url) return o.url;
   if (typeof o.fileUrl === "string" && o.fileUrl) return o.fileUrl;
   return "";
 }
