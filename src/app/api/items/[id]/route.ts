@@ -10,52 +10,52 @@ type RouteContext = {
 /**
  * @swagger
  * /api/items/{id}:
- *   get:
- *     tags: [Items]
- *     summary: Get item detail
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema: { type: string }
- *       - in: query
- *         name: track
- *         schema: { type: boolean, default: true }
- *         description: Whether to increment viewCount.
- *     responses:
- *       200:
- *         description: Item detail.
- *       404:
- *         description: Not found.
- *   patch:
- *     tags: [Items]
- *     summary: Update item status
- *     description: Owner or admin only.
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema: { type: string }
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               status:
- *                 type: string
- *                 enum: [OPEN, RESOLVED, CLOSED]
- *             required: [status]
- *     responses:
- *       200:
- *         description: Updated item.
- *       401:
- *         description: Unauthorized.
- *       403:
- *         description: Forbidden.
- *       404:
- *         description: Not found.
+ * get:
+ * tags: [Items]
+ * summary: Get item detail
+ * parameters:
+ * - in: path
+ * name: id
+ * required: true
+ * schema: { type: string }
+ * - in: query
+ * name: track
+ * schema: { type: boolean, default: true }
+ * description: Whether to increment viewCount.
+ * responses:
+ * 200:
+ * description: Item detail.
+ * 404:
+ * description: Not found.
+ * patch:
+ * tags: [Items]
+ * summary: Update item status
+ * description: Owner or admin only.
+ * parameters:
+ * - in: path
+ * name: id
+ * required: true
+ * schema: { type: string }
+ * requestBody:
+ * required: true
+ * content:
+ * application/json:
+ * schema:
+ * type: object
+ * properties:
+ * status:
+ * type: string
+ * enum: [OPEN, RESOLVED, CLOSED]
+ * required: [status]
+ * responses:
+ * 200:
+ * description: Updated item.
+ * 401:
+ * description: Unauthorized.
+ * 403:
+ * description: Forbidden.
+ * 404:
+ * description: Not found.
  */
 export async function GET(request: NextRequest, context: RouteContext) {
   try {
@@ -87,7 +87,8 @@ export async function GET(request: NextRequest, context: RouteContext) {
     }
     return NextResponse.json(item);
   } catch (error) {
-    const message = error instanceof Error ? error.message : "Failed to fetch item.";
+    const message =
+      error instanceof Error ? error.message : "Failed to fetch item.";
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }
@@ -129,7 +130,8 @@ export async function PATCH(request: Request, context: RouteContext) {
     });
     return NextResponse.json(updated);
   } catch (error) {
-    const message = error instanceof Error ? error.message : "Failed to update item.";
+    const message =
+      error instanceof Error ? error.message : "Failed to update item.";
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }

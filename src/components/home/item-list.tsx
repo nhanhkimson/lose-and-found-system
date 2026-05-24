@@ -9,10 +9,10 @@ export function ItemList({ items }: ItemListProps) {
   if (items.length === 0) {
     return (
       <div
-        className="rounded-xl border border-dashed border-zinc-300 bg-zinc-50/80 px-6 py-16 text-center dark:border-zinc-700 dark:bg-zinc-900/40"
+        className="rounded-xl border border-dashed border-border bg-surface-muted/80 px-6 py-16 text-center/40"
         role="status"
       >
-        <p className="text-sm font-medium text-zinc-600 dark:text-zinc-400">
+        <p className="text-sm font-medium text-muted-foreground">
           No items yet. Check back after the database is seeded or post the
           first listing.
         </p>

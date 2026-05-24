@@ -3,9 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { type ClaimType, Prisma } from "@prisma/client";
 import { auth } from "@/lib/auth";
-import {
-  sendClaimSubmittedEmail,
-} from "@/lib/mail";
+import { sendClaimSubmittedEmail } from "@/lib/mail";
 import { prisma } from "@/lib/prisma";
 import type { ActionResult } from "@/types";
 import {
@@ -126,7 +124,8 @@ export async function createClaim(
         };
       }
     }
-    const messageText = e instanceof Error ? e.message : "Failed to submit claim";
+    const messageText =
+      e instanceof Error ? e.message : "Failed to submit claim";
     return { success: false, error: messageText };
   }
 }

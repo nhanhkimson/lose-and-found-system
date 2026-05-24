@@ -26,10 +26,7 @@ export function createClaimColumns(handlers: {
       cell: ({ row }) => {
         const id = row.original.id;
         return (
-          <span
-            className="font-mono text-xs text-zinc-600 dark:text-zinc-400"
-            title={id}
-          >
+          <span className="font-mono text-xs text-muted-foreground" title={id}>
             {id.length > 14 ? `${id.slice(0, 12)}…` : id}
           </span>
         );
@@ -42,7 +39,7 @@ export function createClaimColumns(handlers: {
       cell: ({ row }) => (
         <Link
           href={`/items/${row.original.itemId}`}
-          className="text-biu-navy underline decoration-biu-gold/40 hover:text-biu-gold dark:text-zinc-100"
+          className="text-primary underline decoration-primary/40 hover:text-primary-hover"
           onClick={(e) => e.stopPropagation()}
         >
           {row.original.itemTitle}
@@ -75,12 +72,16 @@ export function createClaimColumns(handlers: {
         const s = row.original.status;
         const cls =
           s === "PENDING"
-            ? "bg-amber-100 text-amber-900 dark:bg-amber-950/40 dark:text-amber-200"
+            ? "bg-warning-muted text-warning"
             : s === "APPROVED"
-              ? "bg-green-100 text-green-800 dark:bg-green-950/40 dark:text-green-200"
-              : "bg-zinc-200 text-zinc-800 dark:bg-zinc-800 dark:text-zinc-200";
+              ? "bg-success-muted text-success"
+              : s === "REJECTED"
+                ? "bg-danger-muted text-danger"
+                : "bg-surface-muted text-foreground";
         return (
-          <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${cls}`}>
+          <span
+            className={`rounded-full px-2 py-0.5 text-xs font-medium ${cls}`}
+          >
             {s}
           </span>
         );
@@ -99,7 +100,7 @@ export function createClaimColumns(handlers: {
               <DropdownMenuTrigger asChild>
                 <button
                   type="button"
-                  className="inline-flex rounded p-1 hover:bg-zinc-100 dark:hover:bg-zinc-800"
+                  className="inline-flex rounded p-1 hover:bg-surface-muted"
                   aria-label="Actions"
                 >
                   <MoreHorizontal className="h-4 w-4" />
@@ -112,13 +113,13 @@ export function createClaimColumns(handlers: {
                 {pending ? (
                   <>
                     <DropdownMenuItem
-                      className="text-green-700 dark:text-green-400"
+                      className="text-success"
                       onClick={() => handlers.onApprove(r)}
                     >
                       Approve
                     </DropdownMenuItem>
                     <DropdownMenuItem
-                      className="text-red-700 dark:text-red-400"
+                      className="text-danger"
                       onClick={() => handlers.onReject(r)}
                     >
                       Reject

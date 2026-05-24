@@ -39,11 +39,15 @@ const SIZE_CLASS = {
   lg: "h-20 w-20",
 } as const;
 
-export function CategoryIcon({ category, className, size = "md" }: CategoryIconProps) {
+export function CategoryIcon({
+  category,
+  className,
+  size = "md",
+}: CategoryIconProps) {
   const Icon = BY_CATEGORY[category] ?? Package;
   return (
     <Icon
-      className={cn("text-biu-gold/50", SIZE_CLASS[size], className)}
+      className={cn("text-primary/50", SIZE_CLASS[size], className)}
       strokeWidth={1.25}
       aria-hidden
     />

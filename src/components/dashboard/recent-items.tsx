@@ -11,23 +11,23 @@ type RecentItemsProps = {
 
 function iconFor(a: ActivityRow) {
   if (a.kind === "claim") {
-    return { Icon: Gavel, className: "text-amber-600 dark:text-amber-400" };
+    return { Icon: Gavel, className: "text-warning" };
   }
   return a.type === "LOST"
-    ? { Icon: FileText, className: "text-red-600 dark:text-red-400" }
-    : { Icon: Package, className: "text-emerald-600 dark:text-emerald-400" };
+    ? { Icon: FileText, className: "text-danger" }
+    : { Icon: Package, className: "text-found" };
 }
 
 export function RecentItems({ activity }: RecentItemsProps) {
   if (activity.length === 0) {
     return (
-      <section className="rounded-xl border border-zinc-200/80 bg-white p-6 dark:border-zinc-800 dark:bg-zinc-950">
-        <h2 className="text-sm font-semibold text-biu-navy dark:text-zinc-100">
+      <section className="rounded-xl border border-border bg-surface p-6">
+        <h2 className="text-sm font-semibold text-foreground">
           Recent activity
         </h2>
-        <p className="mt-2 text-sm text-zinc-500">
-          No recent listings or claims yet. Post a lost or found item to see activity
-          here.
+        <p className="mt-2 text-sm text-muted-foreground">
+          No recent listings or claims yet. Post a lost or found item to see
+          activity here.
         </p>
       </section>
     );
@@ -35,58 +35,57 @@ export function RecentItems({ activity }: RecentItemsProps) {
 
   return (
     <section
-      className="rounded-xl border border-zinc-200/80 bg-white p-4 dark:border-zinc-800 dark:bg-zinc-950"
+      className="rounded-xl border border-border bg-surface p-4"
       aria-label="Recent activity"
     >
-      <h2 className="px-1 text-sm font-semibold text-biu-navy dark:text-zinc-100">
+      <h2 className="px-1 text-sm font-semibold text-foreground">
         Recent activity
       </h2>
-      <ol className="relative mt-3 border-l border-zinc-200 pl-4 dark:border-zinc-800">
+      <ol className="relative mt-3 border-l border-border pl-4">
         {activity.map((a) => {
           const { Icon, className: iconCls } = iconFor(a);
           const href = `/items/${a.itemId}`;
-          const title =
-            a.kind === "item" ? a.title : `Claim: ${a.itemTitle}`;
+          const title = a.kind === "item" ? a.title : `Claim: ${a.itemTitle}`;
           const when = a.at;
           return (
             <li key={a.id} className="mb-4 last:mb-0">
-              <div className="absolute -left-[9px] mt-0.5 flex h-4 w-4 items-center justify-center rounded-full border border-zinc-200 bg-white dark:border-zinc-700 dark:bg-zinc-950">
+              <div className="absolute -left-[9px] mt-0.5 flex h-4 w-4 items-center justify-center rounded-full border border-border bg-surface">
                 <Icon className={cn("h-2.5 w-2.5", iconCls)} aria-hidden />
               </div>
               <div className="pl-2">
-                <p className="text-xs text-zinc-500">
+                <p className="text-xs text-muted-foreground">
                   {a.kind === "item" ? (
                     <span
                       className={cn(
                         "font-medium",
-                        a.type === "LOST"
-                          ? "text-red-600 dark:text-red-400"
-                          : "text-emerald-600 dark:text-emerald-400",
+                        a.type === "LOST" ? "text-danger" : "text-found",
                       )}
                     >
                       {TYPE_LABEL[a.type]}
                     </span>
                   ) : (
-                    <span className="font-medium text-amber-600 dark:text-amber-400">
+                    <span className="font-medium text-warning">
                       Claim
                     </span>
-                  )}{" "}
-                  ·{" "}
+                  )}
+                  {""}·{""}
                   <time dateTime={when.toISOString()}>
                     {formatDistanceToNow(when, { addSuffix: true })}
                   </time>
                 </p>
                 <Link
                   href={href}
-                  className="mt-0.5 line-clamp-2 text-sm font-medium text-biu-navy hover:underline dark:text-zinc-100"
+                  className="mt-0.5 line-clamp-2 text-sm font-medium text-foreground hover:text-primary hover:underline"
                 >
                   {title}
                 </Link>
                 {a.kind === "item" ? (
-                  <p className="text-xs text-zinc-500">Status: {a.status}</p>
+                  <p className="text-xs text-muted-foreground">
+                    Status: {a.status}
+                  </p>
                 ) : null}
                 {a.kind === "claim" ? (
-                  <p className="text-xs text-zinc-500">
+                  <p className="text-xs text-muted-foreground">
                     Status: {a.claimStatus}
                   </p>
                 ) : null}

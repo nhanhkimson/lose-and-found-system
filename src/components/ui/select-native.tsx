@@ -9,9 +9,9 @@ export const SelectNative = forwardRef<
     <select
       ref={ref}
       className={cn(
-        "w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 outline-none",
-        "ring-biu-gold/40 focus:ring-2",
-        "dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100",
+        "w-full rounded-lg border border-border bg-surface px-3 py-2 text-sm text-foreground outline-none",
+        "ring-primary/40 focus:ring-2",
+        "dark:border-border",
         "disabled:cursor-not-allowed disabled:opacity-50",
         className,
       )}

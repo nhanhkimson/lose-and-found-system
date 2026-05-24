@@ -38,8 +38,10 @@ FILE CONVENTIONS:
 - *-store.ts = Zustand stores ("use client")
 - use-*.ts = Custom hooks ("use client")
 
-COLORS:
-- BIU Gold: #B8860B (primary brand)
-- BIU Navy: #1a1a2e
-- Lost item badge: bg-red-100 text-red-700
-- Found item badge: bg-green-100 text-green-700
+COLORS (semantic tokens — see src/app/globals.css):
+- Primary (BIU Gold): light #c9970c · dark #e5b82e
+- Navy / foreground: light #1b2540 · dark #eef2ff
+- Background: light #f3f6fc · dark #0b1020
+- Lost badge: bg-lost-muted text-lost-foreground
+- Found badge: bg-found-muted text-found-foreground
+- Use semantic classes (bg-surface, text-foreground, border-border) — never hardcode zinc/red/emerald

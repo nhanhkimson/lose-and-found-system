@@ -12,7 +12,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import type { AdminItemRow } from "@/lib/actions/admin.actions";
-import { CATEGORY_LABEL, STATUS_LABEL, TYPE_BADGE, TYPE_LABEL } from "@/lib/utils/constants";
+import {
+  CATEGORY_LABEL,
+  STATUS_LABEL,
+  TYPE_BADGE,
+  TYPE_LABEL,
+} from "@/lib/utils/constants";
 import type { ItemStatus } from "@prisma/client";
 import { cn } from "@/lib/utils/cn";
 
@@ -27,7 +32,7 @@ export function createAdminItemColumns(handlers: {
       cell: ({ row }) => (
         <Link
           href={`/items/${row.original.id}`}
-          className="font-medium text-biu-navy hover:text-biu-gold dark:text-zinc-100"
+          className="font-medium text-primary hover:text-primary-hover"
           onClick={(e) => e.stopPropagation()}
         >
           {row.original.title}
@@ -73,7 +78,8 @@ export function createAdminItemColumns(handlers: {
       id: "eventDate",
       accessorKey: "eventDate",
       header: "Date",
-      cell: ({ row }) => format(new Date(row.original.eventDate), "MMM d, yyyy"),
+      cell: ({ row }) =>
+        format(new Date(row.original.eventDate), "MMM d, yyyy"),
       sortingFn: (a, b, id) => {
         return (
           new Date(a.getValue(id) as string).getTime() -
@@ -92,7 +98,7 @@ export function createAdminItemColumns(handlers: {
               <DropdownMenuTrigger asChild>
                 <button
                   type="button"
-                  className="inline-flex rounded p-1 hover:bg-zinc-100 dark:hover:bg-zinc-800"
+                  className="inline-flex rounded p-1 hover:bg-surface-muted"
                   aria-label="Actions"
                 >
                   <MoreHorizontal className="h-4 w-4" />
@@ -123,7 +129,7 @@ export function createAdminItemColumns(handlers: {
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
-                  className="text-red-600 focus:text-red-600 dark:text-red-400"
+                  className="text-danger focus:text-danger"
                   onClick={() => handlers.onDelete(r)}
                 >
                   <Trash2 className="mr-2 h-4 w-4" />

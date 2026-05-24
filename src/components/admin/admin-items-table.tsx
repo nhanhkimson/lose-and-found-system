@@ -14,7 +14,10 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { adminDeleteItem, adminSetItemStatus } from "@/lib/actions/admin.actions";
+import {
+  adminDeleteItem,
+  adminSetItemStatus,
+} from "@/lib/actions/admin.actions";
 import type { AdminItemRow } from "@/lib/actions/admin.actions";
 import type { ItemStatus } from "@prisma/client";
 import { STATUS_LABEL } from "@/lib/utils/constants";
@@ -109,7 +112,7 @@ export function AdminItemsTable({ items }: Props) {
               type="button"
               disabled={deleting}
               onClick={() => void onConfirmDelete()}
-              className="inline-flex items-center justify-center rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-red-700 disabled:opacity-50"
+              className="inline-flex items-center justify-center rounded-lg bg-danger px-4 py-2 text-sm font-semibold text-white transition hover:bg-danger/90 disabled:opacity-50"
             >
               {deleting ? "…" : "Delete"}
             </button>

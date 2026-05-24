@@ -14,10 +14,10 @@ export function AdminStatsDashboard({ stats }: Props) {
   return (
     <div className="space-y-10">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight text-biu-navy dark:text-zinc-100">
+        <h1 className="text-2xl font-bold tracking-tight text-foreground">
           Admin dashboard
         </h1>
-        <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
+        <p className="mt-1 text-sm text-muted-foreground">
           Platform overview, resolution metrics, and trends.
         </p>
       </div>
@@ -65,13 +65,15 @@ function StatCard({
   return (
     <Card>
       <CardContent className="pt-5">
-        <p className="text-xs font-medium uppercase tracking-wide text-zinc-500">
+        <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
           {title}
         </p>
-        <p className="mt-1 text-2xl font-bold tabular-nums text-biu-navy dark:text-zinc-100">
+        <p className="mt-1 text-2xl font-bold tabular-nums text-foreground">
           {value}
         </p>
-        {hint ? <p className="mt-0.5 text-xs text-zinc-500">{hint}</p> : null}
+        {hint ? (
+          <p className="mt-0.5 text-xs text-muted-foreground">{hint}</p>
+        ) : null}
       </CardContent>
     </Card>
   );

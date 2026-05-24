@@ -100,10 +100,14 @@ export function DataTable<TData>({
         ) : null}
         {filterOptions?.map((fo) => (
           <label key={fo.columnId} className="flex flex-col gap-1 text-xs">
-            <span className="font-medium text-zinc-600 dark:text-zinc-400">{fo.label}</span>
+            <span className="font-medium text-muted-foreground">
+              {fo.label}
+            </span>
             <select
-              className="rounded-lg border border-zinc-200 bg-white px-2 py-1.5 text-sm dark:border-zinc-700 dark:bg-zinc-950"
-              value={(table.getColumn(fo.columnId)?.getFilterValue() as string) ?? ""}
+              className="rounded-lg border border-border bg-surface px-2 py-1.5 text-sm"
+              value={
+                (table.getColumn(fo.columnId)?.getFilterValue() as string) ?? ""
+              }
               onChange={(e) => {
                 const v = e.target.value;
                 table.getColumn(fo.columnId)?.setFilterValue(v || undefined);
@@ -120,23 +124,23 @@ export function DataTable<TData>({
         ))}
       </div>
 
-      <div className="overflow-x-auto rounded-lg border border-zinc-200 dark:border-zinc-800">
+      <div className="overflow-x-auto rounded-lg border border-border">
         <table className="w-full min-w-[640px] border-collapse text-left text-sm">
           <thead>
             {table.getHeaderGroups().map((hg) => (
               <tr
                 key={hg.id}
-                className="border-b border-zinc-200 bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900/50"
+                className="border-b border-border bg-surface-muted/50"
               >
                 {hg.headers.map((h) => (
                   <th
                     key={h.id}
-                    className="px-3 py-2.5 font-semibold text-zinc-800 dark:text-zinc-200"
+                    className="px-3 py-2.5 font-semibold text-foreground"
                   >
                     {h.isPlaceholder ? null : h.column.getCanSort() ? (
                       <button
                         type="button"
-                        className="inline-flex items-center gap-1 hover:text-biu-gold"
+                        className="inline-flex items-center gap-1 hover:text-primary"
                         onClick={h.column.getToggleSortingHandler()}
                       >
                         {flexRender(h.column.columnDef.header, h.getContext())}
@@ -155,7 +159,7 @@ export function DataTable<TData>({
               <tr>
                 <td
                   colSpan={columns.length}
-                  className="px-3 py-8 text-center text-zinc-500"
+                  className="px-3 py-8 text-center text-muted-foreground"
                 >
                   {emptyMessage}
                 </td>
@@ -164,11 +168,13 @@ export function DataTable<TData>({
               table.getRowModel().rows.map((row) => (
                 <tr
                   key={row.id}
-                  onClick={onRowClick ? () => onRowClick(row.original) : undefined}
+                  onClick={
+                    onRowClick ? () => onRowClick(row.original) : undefined
+                  }
                   onKeyDown={
                     onRowClick
                       ? (e) => {
-                          if (e.key === "Enter" || e.key === " ") {
+                          if (e.key === "Enter" || e.key === "") {
                             e.preventDefault();
                             onRowClick(row.original);
                           }
@@ -176,15 +182,23 @@ export function DataTable<TData>({
                       : undefined
                   }
                   className={cn(
-                    "border-b border-zinc-100 last:border-0 dark:border-zinc-800/80",
-                    onRowClick ? "cursor-pointer hover:bg-biu-gold/5" : undefined,
+                    "border-b border-border-subtle last:border-0/80",
+                    onRowClick
+                      ? "cursor-pointer hover:bg-primary/5"
+                      : undefined,
                   )}
                   tabIndex={onRowClick ? 0 : undefined}
                   role={onRowClick ? "button" : undefined}
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <td key={cell.id} className="px-3 py-2 align-middle text-zinc-700 dark:text-zinc-300">
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    <td
+                      key={cell.id}
+                      className="px-3 py-2 align-middle text-foreground"
+                    >
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext(),
+                      )}
                     </td>
                   ))}
                 </tr>
@@ -195,25 +209,26 @@ export function DataTable<TData>({
       </div>
 
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-        <p className="text-xs text-zinc-500">
+        <p className="text-xs text-muted-foreground">
           {table.getFilteredRowModel().rows.length} row(s)
         </p>
         <div className="flex items-center gap-2">
           <button
             type="button"
-            className="inline-flex items-center gap-1 rounded border border-zinc-200 px-2 py-1 text-xs dark:border-zinc-700"
+            className="inline-flex items-center gap-1 rounded border border-border px-2 py-1 text-xs"
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
           >
             <ChevronLeft className="h-3.5 w-3.5" />
             Prev
           </button>
-          <span className="text-xs text-zinc-600 dark:text-zinc-400">
-            Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount() || 1}
+          <span className="text-xs text-muted-foreground">
+            Page {table.getState().pagination.pageIndex + 1} of{" "}
+            {table.getPageCount() || 1}
           </span>
           <button
             type="button"
-            className="inline-flex items-center gap-1 rounded border border-zinc-200 px-2 py-1 text-xs dark:border-zinc-700"
+            className="inline-flex items-center gap-1 rounded border border-border px-2 py-1 text-xs"
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
           >

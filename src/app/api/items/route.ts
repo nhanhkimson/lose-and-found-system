@@ -1,4 +1,9 @@
-import { type ItemCategory, type ItemStatus, type ItemType, type Prisma } from "@prisma/client";
+import {
+  type ItemCategory,
+  type ItemStatus,
+  type ItemType,
+  type Prisma,
+} from "@prisma/client";
 import { endOfDay, parseISO, startOfDay } from "date-fns";
 import { NextResponse, type NextRequest } from "next/server";
 import { auth } from "@/lib/auth";
@@ -25,61 +30,63 @@ const STATUSES: ItemStatus[] = ["OPEN", "RESOLVED", "CLOSED"];
 /**
  * @swagger
  * /api/items:
- *   get:
- *     tags: [Items]
- *     summary: List items
- *     parameters:
- *       - in: query
- *         name: page
- *         schema: { type: integer, minimum: 1, default: 1 }
- *       - in: query
- *         name: q
- *         schema: { type: string }
- *       - in: query
- *         name: type
- *         schema: { type: string, enum: [LOST, FOUND] }
- *       - in: query
- *         name: category
- *         schema: { type: string }
- *       - in: query
- *         name: building
- *         schema: { type: string }
- *       - in: query
- *         name: status
- *         schema: { type: string, enum: [OPEN, RESOLVED, CLOSED] }
- *       - in: query
- *         name: dateFrom
- *         schema: { type: string, format: date }
- *       - in: query
- *         name: dateTo
- *         schema: { type: string, format: date }
- *     responses:
- *       200:
- *         description: Paginated item list.
- *   post:
- *     tags: [Items]
- *     summary: Create item listing
- *     description: Requires authenticated session cookie.
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *     responses:
- *       201:
- *         description: Item created.
- *       401:
- *         description: Unauthorized.
- *       400:
- *         description: Validation error.
+ * get:
+ * tags: [Items]
+ * summary: List items
+ * parameters:
+ * - in: query
+ * name: page
+ * schema: { type: integer, minimum: 1, default: 1 }
+ * - in: query
+ * name: q
+ * schema: { type: string }
+ * - in: query
+ * name: type
+ * schema: { type: string, enum: [LOST, FOUND] }
+ * - in: query
+ * name: category
+ * schema: { type: string }
+ * - in: query
+ * name: building
+ * schema: { type: string }
+ * - in: query
+ * name: status
+ * schema: { type: string, enum: [OPEN, RESOLVED, CLOSED] }
+ * - in: query
+ * name: dateFrom
+ * schema: { type: string, format: date }
+ * - in: query
+ * name: dateTo
+ * schema: { type: string, format: date }
+ * responses:
+ * 200:
+ * description: Paginated item list.
+ * post:
+ * tags: [Items]
+ * summary: Create item listing
+ * description: Requires authenticated session cookie.
+ * requestBody:
+ * required: true
+ * content:
+ * application/json:
+ * schema:
+ * type: object
+ * responses:
+ * 201:
+ * description: Item created.
+ * 401:
+ * description: Unauthorized.
+ * 400:
+ * description: Validation error.
  */
 export async function GET(request: NextRequest) {
   try {
     const pageRaw = request.nextUrl.searchParams.get("page");
     const q = request.nextUrl.searchParams.get("q")?.trim() ?? "";
     const typeRaw = request.nextUrl.searchParams.get("type")?.toUpperCase();
-    const categoryRaw = request.nextUrl.searchParams.get("category")?.toUpperCase();
+    const categoryRaw = request.nextUrl.searchParams
+      .get("category")
+      ?.toUpperCase();
     const building = request.nextUrl.searchParams.get("building")?.trim() ?? "";
     const statusRaw = request.nextUrl.searchParams.get("status")?.toUpperCase();
     const dateFrom = request.nextUrl.searchParams.get("dateFrom");
@@ -149,7 +156,8 @@ export async function GET(request: NextRequest) {
       totalPages: Math.max(1, Math.ceil(total / pageSize)),
     });
   } catch (error) {
-    const message = error instanceof Error ? error.message : "Failed to fetch items.";
+    const message =
+      error instanceof Error ? error.message : "Failed to fetch items.";
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }
@@ -193,9 +201,9 @@ export async function POST(request: Request) {
         imageUrl,
         imageUrls,
         eventDate: d.eventDate,
-        timeApprox: d.type === "LOST" ? (d.timeApprox?.trim() || null) : null,
+        timeApprox: d.type === "LOST" ? d.timeApprox?.trim() || null : null,
         foundDisposition: d.type === "FOUND" ? d.foundDisposition! : null,
-        reward: d.type === "LOST" ? (d.reward?.trim() || null) : null,
+        reward: d.type === "LOST" ? d.reward?.trim() || null : null,
         notifyOnMatch: d.notifyOnMatch,
         allowContact: d.allowContact,
       },
@@ -204,7 +212,8 @@ export async function POST(request: Request) {
 
     return NextResponse.json(item, { status: 201 });
   } catch (error) {
-    const message = error instanceof Error ? error.message : "Failed to create item.";
+    const message =
+      error instanceof Error ? error.message : "Failed to create item.";
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }

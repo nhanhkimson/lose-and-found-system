@@ -7,13 +7,7 @@ import type {
   Prisma,
 } from "@prisma/client";
 
-export type {
-  FoundDisposition,
-  Item,
-  ItemCategory,
-  ItemStatus,
-  ItemType,
-};
+export type { FoundDisposition, Item, ItemCategory, ItemStatus, ItemType };
 
 /**
  * Standard Server Action return shape (see `.cursorrules`).
@@ -27,7 +21,15 @@ export type ActionResult<T> =
  */
 export type ItemListItem = Pick<
   Item,
-  "id" | "type" | "title" | "category" | "building" | "roomHint" | "eventDate" | "imageUrl" | "createdAt"
+  | "id"
+  | "type"
+  | "title"
+  | "category"
+  | "building"
+  | "roomHint"
+  | "eventDate"
+  | "imageUrl"
+  | "createdAt"
 >;
 
 /** Full row from DB (includes contacts) — use `ItemDetailPublic` for UI. */
@@ -45,7 +47,9 @@ export const itemListSelect = {
   createdAt: true,
 } satisfies Prisma.ItemSelect;
 
-export type ItemListRow = Prisma.ItemGetPayload<{ select: typeof itemListSelect }>;
+export type ItemListRow = Prisma.ItemGetPayload<{
+  select: typeof itemListSelect;
+}>;
 
 /** Public item detail: no PII; view count and gallery fields. */
 export const itemDetailPublicSelect = {

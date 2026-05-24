@@ -40,10 +40,7 @@ const Carousel = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement> & CarouselProps
 >(({ className, opts, plugins, setApi, children, ...props }, ref) => {
-  const [carouselRef, api] = useEmblaCarousel(
-    { ...opts, axis: "x" },
-    plugins,
-  );
+  const [carouselRef, api] = useEmblaCarousel({ ...opts, axis: "x" }, plugins);
   const [canScrollPrev, setCanScrollPrev] = React.useState(false);
   const [canScrollNext, setCanScrollNext] = React.useState(false);
 
@@ -85,7 +82,12 @@ const Carousel = React.forwardRef<
 
   return (
     <CarouselContext.Provider value={value}>
-      <div ref={ref} className={cn("relative", className)} role="region" {...props}>
+      <div
+        ref={ref}
+        className={cn("relative", className)}
+        role="region"
+        {...props}
+      >
         {children}
       </div>
     </CarouselContext.Provider>
@@ -100,11 +102,7 @@ const CarouselContent = React.forwardRef<
   const { carouselRef } = useCarousel();
   return (
     <div ref={carouselRef} className="overflow-hidden">
-      <div
-        ref={ref}
-        className={cn("flex", "-ml-3", className)}
-        {...props}
-      />
+      <div ref={ref} className={cn("flex", "-ml-3", className)} {...props} />
     </div>
   );
 });

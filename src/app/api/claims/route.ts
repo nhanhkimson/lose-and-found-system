@@ -11,30 +11,30 @@ function mapItemTypeToClaimType(type: "LOST" | "FOUND"): ClaimType {
 /**
  * @swagger
  * /api/claims:
- *   post:
- *     tags: [Claims]
- *     summary: Create claim for item
- *     description: Requires authenticated session cookie.
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               itemId: { type: string }
- *               message: { type: string }
- *               proofImageUrls:
- *                 type: array
- *                 items: { type: string }
- *             required: [itemId, message]
- *     responses:
- *       201:
- *         description: Claim created.
- *       400:
- *         description: Validation or business error.
- *       401:
- *         description: Unauthorized.
+ * post:
+ * tags: [Claims]
+ * summary: Create claim for item
+ * description: Requires authenticated session cookie.
+ * requestBody:
+ * required: true
+ * content:
+ * application/json:
+ * schema:
+ * type: object
+ * properties:
+ * itemId: { type: string }
+ * message: { type: string }
+ * proofImageUrls:
+ * type: array
+ * items: { type: string }
+ * required: [itemId, message]
+ * responses:
+ * 201:
+ * description: Claim created.
+ * 400:
+ * description: Validation or business error.
+ * 401:
+ * description: Unauthorized.
  */
 export async function POST(request: Request) {
   try {
@@ -92,13 +92,17 @@ export async function POST(request: Request) {
 
     return NextResponse.json(created, { status: 201 });
   } catch (error) {
-    if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002") {
+    if (
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error.code === "P2002"
+    ) {
       return NextResponse.json(
         { error: "You already submitted a claim for this item." },
         { status: 400 },
       );
     }
-    const message = error instanceof Error ? error.message : "Failed to create claim.";
+    const message =
+      error instanceof Error ? error.message : "Failed to create claim.";
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }

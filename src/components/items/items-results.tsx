@@ -3,7 +3,9 @@ import { ItemGrid } from "./item-grid";
 import { ItemPagination } from "./item-pagination";
 
 type ItemsResultsProps = {
-  searchParams: ItemBrowseParams | Record<string, string | string[] | undefined>;
+  searchParams:
+    | ItemBrowseParams
+    | Record<string, string | string[] | undefined>;
 };
 
 export async function ItemsResults({ searchParams }: ItemsResultsProps) {
@@ -11,7 +13,7 @@ export async function ItemsResults({ searchParams }: ItemsResultsProps) {
   if (!result.success) {
     return (
       <div
-        className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800 dark:border-red-900/50 dark:bg-red-950/50 dark:text-red-200"
+        className="rounded-lg border border-danger/30 bg-danger-muted px-4 py-3 text-sm text-danger"
         role="alert"
       >
         {result.error}

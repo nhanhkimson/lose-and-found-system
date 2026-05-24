@@ -40,7 +40,7 @@ export function ItemGallery({ imageUrls, title, category }: ItemGalleryProps) {
   if (imageUrls.length === 0) {
     return (
       <div
-        className="flex aspect-[16/10] w-full items-center justify-center rounded-xl border border-zinc-200/80 bg-zinc-100 dark:border-zinc-800 dark:bg-zinc-900"
+        className="flex aspect-[16/10] w-full items-center justify-center rounded-xl border border-border bg-surface-muted"
         aria-label={`No image — ${title}`}
       >
         <CategoryIcon category={category} size="lg" />
@@ -54,10 +54,14 @@ export function ItemGallery({ imageUrls, title, category }: ItemGalleryProps) {
         <CarouselContent>
           {imageUrls.map((src, index) => (
             <CarouselItem key={`${src}-${index}`}>
-              <div className="relative aspect-[16/10] w-full overflow-hidden rounded-xl border border-zinc-200/80 bg-zinc-100 dark:border-zinc-800 dark:bg-zinc-900">
+              <div className="relative aspect-[16/10] w-full overflow-hidden rounded-xl border border-border bg-surface-muted">
                 <Image
                   src={src}
-                  alt={imageUrls.length > 1 ? `${title} — image ${index + 1}` : title}
+                  alt={
+                    imageUrls.length > 1
+                      ? `${title} — image ${index + 1}`
+                      : title
+                  }
                   fill
                   className="object-contain"
                   sizes="(max-width: 768px) 100vw, 65vw"
@@ -78,8 +82,8 @@ export function ItemGallery({ imageUrls, title, category }: ItemGalleryProps) {
               className={cn(
                 "relative h-14 w-20 shrink-0 overflow-hidden rounded-md border-2 transition",
                 current === index
-                  ? "border-biu-gold ring-1 ring-biu-gold/40"
-                  : "border-transparent ring-1 ring-zinc-200 dark:ring-zinc-700",
+                  ? "border-primary ring-1 ring-primary/40"
+                  : "border-transparent ring-1 ring-border",
               )}
               aria-label={`Show image ${index + 1}`}
               aria-current={current === index}

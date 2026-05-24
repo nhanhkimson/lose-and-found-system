@@ -19,7 +19,7 @@ export function PopoverContent({
         align={align}
         sideOffset={8}
         className={cn(
-          "z-50 w-[min(100vw,22rem)] rounded-lg border border-zinc-200 bg-white p-0 shadow-lg dark:border-zinc-800 dark:bg-zinc-950",
+          "z-50 w-[min(100vw,22rem)] rounded-lg border border-border bg-surface p-0 shadow-lg",
           "data-[state=open]:animate-in data-[state=closed]:animate-out",
           className,
         )}

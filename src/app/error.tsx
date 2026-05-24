@@ -15,16 +15,16 @@ export default function Error({
 
   return (
     <div className="flex min-h-[50vh] flex-col items-center justify-center gap-4 px-4 text-center">
-      <h2 className="text-lg font-semibold text-biu-navy dark:text-zinc-100">
+      <h2 className="text-lg font-semibold text-foreground">
         Something went wrong
       </h2>
-      <p className="max-w-md text-sm text-zinc-600 dark:text-zinc-400">
+      <p className="max-w-md text-sm text-muted-foreground">
         {error.message || "Could not load this page."}
       </p>
       <button
         type="button"
         onClick={() => reset()}
-        className="rounded-lg bg-biu-gold px-4 py-2 text-sm font-medium text-white transition hover:opacity-90"
+        className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white transition hover:opacity-90"
       >
         Try again
       </button>

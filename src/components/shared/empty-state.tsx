@@ -19,12 +19,14 @@ const PRESETS: Record<
   },
   "no-notifications": {
     title: "All caught up",
-    description: "You have no new notifications. We will notify you about matches and updates.",
+    description:
+      "You have no new notifications. We will notify you about matches and updates.",
     icon: Bell,
   },
   "no-matches": {
     title: "No matches found",
-    description: "We could not find counterpart listings that fit your items yet. Keep your listings updated.",
+    description:
+      "We could not find counterpart listings that fit your items yet. Keep your listings updated.",
     icon: Search,
   },
 };
@@ -56,19 +58,19 @@ export function EmptyState({
   return (
     <div
       className={cn(
-        "flex flex-col items-center justify-center rounded-xl border border-dashed border-zinc-200 bg-zinc-50/80 px-6 py-12 text-center dark:border-zinc-800 dark:bg-zinc-900/40",
+        "flex flex-col items-center justify-center rounded-xl border border-dashed border-border bg-surface-muted/80 px-6 py-12 text-center/40",
         className,
       )}
     >
-      <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-biu-gold/15 text-biu-gold">
+      <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-primary/12 text-primary">
         <Icon className="h-7 w-7" strokeWidth={1.75} aria-hidden />
       </div>
-      <h2 className="text-lg font-semibold text-biu-navy dark:text-zinc-100">{head}</h2>
-      <p className="mt-2 max-w-md text-sm text-zinc-600 dark:text-zinc-400">{body}</p>
+      <h2 className="text-lg font-semibold text-foreground">{head}</h2>
+      <p className="mt-2 max-w-md text-sm text-muted-foreground">{body}</p>
       {actionLabel && actionHref ? (
         <Link
           href={actionHref}
-          className="mt-6 inline-flex rounded-lg bg-biu-gold px-4 py-2 text-sm font-semibold text-biu-navy transition hover:opacity-90"
+          className="mt-6 inline-flex rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition hover:opacity-90"
         >
           {actionLabel}
         </Link>

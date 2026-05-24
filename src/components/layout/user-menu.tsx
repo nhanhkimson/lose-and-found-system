@@ -2,6 +2,7 @@
 
 import { signOut, useSession } from "next-auth/react";
 import { LogOut, Settings, User } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import {
   DropdownMenu,
@@ -12,7 +13,10 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils/cn";
 
-function initials(name: string | null | undefined, email: string | null | undefined) {
+function initials(
+  name: string | null | undefined,
+  email: string | null | undefined,
+) {
   if (name?.trim()) {
     const parts = name.trim().split(/\s+/).filter(Boolean);
     if (parts.length >= 2) {
@@ -33,7 +37,7 @@ export function UserMenu() {
   if (status === "loading" || !user) {
     return (
       <div
-        className="h-9 w-9 animate-pulse rounded-full bg-zinc-200 dark:bg-zinc-800"
+        className="h-9 w-9 animate-pulse rounded-full bg-surface-muted"
         aria-hidden
       />
     );
@@ -47,16 +51,18 @@ export function UserMenu() {
         <button
           type="button"
           className={cn(
-            "flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full border-2 border-zinc-200 bg-zinc-100 text-xs font-semibold text-biu-navy",
-            "outline-none ring-offset-2 focus-visible:ring-2 focus-visible:ring-biu-gold dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100",
+            "flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full border-2 border-border bg-surface-muted text-xs font-semibold text-foreground",
+            "outline-none ring-offset-2 focus-visible:ring-2 focus-visible:ring-primary",
           )}
         >
           {user.image ? (
-            // eslint-disable-next-line @next/next/no-img-element -- remote URLs, avoid domain config
-            <img
+            <Image
               src={user.image}
               alt=""
+              width={36}
+              height={36}
               className="h-full w-full object-cover"
+              sizes="36px"
             />
           ) : (
             <span className="text-[11px] leading-none" aria-hidden>
@@ -68,29 +74,33 @@ export function UserMenu() {
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-52" align="end">
         <div className="px-2 py-1.5">
-          <p className="truncate text-sm font-medium text-zinc-900 dark:text-zinc-100">
+          <p className="truncate text-sm font-medium text-foreground">
             {user.name || "User"}
           </p>
-          <p className="truncate text-xs text-zinc-500 dark:text-zinc-400">
-            {user.email}
-          </p>
+          <p className="truncate text-xs text-muted-foreground">{user.email}</p>
         </div>
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>
-          <Link href="/profile" className="flex cursor-pointer items-center gap-2">
+          <Link
+            href="/profile"
+            className="flex cursor-pointer items-center gap-2"
+          >
             <User className="h-4 w-4" aria-hidden />
             Profile
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
-          <Link href="/settings" className="flex cursor-pointer items-center gap-2">
+          <Link
+            href="/settings"
+            className="flex cursor-pointer items-center gap-2"
+          >
             <Settings className="h-4 w-4" aria-hidden />
             Settings
           </Link>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem
-          className="text-red-600 focus:text-red-600 dark:text-red-400 dark:focus:text-red-400"
+          className="text-danger focus:text-danger"
           onSelect={() => void signOut({ callbackUrl: "/" })}
         >
           <span className="flex items-center gap-2">

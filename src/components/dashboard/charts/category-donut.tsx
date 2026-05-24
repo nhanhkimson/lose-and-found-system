@@ -30,7 +30,10 @@ export function CategoryDonutChart({ data }: CategoryDonutProps) {
     value: d.count,
   }));
   const chartConfig: ChartConfig = data.reduce((acc, d, i) => {
-    acc[d.category] = { label: CATEGORY_LABEL[d.category], color: COLORS[i % COLORS.length]! };
+    acc[d.category] = {
+      label: CATEGORY_LABEL[d.category],
+      color: COLORS[i % COLORS.length]!,
+    };
     return acc;
   }, {} as ChartConfig);
 
@@ -40,7 +43,11 @@ export function CategoryDonutChart({ data }: CategoryDonutProps) {
         <CardTitle>Items by category</CardTitle>
       </CardHeader>
       <CardContent>
-        <ChartContainer id="cat-donut" config={chartConfig} className="h-[360px]">
+        <ChartContainer
+          id="cat-donut"
+          config={chartConfig}
+          className="h-[360px]"
+        >
           <div className="flex h-full flex-col gap-2 md:flex-row">
             <div className="h-[300px] min-w-0 flex-1">
               <ResponsiveContainer width="100%" height="100%">
@@ -51,10 +58,7 @@ export function CategoryDonutChart({ data }: CategoryDonutProps) {
                       border: "1px solid hsl(220, 14%, 90%)",
                       borderRadius: "8px",
                     }}
-                    formatter={(value) => [
-                      Number(value ?? 0),
-                      "Items",
-                    ]}
+                    formatter={(value) => [Number(value ?? 0), "Items"]}
                   />
                   <Pie
                     data={rows}
@@ -66,7 +70,9 @@ export function CategoryDonutChart({ data }: CategoryDonutProps) {
                     outerRadius="85%"
                     paddingAngle={2}
                     label={({ percent }) =>
-                      (percent ?? 0) > 0.05 ? `${((percent ?? 0) * 100).toFixed(0)}%` : ""
+                      (percent ?? 0) > 0.05
+                        ? `${((percent ?? 0) * 100).toFixed(0)}%`
+                        : ""
                     }
                   >
                     {rows.map((e, i) => (
@@ -84,7 +90,7 @@ export function CategoryDonutChart({ data }: CategoryDonutProps) {
               {rows.map((e, i) => (
                 <div
                   key={e.name}
-                  className="flex items-center justify-between gap-2 text-xs text-zinc-700 dark:text-zinc-300"
+                  className="flex items-center justify-between gap-2 text-xs text-foreground"
                 >
                   <span className="flex items-center gap-2">
                     <span
@@ -93,7 +99,7 @@ export function CategoryDonutChart({ data }: CategoryDonutProps) {
                     />
                     <span className="line-clamp-2">{e.label}</span>
                   </span>
-                  <span className="shrink-0 font-medium tabular-nums text-zinc-900 dark:text-zinc-100">
+                  <span className="shrink-0 font-medium tabular-nums text-foreground">
                     {e.value}
                   </span>
                 </div>

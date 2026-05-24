@@ -13,7 +13,7 @@ export default function AdminClaimsLoading() {
         ))}
       </div>
       <Skeleton className="h-10 w-full max-w-sm" />
-      <div className="space-y-2 rounded-lg border border-zinc-200 p-3 dark:border-zinc-800">
+      <div className="space-y-2 rounded-lg border border-border p-3">
         {Array.from({ length: 6 }).map((_, i) => (
           <Skeleton key={i} className="h-12 w-full" />
         ))}

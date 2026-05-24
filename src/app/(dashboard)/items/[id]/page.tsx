@@ -17,7 +17,9 @@ type PageProps = {
   params: Promise<{ id: string }>;
 };
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
   const { id } = await params;
   const item = await getItemByIdNoTrack(id);
   if (!item) {
@@ -41,7 +43,7 @@ export default async function ItemDetailPage({ params }: PageProps) {
       <div>
         <Link
           href="/items"
-          className="inline-flex items-center gap-1 text-sm font-medium text-zinc-600 transition hover:text-biu-navy dark:text-zinc-400 dark:hover:text-zinc-100"
+          className="inline-flex items-center gap-1 text-sm font-medium text-muted-foreground transition hover:text-foreground"
         >
           <ChevronLeft className="h-4 w-4" aria-hidden />
           Back to listings
@@ -59,15 +61,15 @@ export default async function ItemDetailPage({ params }: PageProps) {
         </div>
 
         <aside className="space-y-6 lg:sticky lg:top-24">
-          <div className="rounded-xl border border-zinc-200/80 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-950">
+          <div className="rounded-xl border border-border bg-surface p-5 shadow-card">
             <ItemClaimPanel item={item} />
           </div>
         </aside>
       </div>
 
       {similar.length > 0 ? (
-        <section className="border-t border-zinc-100 pt-10 dark:border-zinc-800">
-          <h2 className="mb-6 text-lg font-semibold text-biu-navy dark:text-zinc-100">
+        <section className="border-t border-border-subtle pt-10">
+          <h2 className="mb-6 text-lg font-semibold text-foreground">
             Similar items
           </h2>
           <ItemGrid items={similar} />

@@ -36,7 +36,9 @@ export function AdminUsersTable({ users, currentUserId }: Props) {
     <DataTable<AdminUserRow>
       columns={columns}
       data={users}
-      getSearchableText={(u) => [u.name, u.email, u.studentId, u.role].filter(Boolean).join(" ")}
+      getSearchableText={(u) =>
+        [u.name, u.email, u.studentId, u.role].filter(Boolean).join("")
+      }
       searchPlaceholder="Search name, email, ID…"
       pageSize={12}
     />

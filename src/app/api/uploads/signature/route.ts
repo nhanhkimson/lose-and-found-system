@@ -8,27 +8,27 @@ import {
 /**
  * @swagger
  * /api/uploads/signature:
- *   post:
- *     tags: [Uploads]
- *     summary: Create Cloudinary signed-upload payload
- *     description: Requires authenticated session cookie. Use this for mobile/web secure uploads.
- *     requestBody:
- *       required: false
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               folder:
- *                 type: string
- *                 example: biu-lost-found
- *     responses:
- *       200:
- *         description: Signed payload for direct Cloudinary upload.
- *       401:
- *         description: Unauthorized.
- *       500:
- *         description: Cloudinary server configuration missing.
+ * post:
+ * tags: [Uploads]
+ * summary: Create Cloudinary signed-upload payload
+ * description: Requires authenticated session cookie. Use this for mobile/web secure uploads.
+ * requestBody:
+ * required: false
+ * content:
+ * application/json:
+ * schema:
+ * type: object
+ * properties:
+ * folder:
+ * type: string
+ * example: biu-lost-found
+ * responses:
+ * 200:
+ * description: Signed payload for direct Cloudinary upload.
+ * 401:
+ * description: Unauthorized.
+ * 500:
+ * description: Cloudinary server configuration missing.
  */
 export async function POST(request: Request) {
   try {
@@ -48,8 +48,13 @@ export async function POST(request: Request) {
       );
     }
 
-    const body = (await request.json().catch(() => ({}))) as { folder?: string };
-    const folder = body.folder?.trim() || process.env.NEXT_PUBLIC_CLOUDINARY_FOLDER || "biu-lost-found";
+    const body = (await request.json().catch(() => ({}))) as {
+      folder?: string;
+    };
+    const folder =
+      body.folder?.trim() ||
+      process.env.NEXT_PUBLIC_CLOUDINARY_FOLDER ||
+      "biu-lost-found";
     const timestamp = Math.floor(Date.now() / 1000);
 
     const signature = signCloudinaryParams(
@@ -66,7 +71,9 @@ export async function POST(request: Request) {
     });
   } catch (error) {
     const message =
-      error instanceof Error ? error.message : "Failed to create upload signature.";
+      error instanceof Error
+        ? error.message
+        : "Failed to create upload signature.";
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }

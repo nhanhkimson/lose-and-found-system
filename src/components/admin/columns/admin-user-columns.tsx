@@ -20,7 +20,7 @@ function RoleSelect({
   const disabled = row.id === currentUserId;
   return (
     <select
-      className="max-w-full rounded border border-zinc-200 bg-white px-2 py-1 text-sm dark:border-zinc-600 dark:bg-zinc-900"
+      className="max-w-full rounded border border-border bg-surface px-2 py-1 text-sm"
       value={row.role}
       disabled={disabled}
       onClick={(e) => e.stopPropagation()}
@@ -80,7 +80,8 @@ export function useAdminUserColumns(
       {
         accessorKey: "createdAt",
         header: "Joined",
-        cell: ({ row }) => format(new Date(row.original.createdAt), "MMM d, yyyy"),
+        cell: ({ row }) =>
+          format(new Date(row.original.createdAt), "MMM d, yyyy"),
         sortingFn: (a, b, id) =>
           new Date(a.getValue(id) as string).getTime() -
           new Date(b.getValue(id) as string).getTime(),

@@ -29,10 +29,10 @@ export default async function DashboardPage() {
   return (
     <div className="mx-auto max-w-4xl space-y-10">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight text-biu-navy dark:text-zinc-100">
+        <h1 className="text-2xl font-bold tracking-tight text-foreground">
           Dashboard
         </h1>
-        <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
+        <p className="mt-1 text-sm text-muted-foreground">
           Overview of your listings, claims, and suggested matches.
         </p>
       </div>
@@ -42,13 +42,14 @@ export default async function DashboardPage() {
       </section>
 
       <section className="space-y-2">
-        <h2 className="text-sm font-semibold text-biu-navy dark:text-zinc-200">
+        <h2 className="text-sm font-semibold text-foreground">
           Potential matches
         </h2>
         {potentialCount > 0 ? (
-          <p className="text-xs text-zinc-500">
+          <p className="text-xs text-muted-foreground">
             {potentialCount} suggested pairing
-            {potentialCount === 1 ? "" : "s"} from open listings in the last 90 days.
+            {potentialCount === 1 ? "" : "s"} from open listings in the last 90
+            days.
           </p>
         ) : null}
         <MatchSuggestions items={matchSuggestions} />

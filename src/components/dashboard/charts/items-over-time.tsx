@@ -30,14 +30,25 @@ export function ItemsOverTimeChart({ data }: ItemsOverTimeProps) {
         <CardTitle>New listings (last 30 days)</CardTitle>
       </CardHeader>
       <CardContent>
-        <ChartContainer id="items-time" config={chartConfig} className="h-[320px]">
+        <ChartContainer
+          id="items-time"
+          config={chartConfig}
+          className="h-[320px]"
+        >
           <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={data} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" className="stroke-zinc-200 dark:stroke-zinc-800" />
+            <LineChart
+              data={data}
+              margin={{ top: 8, right: 8, left: 0, bottom: 0 }}
+            >
+              <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
               <XAxis
                 dataKey="date"
                 tick={{ fontSize: 10 }}
-                tickFormatter={(v) => (typeof v === "string" && v.length >= 10 ? v.slice(5) : String(v))}
+                tickFormatter={(v) =>
+                  typeof v === "string" && v.length >= 10
+                    ? v.slice(5)
+                    : String(v)
+                }
                 stroke="hsl(220, 9%, 46%)"
               />
               <YAxis allowDecimals={false} width={32} tick={{ fontSize: 10 }} />

@@ -4,11 +4,18 @@ import { format } from "date-fns";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState, useTransition } from "react";
 import { toast } from "sonner";
-import { getAdminClaimForReview, reviewClaim } from "@/lib/actions/admin.actions";
+import {
+  getAdminClaimForReview,
+  reviewClaim,
+} from "@/lib/actions/admin.actions";
 import type { ClaimDetailPayload } from "@/lib/actions/admin.actions";
 import { Sheet } from "@/components/ui/sheet";
 import { Textarea } from "@/components/ui/textarea";
-import { CATEGORY_LABEL, STATUS_LABEL, TYPE_LABEL } from "@/lib/utils/constants";
+import {
+  CATEGORY_LABEL,
+  STATUS_LABEL,
+  TYPE_LABEL,
+} from "@/lib/utils/constants";
 
 type ClaimDetailPanelProps = {
   claimId: string | null;
@@ -58,7 +65,9 @@ export function ClaimDetailPanel({
           adminNote: adminNote.trim() || undefined,
         });
         if (res.success) {
-          toast.success(decision === "APPROVE" ? "Claim approved" : "Claim rejected");
+          toast.success(
+            decision === "APPROVE" ? "Claim approved" : "Claim rejected",
+          );
           close();
           router.refresh();
         } else {
@@ -84,17 +93,17 @@ export function ClaimDetailPanel({
       contentClassName="w-[min(100vw,40rem)] max-w-full sm:max-w-2xl"
     >
       {!data ? (
-        <div className="p-4 text-sm text-zinc-500">Loading…</div>
+        <div className="p-4 text-sm text-muted-foreground">Loading…</div>
       ) : (
         <div className="space-y-6 p-4">
           <div className="grid gap-4 md:grid-cols-2">
             <div>
-              <p className="mb-2 text-xs font-semibold uppercase text-zinc-500">
+              <p className="mb-2 text-xs font-semibold uppercase text-muted-foreground">
                 Item photos
               </p>
               <div className="grid grid-cols-2 gap-2">
                 {itemUrls.length === 0 ? (
-                  <p className="text-sm text-zinc-500">No images</p>
+                  <p className="text-sm text-muted-foreground">No images</p>
                 ) : (
                   itemUrls.map((url) => (
                     <a
@@ -102,22 +111,28 @@ export function ClaimDetailPanel({
                       href={url}
                       target="_blank"
                       rel="noreferrer"
-                      className="relative block aspect-square overflow-hidden rounded-lg bg-zinc-100 dark:bg-zinc-900"
+                      className="relative block aspect-square overflow-hidden rounded-lg bg-surface-muted"
                     >
                       {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src={url} alt="" className="h-full w-full object-cover" />
+                      <img
+                        src={url}
+                        alt=""
+                        className="h-full w-full object-cover"
+                      />
                     </a>
                   ))
                 )}
               </div>
             </div>
             <div>
-              <p className="mb-2 text-xs font-semibold uppercase text-zinc-500">
+              <p className="mb-2 text-xs font-semibold uppercase text-muted-foreground">
                 Proof photos
               </p>
               <div className="grid grid-cols-2 gap-2">
                 {proofUrls.length === 0 ? (
-                  <p className="text-sm text-zinc-500">No proof images</p>
+                  <p className="text-sm text-muted-foreground">
+                    No proof images
+                  </p>
                 ) : (
                   proofUrls.map((url) => (
                     <a
@@ -125,10 +140,14 @@ export function ClaimDetailPanel({
                       href={url}
                       target="_blank"
                       rel="noreferrer"
-                      className="relative block aspect-square overflow-hidden rounded-lg bg-zinc-100 dark:bg-zinc-900"
+                      className="relative block aspect-square overflow-hidden rounded-lg bg-surface-muted"
                     >
                       {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src={url} alt="" className="h-full w-full object-cover" />
+                      <img
+                        src={url}
+                        alt=""
+                        className="h-full w-full object-cover"
+                      />
                     </a>
                   ))
                 )}
@@ -137,57 +156,64 @@ export function ClaimDetailPanel({
           </div>
 
           <section className="space-y-1 text-sm">
-            <h3 className="font-semibold text-biu-navy dark:text-zinc-100">
-              {item?.title}
-            </h3>
-            <dl className="grid gap-1 text-zinc-700 dark:text-zinc-300">
+            <h3 className="font-semibold text-foreground">{item?.title}</h3>
+            <dl className="grid gap-1 text-foreground">
               <div className="flex gap-2">
-                <dt className="w-24 shrink-0 text-zinc-500">Type</dt>
+                <dt className="w-24 shrink-0 text-muted-foreground">Type</dt>
                 <dd>{item ? TYPE_LABEL[item.type] : "—"}</dd>
               </div>
               <div className="flex gap-2">
-                <dt className="w-24 shrink-0 text-zinc-500">Category</dt>
+                <dt className="w-24 shrink-0 text-muted-foreground">
+                  Category
+                </dt>
                 <dd>{item ? CATEGORY_LABEL[item.category] : "—"}</dd>
               </div>
               <div className="flex gap-2">
-                <dt className="w-24 shrink-0 text-zinc-500">Building</dt>
+                <dt className="w-24 shrink-0 text-muted-foreground">
+                  Building
+                </dt>
                 <dd>{item?.building}</dd>
               </div>
               <div className="flex gap-2">
-                <dt className="w-24 shrink-0 text-zinc-500">Status</dt>
+                <dt className="w-24 shrink-0 text-muted-foreground">Status</dt>
                 <dd>{item ? STATUS_LABEL[item.status] : "—"}</dd>
               </div>
               <div className="flex gap-2">
-                <dt className="w-24 shrink-0 text-zinc-500">Description</dt>
+                <dt className="w-24 shrink-0 text-muted-foreground">
+                  Description
+                </dt>
                 <dd className="whitespace-pre-wrap">{item?.description}</dd>
               </div>
             </dl>
           </section>
 
           <section>
-            <p className="mb-1 text-xs font-semibold uppercase text-zinc-500">
+            <p className="mb-1 text-xs font-semibold uppercase text-muted-foreground">
               Claimant
             </p>
             <p className="text-sm">
-              {user?.name ?? "—"}{" "}
-              <span className="text-zinc-500">({user?.email ?? "—"})</span>
+              {user?.name ?? "—"}
+              {""}
+              <span className="text-muted-foreground">
+                ({user?.email ?? "—"})
+              </span>
             </p>
-            <p className="mt-2 text-xs text-zinc-500">
+            <p className="mt-2 text-xs text-muted-foreground">
               Submitted {format(new Date(claim!.createdAt), "PPpp")}
             </p>
           </section>
 
           <section>
-            <p className="mb-1 text-xs font-semibold uppercase text-zinc-500">
+            <p className="mb-1 text-xs font-semibold uppercase text-muted-foreground">
               Claim message
             </p>
-            <p className="whitespace-pre-wrap text-sm text-zinc-800 dark:text-zinc-200">
+            <p className="whitespace-pre-wrap text-sm text-foreground">
               {claim?.message}
             </p>
           </section>
 
           <section>
-            <label className="mb-1 block text-xs font-semibold uppercase text-zinc-500">
+            <label className="mb-1 block text-xs font-semibold uppercase text-muted-foreground">
               Admin note
             </label>
             <Textarea
@@ -200,10 +226,10 @@ export function ClaimDetailPanel({
           </section>
 
           {claim?.status === "PENDING" ? (
-            <div className="flex flex-wrap gap-2 border-t border-zinc-200 pt-4 dark:border-zinc-800">
+            <div className="flex flex-wrap gap-2 border-t border-border pt-4">
               <button
                 type="button"
-                className="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-emerald-700 disabled:opacity-50"
+                className="rounded-lg bg-found px-4 py-2 text-sm font-semibold text-white transition hover:bg-found/90 disabled:opacity-50"
                 disabled={pending}
                 onClick={() => submit("APPROVE")}
               >
@@ -211,7 +237,7 @@ export function ClaimDetailPanel({
               </button>
               <button
                 type="button"
-                className="rounded-lg border border-red-300 bg-red-50 px-4 py-2 text-sm font-semibold text-red-800 transition hover:bg-red-100 dark:border-red-800 dark:bg-red-950/30 dark:text-red-200 disabled:opacity-50"
+                className="rounded-lg border border-danger/40 bg-danger-muted px-4 py-2 text-sm font-semibold text-danger transition hover:bg-danger-muted disabled:opacity-50"
                 disabled={pending}
                 onClick={() => submit("REJECT")}
               >
@@ -219,12 +245,12 @@ export function ClaimDetailPanel({
               </button>
             </div>
           ) : (
-            <p className="text-sm text-zinc-500">
+            <p className="text-sm text-muted-foreground">
               This claim is {claim?.status.toLowerCase()}.
               {claim?.adminNote ? (
                 <>
                   <br />
-                  <span className="text-zinc-600 dark:text-zinc-400">
+                  <span className="text-muted-foreground">
                     Note: {claim.adminNote}
                   </span>
                 </>

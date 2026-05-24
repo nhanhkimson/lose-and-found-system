@@ -7,7 +7,11 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import type { ItemCategory, ItemStatus, ItemType } from "@prisma/client";
 import { Calendar } from "@/components/ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import {
   CAMPUS_BUILDINGS,
   CATEGORIES,
@@ -47,7 +51,9 @@ export function ItemFilters() {
   const searchParams = useSearchParams();
   const update = useUpdateQuery();
 
-  const typeParam = searchParams.get("type")?.toUpperCase() as ItemType | undefined;
+  const typeParam = searchParams.get("type")?.toUpperCase() as
+    | ItemType
+    | undefined;
   const activeTab =
     typeParam === "LOST" || typeParam === "FOUND" ? typeParam : "all";
 
@@ -64,13 +70,15 @@ export function ItemFilters() {
   const [toOpen, setToOpen] = useState(false);
 
   return (
-    <div className="flex flex-col gap-4 rounded-xl border border-zinc-200 bg-white p-4 dark:border-zinc-800 dark:bg-zinc-950">
-      <div className="flex flex-wrap gap-2" role="tablist" aria-label="Item type">
+    <div className="flex flex-col gap-4 rounded-xl border border-border bg-surface p-4">
+      <div
+        className="flex flex-wrap gap-2"
+        role="tablist"
+        aria-label="Item type"
+      >
         {TABS.map((tab) => {
           const selected =
-            tab.key === "all"
-              ? activeTab === "all"
-              : activeTab === tab.key;
+            tab.key === "all" ? activeTab === "all" : activeTab === tab.key;
           const href =
             tab.param === null
               ? withItemsParams(searchParams, { type: null, page: "1" })
@@ -84,8 +92,8 @@ export function ItemFilters() {
               className={cn(
                 "rounded-lg px-4 py-2 text-sm font-medium transition",
                 selected
-                  ? "bg-biu-gold/15 text-biu-gold ring-2 ring-biu-gold/40"
-                  : "bg-zinc-100 text-zinc-700 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700",
+                  ? "bg-primary/12 text-primary ring-2 ring-primary/40"
+                  : "bg-surface-muted text-foreground hover:bg-surface-muted",
               )}
             >
               {tab.label}
@@ -95,10 +103,10 @@ export function ItemFilters() {
       </div>
 
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        <label className="flex flex-col gap-1 text-xs font-medium text-zinc-600 dark:text-zinc-400">
+        <label className="flex flex-col gap-1 text-xs font-medium text-muted-foreground">
           Category
           <select
-            className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
+            className="rounded-lg border border-border bg-surface px-3 py-2 text-sm text-foreground"
             value={category}
             onChange={(e) =>
               update({
@@ -115,10 +123,10 @@ export function ItemFilters() {
           </select>
         </label>
 
-        <label className="flex flex-col gap-1 text-xs font-medium text-zinc-600 dark:text-zinc-400">
+        <label className="flex flex-col gap-1 text-xs font-medium text-muted-foreground">
           Building
           <select
-            className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
+            className="rounded-lg border border-border bg-surface px-3 py-2 text-sm text-foreground"
             value={building}
             onChange={(e) =>
               update({
@@ -135,10 +143,10 @@ export function ItemFilters() {
           </select>
         </label>
 
-        <label className="flex flex-col gap-1 text-xs font-medium text-zinc-600 dark:text-zinc-400">
+        <label className="flex flex-col gap-1 text-xs font-medium text-muted-foreground">
           Status
           <select
-            className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
+            className="rounded-lg border border-border bg-surface px-3 py-2 text-sm text-foreground"
             value={status}
             onChange={(e) =>
               update({
@@ -156,7 +164,7 @@ export function ItemFilters() {
         </label>
 
         <div className="flex flex-col gap-1 sm:col-span-2 lg:col-span-1">
-          <span className="text-xs font-medium text-zinc-600 dark:text-zinc-400">
+          <span className="text-xs font-medium text-muted-foreground">
             Date range
           </span>
           <div className="flex flex-wrap gap-2">
@@ -165,11 +173,11 @@ export function ItemFilters() {
                 <button
                   type="button"
                   className={cn(
-                    "inline-flex min-w-[8.5rem] items-center justify-start gap-2 rounded-lg border border-zinc-300 bg-white px-3 py-2 text-left text-sm dark:border-zinc-700 dark:bg-zinc-900",
-                    !dateFrom && "text-zinc-500",
+                    "inline-flex min-w-[8.5rem] items-center justify-start gap-2 rounded-lg border border-border bg-surface px-3 py-2 text-left text-sm",
+                    !dateFrom && "text-muted-foreground",
                   )}
                 >
-                  <CalendarIcon className="h-4 w-4 shrink-0 text-biu-gold" />
+                  <CalendarIcon className="h-4 w-4 shrink-0 text-primary" />
                   {dateFrom ? format(dateFrom, "MMM d, yyyy") : "From"}
                 </button>
               </PopoverTrigger>
@@ -192,11 +200,11 @@ export function ItemFilters() {
                 <button
                   type="button"
                   className={cn(
-                    "inline-flex min-w-[8.5rem] items-center justify-start gap-2 rounded-lg border border-zinc-300 bg-white px-3 py-2 text-left text-sm dark:border-zinc-700 dark:bg-zinc-900",
-                    !dateTo && "text-zinc-500",
+                    "inline-flex min-w-[8.5rem] items-center justify-start gap-2 rounded-lg border border-border bg-surface px-3 py-2 text-left text-sm",
+                    !dateTo && "text-muted-foreground",
                   )}
                 >
-                  <CalendarIcon className="h-4 w-4 shrink-0 text-biu-gold" />
+                  <CalendarIcon className="h-4 w-4 shrink-0 text-primary" />
                   {dateTo ? format(dateTo, "MMM d, yyyy") : "To"}
                 </button>
               </PopoverTrigger>
@@ -217,10 +225,10 @@ export function ItemFilters() {
         </div>
       </div>
 
-      <div className="flex justify-end border-t border-zinc-100 pt-3 dark:border-zinc-800">
+      <div className="flex justify-end border-t border-border-subtle pt-3">
         <Link
           href="/items"
-          className="inline-flex items-center gap-1.5 rounded-lg border border-zinc-300 px-3 py-2 text-sm font-medium text-zinc-700 transition hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
+          className="inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-2 text-sm font-medium text-foreground transition hover:bg-surface-muted"
         >
           <X className="h-4 w-4" />
           Clear filters

@@ -8,13 +8,17 @@ import type {
   ItemType,
   UserRole,
 } from "@prisma/client";
-import { differenceInCalendarDays, endOfMonth, format, startOfDay, startOfMonth, subDays } from "date-fns";
+import {
+  differenceInCalendarDays,
+  endOfMonth,
+  format,
+  startOfDay,
+  startOfMonth,
+  subDays,
+} from "date-fns";
 import { z } from "zod";
 import { auth } from "@/lib/auth";
-import {
-  sendClaimApprovedEmail,
-  sendClaimRejectedEmail,
-} from "@/lib/mail";
+import { sendClaimApprovedEmail, sendClaimRejectedEmail } from "@/lib/mail";
 import { prisma } from "@/lib/prisma";
 import { buildGalleryUrls } from "@/lib/utils/item-gallery";
 import type { ActionResult } from "@/types";
@@ -183,8 +187,7 @@ export async function listAdminClaims(
   status?: ClaimStatus | "ALL",
 ): Promise<AdminClaimRow[] | null> {
   if (!(await assertAdmin())) return null;
-  const where =
-    status && status !== "ALL" ? { status } : undefined;
+  const where = status && status !== "ALL" ? { status } : undefined;
   const rows = await prisma.claim.findMany({
     where,
     orderBy: { createdAt: "desc" },
@@ -277,9 +280,7 @@ const reviewSchema = z.object({
   adminNote: z.string().max(2000).optional(),
 });
 
-export async function reviewClaim(
-  input: unknown,
-): Promise<ActionResult<void>> {
+export async function reviewClaim(input: unknown): Promise<ActionResult<void>> {
   const session = await assertAdmin();
   if (!session) {
     return { success: false, error: "Unauthorized" };
@@ -303,7 +304,8 @@ export async function reviewClaim(
     return { success: false, error: "Claim is no longer pending" };
   }
 
-  const newStatus: ClaimStatus = decision === "APPROVE" ? "APPROVED" : "REJECTED";
+  const newStatus: ClaimStatus =
+    decision === "APPROVE" ? "APPROVED" : "REJECTED";
   const now = new Date();
 
   await prisma.$transaction(async (tx) => {
@@ -475,7 +477,10 @@ export async function adminUpdateUserRole(
     return { success: false, error: "Unauthorized" };
   }
   if (userId === session.user.id) {
-    return { success: false, error: "You cannot change your own role from here" };
+    return {
+      success: false,
+      error: "You cannot change your own role from here",
+    };
   }
   await prisma.user.update({
     where: { id: userId },

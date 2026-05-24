@@ -38,7 +38,7 @@ export function ItemSearch() {
   return (
     <div className="relative w-full">
       <Search
-        className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-400"
+        className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-subtle-foreground"
         aria-hidden
       />
       <input
@@ -48,15 +48,15 @@ export function ItemSearch() {
         onChange={(e) => setValue(e.target.value)}
         placeholder="Search title or description…"
         className={cn(
-          "w-full rounded-lg border border-zinc-300 bg-white py-2.5 pl-10 pr-10 text-sm text-zinc-900 outline-none ring-biu-gold/30 focus:border-biu-gold focus:ring-2",
-          "dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100",
+          "w-full rounded-lg border border-border bg-surface py-2.5 pl-10 pr-10 text-sm text-foreground outline-none ring-primary/30 focus:border-primary focus:ring-2",
+          "dark:border-border",
         )}
         autoComplete="off"
         aria-busy={isDebouncing}
       />
       {isDebouncing ? (
         <Loader2
-          className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 animate-spin text-biu-gold"
+          className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 animate-spin text-primary"
           aria-hidden
         />
       ) : null}

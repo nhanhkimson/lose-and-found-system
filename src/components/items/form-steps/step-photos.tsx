@@ -18,9 +18,7 @@ export function StepPhotos() {
   return (
     <div className="space-y-6">
       <div>
-        <p className="mb-1.5 text-sm font-medium text-zinc-700 dark:text-zinc-300">
-          Photos
-        </p>
+        <p className="mb-1.5 text-sm font-medium text-foreground">Photos</p>
         <Controller
           name="imageUrls"
           control={control}
@@ -29,7 +27,7 @@ export function StepPhotos() {
           )}
         />
         {errors.imageUrls ? (
-          <p className="mt-1 text-xs text-red-600 dark:text-red-400">
+          <p className="mt-1 text-xs text-danger">
             {errors.imageUrls.message as string}
           </p>
         ) : null}
@@ -46,29 +44,33 @@ export function StepPhotos() {
         </div>
       ) : null}
 
-      <div className="space-y-3 rounded-lg border border-zinc-200/80 p-4 dark:border-zinc-800">
-        <label className="flex cursor-pointer items-start gap-3 text-sm text-zinc-700 dark:text-zinc-300">
+      <div className="space-y-3 rounded-lg border border-border p-4">
+        <label className="flex cursor-pointer items-start gap-3 text-sm text-foreground">
           <input
             type="checkbox"
-            className="mt-0.5 h-4 w-4 rounded border-zinc-300 text-biu-gold focus:ring-biu-gold/40"
+            className="mt-0.5 h-4 w-4 rounded border-border text-primary focus:ring-primary/40"
             {...register("notifyOnMatch")}
           />
           <span>
-            <span className="font-medium">Email me if a close match is posted</span>
-            <span className="mt-0.5 block text-xs text-zinc-500">
+            <span className="font-medium">
+              Email me if a close match is posted
+            </span>
+            <span className="mt-0.5 block text-xs text-muted-foreground">
               We use your account email for notifications.
             </span>
           </span>
         </label>
-        <label className="flex cursor-pointer items-start gap-3 text-sm text-zinc-700 dark:text-zinc-300">
+        <label className="flex cursor-pointer items-start gap-3 text-sm text-foreground">
           <input
             type="checkbox"
-            className="mt-0.5 h-4 w-4 rounded border-zinc-300 text-biu-gold focus:ring-biu-gold/40"
+            className="mt-0.5 h-4 w-4 rounded border-border text-primary focus:ring-primary/40"
             {...register("allowContact")}
           />
           <span>
-            <span className="font-medium">Allow contact on the public listing</span>
-            <span className="mt-0.5 block text-xs text-zinc-500">
+            <span className="font-medium">
+              Allow contact on the public listing
+            </span>
+            <span className="mt-0.5 block text-xs text-muted-foreground">
               If unchecked, your email is not shown to other students.
             </span>
           </span>

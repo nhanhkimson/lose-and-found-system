@@ -39,10 +39,7 @@ export const itemReportFormSchema = z
     color: z.string().max(120).default(""),
     brand: z.string().max(120).default(""),
     building: z.string().min(1, "Select a building"),
-    roomHint: z
-      .string()
-      .min(1, "Describe the specific location")
-      .max(2000),
+    roomHint: z.string().min(1, "Describe the specific location").max(2000),
     eventDate: z.coerce.date().refine((d) => isValid(d), "Choose a date"),
     timeApprox: z.string().max(200).default(""),
     foundDisposition: z

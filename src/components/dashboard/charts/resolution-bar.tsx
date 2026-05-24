@@ -41,14 +41,21 @@ export function ResolutionBarChart({ data }: ResolutionBarProps) {
               layout="vertical"
               margin={{ top: 8, right: 16, left: 8, bottom: 8 }}
             >
-              <CartesianGrid strokeDasharray="3 3" className="stroke-zinc-200 dark:stroke-zinc-800" />
-              <XAxis type="number" domain={[0, 100]} tick={{ fontSize: 10 }} unit="%" />
+              <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
+              <XAxis
+                type="number"
+                domain={[0, 100]}
+                tick={{ fontSize: 10 }}
+                unit="%"
+              />
               <YAxis
                 type="category"
                 dataKey="label"
                 width={100}
                 tick={{ fontSize: 10 }}
-                tickFormatter={(v) => (String(v).length > 14 ? `${String(v).slice(0, 12)}…` : v)}
+                tickFormatter={(v) =>
+                  String(v).length > 14 ? `${String(v).slice(0, 12)}…` : v
+                }
               />
               <Tooltip
                 contentStyle={{
@@ -57,7 +64,9 @@ export function ResolutionBarChart({ data }: ResolutionBarProps) {
                   borderRadius: "8px",
                 }}
                 formatter={(v) => [`${Number(v ?? 0)}%`, "Resolution"]}
-                labelFormatter={(_, p) => String((p?.[0]?.payload as { label?: string })?.label ?? "")}
+                labelFormatter={(_, p) =>
+                  String((p?.[0]?.payload as { label?: string })?.label ?? "")
+                }
               />
               <Bar
                 dataKey="rate"

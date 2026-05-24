@@ -26,7 +26,9 @@ const notificationSelect = {
   createdAt: true,
 } as const;
 
-export async function getUserNotifications(): Promise<NotificationRow[] | null> {
+export async function getUserNotifications(): Promise<
+  NotificationRow[] | null
+> {
   const session = await auth();
   if (!session?.user?.id) return null;
   return prisma.notification.findMany({
@@ -52,7 +54,10 @@ export async function createNotification(
     return { success: false, error: "Unauthorized" };
   }
   if (input.userId !== session.user.id && session.user.role !== "ADMIN") {
-    return { success: false, error: "Cannot create notification for another user" };
+    return {
+      success: false,
+      error: "Cannot create notification for another user",
+    };
   }
   const row = await prisma.notification.create({
     data: {
@@ -69,9 +74,7 @@ export async function createNotification(
   return { success: true, data: { id: row.id } };
 }
 
-export async function markAsRead(
-  id: string,
-): Promise<ActionResult<void>> {
+export async function markAsRead(id: string): Promise<ActionResult<void>> {
   const session = await auth();
   if (!session?.user?.id) {
     return { success: false, error: "Unauthorized" };

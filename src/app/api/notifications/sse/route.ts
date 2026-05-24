@@ -6,20 +6,20 @@ export const runtime = "nodejs";
 /**
  * @swagger
  * /api/notifications/sse:
- *   get:
- *     tags: [Notifications]
- *     summary: Notification unread count stream (SSE alias)
- *     description: Alias of /api/notifications/stream. Returns text/event-stream with unread count updates.
- *     responses:
- *       200:
- *         description: SSE stream opened.
- *         content:
- *           text/event-stream:
- *             schema:
- *               type: string
- *               example: "data: {\"type\":\"unread\",\"unreadCount\":3}"
- *       401:
- *         description: Unauthorized.
+ * get:
+ * tags: [Notifications]
+ * summary: Notification unread count stream (SSE alias)
+ * description: Alias of /api/notifications/stream. Returns text/event-stream with unread count updates.
+ * responses:
+ * 200:
+ * description: SSE stream opened.
+ * content:
+ * text/event-stream:
+ * schema:
+ * type: string
+ * example:"data: {\"type\":\"unread\",\"unreadCount\":3}"
+ * 401:
+ * description: Unauthorized.
  */
 export async function GET(req: Request) {
   const session = await auth();
@@ -33,9 +33,7 @@ export async function GET(req: Request) {
   const stream = new ReadableStream({
     async start(controller) {
       const write = (obj: object) => {
-        controller.enqueue(
-          encoder.encode(`data: ${JSON.stringify(obj)}\n\n`),
-        );
+        controller.enqueue(encoder.encode(`data: ${JSON.stringify(obj)}\n\n`));
       };
 
       const sendUnread = async () => {

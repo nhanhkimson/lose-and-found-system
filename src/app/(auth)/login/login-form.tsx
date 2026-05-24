@@ -75,10 +75,8 @@ export function LoginForm() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-lg font-semibold text-biu-navy dark:text-zinc-100">
-          Sign in
-        </h2>
-        <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
+        <h2 className="text-lg font-semibold text-foreground">Sign in</h2>
+        <p className="mt-1 text-sm text-muted-foreground">
           Use your campus email or Google.
         </p>
       </div>
@@ -86,7 +84,7 @@ export function LoginForm() {
         <div>
           <label
             htmlFor="email"
-            className="mb-1 block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+            className="mb-1 block text-sm font-medium text-foreground"
           >
             Email
           </label>
@@ -95,13 +93,13 @@ export function LoginForm() {
             type="email"
             autoComplete="email"
             className={cn(
-              "w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 outline-none ring-biu-gold/40 focus:ring-2 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100",
-              errors.email && "border-red-500 focus:ring-red-500/30",
+              "w-full rounded-lg border border-border bg-surface px-3 py-2 text-sm text-foreground outline-none ring-primary/40 focus:ring-2",
+              errors.email && "border-danger focus:ring-danger/30",
             )}
             {...register("email")}
           />
           {errors.email ? (
-            <p className="mt-1 text-sm text-red-600 dark:text-red-400" role="alert">
+            <p className="mt-1 text-sm text-danger" role="alert">
               {errors.email.message}
             </p>
           ) : null}
@@ -109,7 +107,7 @@ export function LoginForm() {
         <div>
           <label
             htmlFor="password"
-            className="mb-1 block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+            className="mb-1 block text-sm font-medium text-foreground"
           >
             Password
           </label>
@@ -118,13 +116,13 @@ export function LoginForm() {
             type="password"
             autoComplete="current-password"
             className={cn(
-              "w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 outline-none ring-biu-gold/40 focus:ring-2 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100",
-              errors.password && "border-red-500 focus:ring-red-500/30",
+              "w-full rounded-lg border border-border bg-surface px-3 py-2 text-sm text-foreground outline-none ring-primary/40 focus:ring-2",
+              errors.password && "border-danger focus:ring-danger/30",
             )}
             {...register("password")}
           />
           {errors.password ? (
-            <p className="mt-1 text-sm text-red-600 dark:text-red-400" role="alert">
+            <p className="mt-1 text-sm text-danger" role="alert">
               {errors.password.message}
             </p>
           ) : null}
@@ -132,7 +130,7 @@ export function LoginForm() {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="flex w-full items-center justify-center gap-2 rounded-lg bg-biu-gold py-2.5 text-sm font-semibold text-white transition hover:opacity-95 disabled:cursor-not-allowed disabled:opacity-60"
+          className="flex w-full items-center justify-center gap-2 rounded-lg bg-primary py-2.5 text-sm font-semibold text-white transition hover:opacity-95 disabled:cursor-not-allowed disabled:opacity-60"
         >
           {isSubmitting ? (
             <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
@@ -142,10 +140,10 @@ export function LoginForm() {
       </form>
       <div className="relative">
         <div className="absolute inset-0 flex items-center" aria-hidden>
-          <div className="w-full border-t border-zinc-200 dark:border-zinc-800" />
+          <div className="w-full border-t border-border" />
         </div>
         <div className="relative flex justify-center text-xs uppercase">
-          <span className="bg-white px-2 text-zinc-500 dark:bg-zinc-950">
+          <span className="bg-surface px-2 text-muted-foreground">
             Or continue with
           </span>
         </div>
@@ -153,16 +151,16 @@ export function LoginForm() {
       <button
         type="button"
         onClick={onGoogle}
-        className="flex w-full items-center justify-center gap-2 rounded-lg border border-zinc-300 bg-white py-2.5 text-sm font-medium text-zinc-800 transition hover:bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100 dark:hover:bg-zinc-800"
+        className="flex w-full items-center justify-center gap-2 rounded-lg border border-border bg-surface py-2.5 text-sm font-medium text-foreground transition hover:bg-surface-muted"
       >
-        <span className="text-zinc-700 dark:text-zinc-200">{googleIcon}</span>
+        <span className="text-foreground">{googleIcon}</span>
         Sign in with Google
       </button>
-      <p className="text-center text-sm text-zinc-600 dark:text-zinc-400">
-        No account?{" "}
+      <p className="text-center text-sm text-muted-foreground">
+        No account?{""}
         <Link
           href="/register"
-          className="font-semibold text-biu-gold hover:underline"
+          className="font-semibold text-primary hover:underline"
         >
           Create one
         </Link>

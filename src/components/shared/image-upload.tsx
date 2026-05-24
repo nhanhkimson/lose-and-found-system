@@ -24,7 +24,12 @@ type ImageUploadProps = {
   className?: string;
 };
 
-export function ImageUpload({ value, onChange, disabled, className }: ImageUploadProps) {
+export function ImageUpload({
+  value,
+  onChange,
+  disabled,
+  className,
+}: ImageUploadProps) {
   const id = useId();
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [isUploading, setIsUploading] = useState(false);
@@ -39,7 +44,9 @@ export function ImageUpload({ value, onChange, disabled, className }: ImageUploa
 
       const allowedFiles = files.slice(0, remaining);
       if (files.length > remaining) {
-        toast.error(`Only ${remaining} more image${remaining === 1 ? "" : "s"} allowed.`);
+        toast.error(
+          `Only ${remaining} more image${remaining === 1 ? "" : "s"} allowed.`,
+        );
       }
 
       setIsUploading(true);
@@ -91,13 +98,16 @@ export function ImageUpload({ value, onChange, disabled, className }: ImageUploa
     [handleFiles],
   );
 
-  const onDragOver = useCallback((event: DragEvent<HTMLDivElement>) => {
-    event.preventDefault();
-    event.stopPropagation();
-    if (!disabled && !isUploading) {
-      setIsDragActive(true);
-    }
-  }, [disabled, isUploading]);
+  const onDragOver = useCallback(
+    (event: DragEvent<HTMLDivElement>) => {
+      event.preventDefault();
+      event.stopPropagation();
+      if (!disabled && !isUploading) {
+        setIsDragActive(true);
+      }
+    },
+    [disabled, isUploading],
+  );
 
   const onDragLeave = useCallback((event: DragEvent<HTMLDivElement>) => {
     event.preventDefault();
@@ -114,7 +124,7 @@ export function ImageUpload({ value, onChange, disabled, className }: ImageUploa
 
   return (
     <div className={cn("space-y-3", className)}>
-      <p id={`${id}-help`} className="text-xs text-zinc-500">
+      <p id={`${id}-help`} className="text-xs text-muted-foreground">
         Up to {MAX_FILES} images, {MAX_MB}MB each. JPEG or PNG.
       </p>
 
@@ -123,7 +133,7 @@ export function ImageUpload({ value, onChange, disabled, className }: ImageUploa
           {value.map((url) => (
             <li
               key={url}
-              className="group relative aspect-4/3 overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-700"
+              className="group relative aspect-4/3 overflow-hidden rounded-lg border border-border"
             >
               <Image
                 src={url}
@@ -150,11 +160,13 @@ export function ImageUpload({ value, onChange, disabled, className }: ImageUploa
       {canAdd ? (
         <div
           className={cn(
-            "w-full rounded-xl border-2 border-dashed border-zinc-300 bg-zinc-50/50 p-6 transition",
-            "dark:border-zinc-600 dark:bg-zinc-900/40",
-            !disabled && !isUploading && "cursor-pointer hover:border-biu-gold/60 hover:bg-biu-gold/5",
+            "w-full rounded-xl border-2 border-dashed border-border bg-surface-muted/50 p-6 transition",
+            "dark:border-border/40",
+            !disabled &&
+              !isUploading &&
+              "cursor-pointer hover:border-primary/60 hover:bg-primary/5",
             (disabled || isUploading) && "pointer-events-none opacity-70",
-            isDragActive && "border-biu-gold bg-biu-gold/10",
+            isDragActive && "border-primary bg-primary/10",
           )}
           onDrop={onDrop}
           onDragOver={onDragOver}
@@ -163,7 +175,7 @@ export function ImageUpload({ value, onChange, disabled, className }: ImageUploa
           aria-disabled={disabled || isUploading}
           tabIndex={disabled ? -1 : 0}
           onKeyDown={(event) => {
-            if (event.key === "Enter" || event.key === " ") {
+            if (event.key === "Enter" || event.key === "") {
               event.preventDefault();
               inputRef.current?.click();
             }
@@ -179,8 +191,8 @@ export function ImageUpload({ value, onChange, disabled, className }: ImageUploa
             className="hidden"
             onChange={onPickFiles}
           />
-          <div className="flex w-full flex-col items-center justify-center gap-2 text-sm text-zinc-600 dark:text-zinc-300">
-            <Upload className="h-8 w-8 text-biu-gold" />
+          <div className="flex w-full flex-col items-center justify-center gap-2 text-sm text-muted-foreground">
+            <Upload className="h-8 w-8 text-primary" />
             <div className="w-full text-center">
               {isUploading ? (
                 <span className="inline-flex items-center gap-2">
@@ -197,14 +209,14 @@ export function ImageUpload({ value, onChange, disabled, className }: ImageUploa
               )}
               {isUploading ? (
                 <div
-                  className="mx-auto mt-3 h-1.5 w-full max-w-xs overflow-hidden rounded-full bg-zinc-200 dark:bg-zinc-700"
+                  className="mx-auto mt-3 h-1.5 w-full max-w-xs overflow-hidden rounded-full bg-surface-muted"
                   role="progressbar"
                   aria-valuenow={uploadProgress}
                   aria-valuemin={0}
                   aria-valuemax={100}
                 >
                   <div
-                    className="h-full rounded-full bg-biu-gold transition-all"
+                    className="h-full rounded-full bg-primary transition-all"
                     style={{ width: `${uploadProgress}%` }}
                   />
                 </div>

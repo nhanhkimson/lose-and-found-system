@@ -125,8 +125,7 @@ export async function getItems(
       }
     }
 
-    const where: Prisma.ItemWhereInput =
-      and.length > 0 ? { AND: and } : {};
+    const where: Prisma.ItemWhereInput = and.length > 0 ? { AND: and } : {};
 
     const [total, rows] = await Promise.all([
       prisma.item.count({ where }),
@@ -231,13 +230,19 @@ export async function createItem(
 ): Promise<ActionResult<{ id: string }>> {
   const session = await auth();
   if (!session?.user?.id) {
-    return { success: false, error: "You must be signed in to post a listing." };
+    return {
+      success: false,
+      error: "You must be signed in to post a listing.",
+    };
   }
 
   const parsed = itemReportFormSchema.safeParse(input);
   if (!parsed.success) {
     const first = parsed.error.issues[0];
-    return { success: false, error: first?.message ?? "Check the form and try again." };
+    return {
+      success: false,
+      error: first?.message ?? "Check the form and try again.",
+    };
   }
   const d = parsed.data;
 
@@ -266,9 +271,9 @@ export async function createItem(
         imageUrl,
         imageUrls: imageRest,
         eventDate: d.eventDate,
-        timeApprox: d.type === "LOST" ? (d.timeApprox?.trim() || null) : null,
+        timeApprox: d.type === "LOST" ? d.timeApprox?.trim() || null : null,
         foundDisposition: d.type === "FOUND" ? d.foundDisposition! : null,
-        reward: d.type === "LOST" ? (d.reward?.trim() || null) : null,
+        reward: d.type === "LOST" ? d.reward?.trim() || null : null,
         notifyOnMatch: d.notifyOnMatch,
         allowContact: d.allowContact,
       },

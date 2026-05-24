@@ -1,12 +1,32 @@
 const STOP = new Set([
-  "a", "an", "the", "and", "or", "in", "on", "at", "to", "for", "of", "with", "is", "it",
-  "laptop", "phone", "black", "white", "blue", "red", "small", "big",
+  "a",
+  "an",
+  "the",
+  "and",
+  "or",
+  "in",
+  "on",
+  "at",
+  "to",
+  "for",
+  "of",
+  "with",
+  "is",
+  "it",
+  "laptop",
+  "phone",
+  "black",
+  "white",
+  "blue",
+  "red",
+  "small",
+  "big",
 ]);
 
 function tokenize(s: string): string[] {
   return s
     .toLowerCase()
-    .replace(/[^a-z0-9äöüéàèùâêîôûç\s]/gi, " ")
+    .replace(/[^a-z0-9äöüéàèùâêîôûç\s]/gi, "")
     .split(/\s+/)
     .map((t) => t.trim())
     .filter((t) => t.length > 1 && !STOP.has(t));
@@ -42,10 +62,10 @@ export type SuggestionSide = "LOST" | "FOUND";
 
 export function confidenceBadgeClass(percent: number): string {
   if (percent >= 70) {
-    return "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-200";
+    return "bg-found-muted text-found-foreground";
   }
   if (percent >= 50) {
-    return "bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-200";
+    return "bg-warning-muted text-warning";
   }
-  return "bg-zinc-200 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-200";
+  return "bg-surface-muted text-foreground";
 }

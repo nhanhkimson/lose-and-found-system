@@ -25,11 +25,11 @@ export function StepDetails() {
           id="title"
           autoComplete="off"
           aria-invalid={!!errors.title}
-          className={cn(errors.title && "border-red-500 focus:ring-red-500/30")}
+          className={cn(errors.title && "border-danger focus:ring-danger/30")}
           {...register("title")}
         />
         {errors.title ? (
-          <p className="mt-1 text-xs text-red-600 dark:text-red-400">
+          <p className="mt-1 text-xs text-danger">
             {errors.title.message as string}
           </p>
         ) : null}
@@ -43,11 +43,13 @@ export function StepDetails() {
           id="description"
           rows={5}
           aria-invalid={!!errors.description}
-          className={cn(errors.description && "border-red-500 focus:ring-red-500/30")}
+          className={cn(
+            errors.description && "border-danger focus:ring-danger/30",
+          )}
           {...register("description")}
         />
         {errors.description ? (
-          <p className="mt-1 text-xs text-red-600 dark:text-red-400">
+          <p className="mt-1 text-xs text-danger">
             {errors.description.message as string}
           </p>
         ) : null}
@@ -60,7 +62,9 @@ export function StepDetails() {
         <SelectNative
           id="category"
           aria-invalid={!!errors.category}
-          className={cn(errors.category && "border-red-500 focus:ring-red-500/30")}
+          className={cn(
+            errors.category && "border-danger focus:ring-danger/30",
+          )}
           {...register("category")}
         >
           {CATEGORIES.map((c) => (
@@ -70,7 +74,7 @@ export function StepDetails() {
           ))}
         </SelectNative>
         {errors.category ? (
-          <p className="mt-1 text-xs text-red-600 dark:text-red-400">
+          <p className="mt-1 text-xs text-danger">
             {errors.category.message as string}
           </p>
         ) : null}

@@ -35,7 +35,7 @@ export function StepReview({
   return (
     <div className="space-y-6">
       <div
-        className="rounded-xl border border-zinc-200/80 bg-zinc-50/80 p-4 text-sm dark:border-zinc-800 dark:bg-zinc-900/40"
+        className="rounded-xl border border-border bg-surface-muted/80 p-4 text-sm/40"
         role="region"
         aria-label="Summary"
       >
@@ -62,8 +62,9 @@ export function StepReview({
           <ReviewRow
             label="Color / brand"
             value={
-              [values.color?.trim(), values.brand?.trim()].filter(Boolean).join(" · ") ||
-              "—"
+              [values.color?.trim(), values.brand?.trim()]
+                .filter(Boolean)
+                .join(" ·") || "—"
             }
             onEdit={() => onEditStep(0)}
             stepName={STEP_LABELS[0]}
@@ -141,15 +142,15 @@ export function StepReview({
       </div>
 
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <p className="text-xs text-zinc-500">
-          By submitting, you confirm the information is honest to the best of your
-          knowledge.
+        <p className="text-xs text-muted-foreground">
+          By submitting, you confirm the information is honest to the best of
+          your knowledge.
         </p>
         <button
           type="button"
           onClick={onSubmitItem}
           disabled={isSubmitting}
-          className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-biu-gold px-4 py-2.5 text-sm font-semibold text-biu-navy transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
+          className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
         >
           {isSubmitting ? (
             <Loader2 className="h-4 w-4 animate-spin" />
@@ -179,15 +180,15 @@ function ReviewRow({
   return (
     <div
       className={cn(
-        "border-b border-zinc-200/80 pb-3 last:border-0 last:pb-0 dark:border-zinc-800/80",
+        "border-b border-border pb-3 last:border-0 last:pb-0/80",
         multiline && "sm:grid sm:grid-cols-[7rem,1fr,auto] sm:gap-2",
         !multiline && "flex flex-wrap items-baseline justify-between gap-2",
       )}
     >
-      <dt className="font-medium text-zinc-600 dark:text-zinc-400">{label}</dt>
+      <dt className="font-medium text-muted-foreground">{label}</dt>
       <dd
         className={cn(
-          "min-w-0 text-zinc-900 dark:text-zinc-100",
+          "min-w-0 text-foreground",
           multiline && "col-span-1 col-start-2 sm:col-start-2",
         )}
       >
@@ -201,7 +202,7 @@ function ReviewRow({
         <button
           type="button"
           onClick={onEdit}
-          className="text-sm font-medium text-biu-gold hover:underline"
+          className="text-sm font-medium text-primary hover:underline"
         >
           Edit {stepName}
         </button>

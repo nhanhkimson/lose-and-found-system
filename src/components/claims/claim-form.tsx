@@ -90,7 +90,9 @@ export function ClaimFormContent({ itemId, onSuccess }: ClaimFormContentProps) {
 
     const toUpload = files.slice(0, slotsLeft);
     if (files.length > slotsLeft) {
-      toast.error(`Only ${slotsLeft} more photo${slotsLeft === 1 ? "" : "s"} allowed.`);
+      toast.error(
+        `Only ${slotsLeft} more photo${slotsLeft === 1 ? "" : "s"} allowed.`,
+      );
     }
 
     setIsUploadingProof(true);
@@ -104,7 +106,9 @@ export function ClaimFormContent({ itemId, onSuccess }: ClaimFormContentProps) {
       }
     } catch (error: unknown) {
       const message =
-        error instanceof Error ? error.message : "Failed to upload proof photos.";
+        error instanceof Error
+          ? error.message
+          : "Failed to upload proof photos.";
       toast.error(message);
     } finally {
       setIsUploadingProof(false);
@@ -141,14 +145,14 @@ export function ClaimFormContent({ itemId, onSuccess }: ClaimFormContentProps) {
 
   return (
     <form onSubmit={onSubmit} className="space-y-5" noValidate>
-      <p className="text-sm text-zinc-600 dark:text-zinc-400">
-        Describe how you can prove this is yours (or that you found the item). Be
-        specific — e.g. serial numbers, marks, or where you last saw it.
+      <p className="text-sm text-muted-foreground">
+        Describe how you can prove this is yours (or that you found the item).
+        Be specific — e.g. serial numbers, marks, or where you last saw it.
       </p>
       <div>
         <label
           htmlFor="claim-message"
-          className="mb-1 block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+          className="mb-1 block text-sm font-medium text-foreground"
         >
           Your explanation
         </label>
@@ -156,19 +160,21 @@ export function ClaimFormContent({ itemId, onSuccess }: ClaimFormContentProps) {
           id="claim-message"
           rows={5}
           className={cn(
-            "w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 outline-none ring-biu-gold/40 focus:ring-2 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100",
-            errors.message && "border-red-500 focus:ring-red-500/30",
+            "w-full rounded-lg border border-border bg-surface px-3 py-2 text-sm text-foreground outline-none ring-primary/40 focus:ring-2",
+            errors.message && "border-danger focus:ring-danger/30",
           )}
           {...register("message")}
         />
-        <div className="mt-1 flex justify-between text-xs text-zinc-500">
+        <div className="mt-1 flex justify-between text-xs text-muted-foreground">
           <span>{errors.message?.message as string | undefined}</span>
-          {remaining > 0 ? <span>At least {remaining} more characters</span> : null}
+          {remaining > 0 ? (
+            <span>At least {remaining} more characters</span>
+          ) : null}
         </div>
       </div>
 
       <div>
-        <p className="mb-2 text-sm font-medium text-zinc-700 dark:text-zinc-300">
+        <p className="mb-2 text-sm font-medium text-foreground">
           Proof photos (optional, up to 3)
         </p>
         {proofUrls.length < 3 ? (
@@ -185,7 +191,7 @@ export function ClaimFormContent({ itemId, onSuccess }: ClaimFormContentProps) {
               type="button"
               onClick={() => proofInputRef.current?.click()}
               disabled={isUploadingProof}
-              className="inline-flex items-center justify-center rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm font-medium text-zinc-700 transition hover:bg-zinc-50 disabled:cursor-not-allowed disabled:opacity-60 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-200 dark:hover:bg-zinc-800"
+              className="inline-flex items-center justify-center rounded-md border border-border bg-surface px-3 py-2 text-sm font-medium text-foreground transition hover:bg-surface-muted disabled:cursor-not-allowed disabled:opacity-60"
             >
               {isUploadingProof ? (
                 <span className="inline-flex items-center gap-2">
@@ -203,12 +209,20 @@ export function ClaimFormContent({ itemId, onSuccess }: ClaimFormContentProps) {
             {proofUrls.map((url) => (
               <li
                 key={url}
-                className="group relative h-20 w-24 overflow-hidden rounded-md border border-zinc-200 dark:border-zinc-700"
+                className="group relative h-20 w-24 overflow-hidden rounded-md border border-border"
               >
-                <Image src={url} alt="" fill className="object-cover" unoptimized />
+                <Image
+                  src={url}
+                  alt=""
+                  fill
+                  className="object-cover"
+                  unoptimized
+                />
                 <button
                   type="button"
-                  onClick={() => setProofUrls((p) => p.filter((u) => u !== url))}
+                  onClick={() =>
+                    setProofUrls((p) => p.filter((u) => u !== url))
+                  }
                   className="absolute right-0 top-0 rounded-bl bg-black/50 px-1.5 text-xs text-white opacity-0 transition group-hover:opacity-100"
                 >
                   Remove
@@ -217,13 +231,15 @@ export function ClaimFormContent({ itemId, onSuccess }: ClaimFormContentProps) {
             ))}
           </ul>
         ) : null}
-        <p className="mt-1 text-xs text-zinc-500">JPEG or PNG, max 4MB each</p>
+        <p className="mt-1 text-xs text-muted-foreground">
+          JPEG or PNG, max 4MB each
+        </p>
       </div>
 
       <button
         type="submit"
         disabled={isSubmitting}
-        className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-biu-gold px-4 py-2.5 text-sm font-semibold text-biu-navy transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+        className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
       >
         {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
         Submit claim
@@ -245,8 +261,8 @@ export function ItemClaimPanel({ item }: ItemClaimPanelProps) {
         className={cn(
           "inline-flex rounded-full px-3 py-1 text-xs font-semibold",
           isOpen
-            ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-200"
-            : "bg-zinc-200 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-200",
+            ? "bg-found-muted text-found-foreground"
+            : "bg-surface-muted text-foreground",
         )}
       >
         {STATUS_LABEL[item.status]}
@@ -258,14 +274,16 @@ export function ItemClaimPanel({ item }: ItemClaimPanelProps) {
             <button
               type="button"
               onClick={open}
-              className="w-full rounded-lg bg-biu-gold py-2.5 text-center text-sm font-semibold text-biu-navy transition hover:opacity-90"
+              className="w-full rounded-lg bg-primary py-2.5 text-center text-sm font-semibold text-primary-foreground transition hover:opacity-90"
             >
               {item.type === "LOST" ? "I Found It" : "It's Mine"}
             </button>
           )}
         </ItemClaimCTAWithSheet>
       ) : (
-        <p className="text-sm text-zinc-500">Claims are closed for this listing.</p>
+        <p className="text-sm text-muted-foreground">
+          Claims are closed for this listing.
+        </p>
       )}
     </div>
   );

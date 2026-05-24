@@ -1,6 +1,6 @@
 export default function SettingsPage() {
   return (
-    <p className="text-sm text-zinc-600 dark:text-zinc-400">
+    <p className="text-sm text-muted-foreground">
       Account settings (coming soon).
     </p>
   );

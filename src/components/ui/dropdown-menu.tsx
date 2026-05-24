@@ -18,7 +18,7 @@ export const DropdownMenuContent = ({
         align={align}
         sideOffset={6}
         className={cn(
-          "z-50 min-w-[10rem] overflow-hidden rounded-lg border border-zinc-200 bg-white p-1 text-sm shadow-md dark:border-zinc-800 dark:bg-zinc-950",
+          "z-50 min-w-[10rem] overflow-hidden rounded-lg border border-border bg-surface p-1 text-sm shadow-card",
           "data-[state=open]:animate-in data-[state=closed]:animate-out",
           "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
           "data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95",
@@ -42,9 +42,8 @@ export function DropdownMenuItem({
     <Dropdown.Item
       asChild={asChild}
       className={cn(
-        "cursor-pointer rounded px-2 py-2 text-zinc-800 outline-none select-none",
-        "focus:bg-zinc-100 data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
-        "dark:text-zinc-200 dark:focus:bg-zinc-800",
+        "cursor-pointer rounded px-2 py-2 text-foreground outline-none select-none",
+        "focus:bg-surface-muted data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
         asChild && "[&>a]:flex [&>a]:w-full [&>a]:items-center",
         className,
       )}
@@ -60,12 +59,15 @@ export const DropdownMenuSeparator = ({
   ...props
 }: React.ComponentProps<typeof Dropdown.Separator>) => (
   <Dropdown.Separator
-    className={cn("-mx-1 my-1 h-px bg-zinc-200 dark:bg-zinc-800", className)}
+    className={cn("-mx-1 my-1 h-px bg-border", className)}
     {...props}
   />
 );
 
 type DropdownSubProps = { children: ReactNode };
 export const DropdownMenuLabel = (props: DropdownSubProps) => (
-  <div className="px-2 py-1.5 text-xs font-medium text-zinc-500" {...props} />
+  <div
+    className="px-2 py-1.5 text-xs font-medium text-muted-foreground"
+    {...props}
+  />
 );

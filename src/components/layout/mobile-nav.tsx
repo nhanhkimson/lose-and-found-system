@@ -14,10 +14,7 @@ export function MobileNav({ open, onOpenChange, role }: MobileNavProps) {
   return (
     <Sheet open={open} onOpenChange={onOpenChange} title="Navigation">
       <div className="p-3">
-        <DashboardNavList
-          role={role}
-          onNavigate={() => onOpenChange(false)}
-        />
+        <DashboardNavList role={role} onNavigate={() => onOpenChange(false)} />
       </div>
     </Sheet>
   );

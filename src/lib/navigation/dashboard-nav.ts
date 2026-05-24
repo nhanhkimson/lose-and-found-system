@@ -40,7 +40,7 @@ export function isNavActive(pathname: string, href: string) {
   if (href === "/dashboard") {
     return pathname === "/dashboard";
   }
-  // "Browse" is /items and /items/[id], not /items/lost or /items/found
+  //"Browse" is /items and /items/[id], not /items/lost or /items/found
   if (href === "/items") {
     if (pathname === "/items") return true;
     if (

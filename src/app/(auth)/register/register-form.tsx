@@ -8,7 +8,10 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { registerAction } from "@/lib/actions/auth.actions";
 import { cn } from "@/lib/utils/cn";
-import { registerSchema, type RegisterInput } from "@/lib/validations/auth.schema";
+import {
+  registerSchema,
+  type RegisterInput,
+} from "@/lib/validations/auth.schema";
 
 export function RegisterForm() {
   const router = useRouter();
@@ -40,10 +43,10 @@ export function RegisterForm() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-lg font-semibold text-biu-navy dark:text-zinc-100">
+        <h2 className="text-lg font-semibold text-foreground">
           Create an account
         </h2>
-        <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
+        <p className="mt-1 text-sm text-muted-foreground">
           Use your student email. You can sign in with Google later from the
           login page.
         </p>
@@ -52,7 +55,7 @@ export function RegisterForm() {
         <div>
           <label
             htmlFor="name"
-            className="mb-1 block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+            className="mb-1 block text-sm font-medium text-foreground"
           >
             Full name
           </label>
@@ -61,13 +64,13 @@ export function RegisterForm() {
             type="text"
             autoComplete="name"
             className={cn(
-              "w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 outline-none ring-biu-gold/40 focus:ring-2 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100",
-              errors.name && "border-red-500",
+              "w-full rounded-lg border border-border bg-surface px-3 py-2 text-sm text-foreground outline-none ring-primary/40 focus:ring-2",
+              errors.name && "border-danger",
             )}
             {...register("name")}
           />
           {errors.name ? (
-            <p className="mt-1 text-sm text-red-600 dark:text-red-400" role="alert">
+            <p className="mt-1 text-sm text-danger" role="alert">
               {errors.name.message}
             </p>
           ) : null}
@@ -75,7 +78,7 @@ export function RegisterForm() {
         <div>
           <label
             htmlFor="reg-email"
-            className="mb-1 block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+            className="mb-1 block text-sm font-medium text-foreground"
           >
             Email
           </label>
@@ -84,13 +87,13 @@ export function RegisterForm() {
             type="email"
             autoComplete="email"
             className={cn(
-              "w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 outline-none ring-biu-gold/40 focus:ring-2 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100",
-              errors.email && "border-red-500",
+              "w-full rounded-lg border border-border bg-surface px-3 py-2 text-sm text-foreground outline-none ring-primary/40 focus:ring-2",
+              errors.email && "border-danger",
             )}
             {...register("email")}
           />
           {errors.email ? (
-            <p className="mt-1 text-sm text-red-600 dark:text-red-400" role="alert">
+            <p className="mt-1 text-sm text-danger" role="alert">
               {errors.email.message}
             </p>
           ) : null}
@@ -98,25 +101,24 @@ export function RegisterForm() {
         <div>
           <label
             htmlFor="studentId"
-            className="mb-1 block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+            className="mb-1 block text-sm font-medium text-foreground"
           >
-            Student ID{" "}
-            <span className="font-normal text-zinc-500">(optional)</span>
+            Student ID{""}
+            <span className="font-normal text-muted-foreground">
+              (optional)
+            </span>
           </label>
           <input
             id="studentId"
             type="text"
             className={cn(
-              "w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 outline-none ring-biu-gold/40 focus:ring-2 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100",
-              errors.studentId && "border-red-500",
+              "w-full rounded-lg border border-border bg-surface px-3 py-2 text-sm text-foreground outline-none ring-primary/40 focus:ring-2",
+              errors.studentId && "border-danger",
             )}
             {...register("studentId")}
           />
           {errors.studentId ? (
-            <p
-              className="mt-1 text-sm text-red-600 dark:text-red-400"
-              role="alert"
-            >
+            <p className="mt-1 text-sm text-danger" role="alert">
               {errors.studentId.message}
             </p>
           ) : null}
@@ -124,7 +126,7 @@ export function RegisterForm() {
         <div>
           <label
             htmlFor="reg-password"
-            className="mb-1 block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+            className="mb-1 block text-sm font-medium text-foreground"
           >
             Password
           </label>
@@ -133,13 +135,13 @@ export function RegisterForm() {
             type="password"
             autoComplete="new-password"
             className={cn(
-              "w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 outline-none ring-biu-gold/40 focus:ring-2 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100",
-              errors.password && "border-red-500",
+              "w-full rounded-lg border border-border bg-surface px-3 py-2 text-sm text-foreground outline-none ring-primary/40 focus:ring-2",
+              errors.password && "border-danger",
             )}
             {...register("password")}
           />
           {errors.password ? (
-            <p className="mt-1 text-sm text-red-600 dark:text-red-400" role="alert">
+            <p className="mt-1 text-sm text-danger" role="alert">
               {errors.password.message}
             </p>
           ) : null}
@@ -147,7 +149,7 @@ export function RegisterForm() {
         <div>
           <label
             htmlFor="confirmPassword"
-            className="mb-1 block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+            className="mb-1 block text-sm font-medium text-foreground"
           >
             Confirm password
           </label>
@@ -156,16 +158,13 @@ export function RegisterForm() {
             type="password"
             autoComplete="new-password"
             className={cn(
-              "w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 outline-none ring-biu-gold/40 focus:ring-2 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100",
-              errors.confirmPassword && "border-red-500",
+              "w-full rounded-lg border border-border bg-surface px-3 py-2 text-sm text-foreground outline-none ring-primary/40 focus:ring-2",
+              errors.confirmPassword && "border-danger",
             )}
             {...register("confirmPassword")}
           />
           {errors.confirmPassword ? (
-            <p
-              className="mt-1 text-sm text-red-600 dark:text-red-400"
-              role="alert"
-            >
+            <p className="mt-1 text-sm text-danger" role="alert">
               {errors.confirmPassword.message}
             </p>
           ) : null}
@@ -173,7 +172,7 @@ export function RegisterForm() {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="flex w-full items-center justify-center gap-2 rounded-lg bg-biu-gold py-2.5 text-sm font-semibold text-white transition hover:opacity-95 disabled:cursor-not-allowed disabled:opacity-60"
+          className="flex w-full items-center justify-center gap-2 rounded-lg bg-primary py-2.5 text-sm font-semibold text-white transition hover:opacity-95 disabled:cursor-not-allowed disabled:opacity-60"
         >
           {isSubmitting ? (
             <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
@@ -181,11 +180,11 @@ export function RegisterForm() {
           Register
         </button>
       </form>
-      <p className="text-center text-sm text-zinc-600 dark:text-zinc-400">
-        Already have an account?{" "}
+      <p className="text-center text-sm text-muted-foreground">
+        Already have an account?{""}
         <Link
           href="/login"
-          className="font-semibold text-biu-gold hover:underline"
+          className="font-semibold text-primary hover:underline"
         >
           Sign in
         </Link>

@@ -43,7 +43,9 @@ export function ClaimsTable({ initialRows }: ClaimsTableProps) {
         decision,
       });
       if (res.success) {
-        toast.success(decision === "APPROVE" ? "Claim approved" : "Claim rejected");
+        toast.success(
+          decision === "APPROVE" ? "Claim approved" : "Claim rejected",
+        );
         router.refresh();
       } else {
         toast.error(res.error ?? "Something went wrong");
@@ -64,7 +66,11 @@ export function ClaimsTable({ initialRows }: ClaimsTableProps) {
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-wrap gap-2" role="tablist" aria-label="Filter by status">
+      <div
+        className="flex flex-wrap gap-2"
+        role="tablist"
+        aria-label="Filter by status"
+      >
         {(
           [
             ["ALL", "All"],
@@ -80,8 +86,8 @@ export function ClaimsTable({ initialRows }: ClaimsTableProps) {
             aria-selected={tab === value}
             className={
               tab === value
-                ? "rounded-lg bg-biu-gold px-3 py-1.5 text-sm font-semibold text-biu-navy"
-                : "rounded-lg border border-zinc-200 px-3 py-1.5 text-sm text-zinc-700 transition hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
+                ? "rounded-lg bg-primary px-3 py-1.5 text-sm font-semibold text-primary-foreground"
+                : "rounded-lg border border-border px-3 py-1.5 text-sm text-foreground transition hover:bg-surface-muted"
             }
             onClick={() => setTab(value)}
           >
@@ -96,7 +102,7 @@ export function ClaimsTable({ initialRows }: ClaimsTableProps) {
         getSearchableText={(r) =>
           [r.id, r.itemTitle, r.claimantName, r.claimantEmail, r.status]
             .filter(Boolean)
-            .join(" ")
+            .join("")
         }
         searchPlaceholder="Search claims, items, claimants…"
         pageSize={12}

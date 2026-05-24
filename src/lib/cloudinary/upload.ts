@@ -40,7 +40,10 @@ function validateImageFile(file: File): void {
 function parseCloudinaryError(payload: unknown, fallback: string): string {
   if (typeof payload !== "object" || payload === null) return fallback;
   const maybePayload = payload as CloudinaryErrorPayload;
-  if (typeof maybePayload.error?.message === "string" && maybePayload.error.message) {
+  if (
+    typeof maybePayload.error?.message === "string" &&
+    maybePayload.error.message
+  ) {
     return maybePayload.error.message;
   }
   return fallback;

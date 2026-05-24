@@ -3,7 +3,10 @@
 import { subDays } from "date-fns";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { matchConfidencePercent, type SuggestionSide } from "@/lib/utils/match-score";
+import {
+  matchConfidencePercent,
+  type SuggestionSide,
+} from "@/lib/utils/match-score";
 
 const MATCH_WINDOW_DAYS = 90;
 const MAX_SUGGESTIONS = 8;

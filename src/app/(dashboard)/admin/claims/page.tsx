@@ -10,11 +10,12 @@ export default async function AdminClaimsPage() {
   return (
     <div className="mx-auto max-w-5xl space-y-6">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight text-biu-navy dark:text-zinc-100">
+        <h1 className="text-2xl font-bold tracking-tight text-foreground">
           Manage claims
         </h1>
-        <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-          Review, approve, or reject ownership claims. Row click opens the detail panel.
+        <p className="mt-1 text-sm text-muted-foreground">
+          Review, approve, or reject ownership claims. Row click opens the
+          detail panel.
         </p>
       </div>
       <ClaimsTable initialRows={rows} />

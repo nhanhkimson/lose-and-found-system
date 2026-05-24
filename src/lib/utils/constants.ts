@@ -17,15 +17,15 @@ export const PAGINATION = {
   maxPageSize: 48,
 } as const;
 
-/** BIU brand (see `.cursorrules`) */
+/** BIU brand — CSS vars in globals.css adapt per theme */
 export const BRAND = {
-  gold: "#B8860B",
-  navy: "#1a1a2e",
+  gold: "#c9970c",
+  navy: "#1b2540",
 } as const;
 
 export const TYPE_BADGE = {
-  LOST: { className: "bg-red-100 text-red-700" },
-  FOUND: { className: "bg-green-100 text-green-700" },
+  LOST: { className: "bg-lost-muted text-lost-foreground" },
+  FOUND: { className: "bg-found-muted text-found-foreground" },
 } as const satisfies Record<ItemType, { className: string }>;
 
 export const TYPE_LABEL: Record<ItemType, string> = {

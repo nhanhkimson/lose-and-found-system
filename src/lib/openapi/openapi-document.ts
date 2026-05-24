@@ -13,7 +13,7 @@ export function buildOpenApiDocument(baseUrl: string): OpenApiDoc {
         title: "BIU Lost & Found API",
         version: "1.0.0",
         description:
-          "Auto-generated OpenAPI from route handlers under src/app/api. " +
+          "Auto-generated OpenAPI from route handlers under src/app/api." +
           "Sign in on the same origin before using Try it out for cookie-based endpoints.",
       },
       servers: [{ url: baseUrl }],
@@ -21,7 +21,10 @@ export function buildOpenApiDocument(baseUrl: string): OpenApiDoc {
         { name: "Items", description: "Lost and found item endpoints" },
         { name: "Claims", description: "Claim submission endpoints" },
         { name: "Uploads", description: "Cloudinary upload helpers" },
-        { name: "Notifications", description: "In-app notification feed and read state" },
+        {
+          name: "Notifications",
+          description: "In-app notification feed and read state",
+        },
         { name: "Auth", description: "NextAuth.js handlers" },
       ],
       components: {
@@ -37,7 +40,10 @@ export function buildOpenApiDocument(baseUrl: string): OpenApiDoc {
             type: "object",
             properties: {
               id: { type: "string" },
-              kind: { type: "string", enum: ["SYSTEM", "MATCH", "CLAIM", "ITEM"] },
+              kind: {
+                type: "string",
+                enum: ["SYSTEM", "MATCH", "CLAIM", "ITEM"],
+              },
               link: { type: "string", nullable: true },
               title: { type: "string" },
               message: { type: "string" },
@@ -75,7 +81,10 @@ export function buildOpenApiDocument(baseUrl: string): OpenApiDoc {
       },
       security: [{ cookieSession: [] }],
     },
-    apis: [path.join(apiRoot, "**/route.ts"), path.join(apiRoot, "**/route.js")],
+    apis: [
+      path.join(apiRoot, "**/route.ts"),
+      path.join(apiRoot, "**/route.js"),
+    ],
   });
 
   return spec;

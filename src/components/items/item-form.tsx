@@ -120,17 +120,14 @@ export function ItemForm({ type }: ItemFormProps) {
 
   if (successId) {
     return (
-      <ItemReportSuccessView
-        itemId={successId}
-        onCreateAnother={resetForm}
-      />
+      <ItemReportSuccessView itemId={successId} onCreateAnother={resetForm} />
     );
   }
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between gap-2">
-        <p className="text-sm text-zinc-500">
+        <p className="text-sm text-muted-foreground">
           Step {step + 1} of {TOTAL_STEPS} — {stepTitle[step]}
         </p>
         <div
@@ -146,7 +143,7 @@ export function ItemForm({ type }: ItemFormProps) {
               key={i}
               className={cn(
                 "h-1.5 flex-1 rounded-full",
-                i <= step ? "bg-biu-gold" : "bg-zinc-200 dark:bg-zinc-700",
+                i <= step ? "bg-primary" : "bg-surface-muted",
               )}
             />
           ))}
@@ -171,19 +168,19 @@ export function ItemForm({ type }: ItemFormProps) {
           )}
 
           {step < 3 ? (
-            <div className="flex items-center justify-between gap-3 border-t border-zinc-100 pt-6 dark:border-zinc-800">
+            <div className="flex items-center justify-between gap-3 border-t border-border-subtle pt-6">
               <button
                 type="button"
                 onClick={goPrev}
                 disabled={step === 0}
-                className="rounded-lg border border-zinc-300 px-4 py-2 text-sm font-medium text-zinc-700 transition hover:bg-zinc-50 disabled:cursor-not-allowed disabled:opacity-40 dark:border-zinc-600 dark:text-zinc-200 dark:hover:bg-zinc-800"
+                className="rounded-lg border border-border px-4 py-2 text-sm font-medium text-foreground transition hover:bg-surface-muted disabled:cursor-not-allowed disabled:opacity-40"
               >
                 Previous
               </button>
               <button
                 type="button"
                 onClick={() => void goNext()}
-                className="rounded-lg bg-biu-gold px-4 py-2 text-sm font-semibold text-biu-navy transition hover:opacity-90"
+                className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition hover:opacity-90"
               >
                 Next
               </button>
@@ -205,16 +202,16 @@ function ItemReportSuccessView({ itemId, onCreateAnother }: SuccessProps) {
   const path = `/items/${itemId}`;
 
   return (
-    <div className="mx-auto max-w-md rounded-xl border border-emerald-200/80 bg-emerald-50/50 p-6 text-center dark:border-emerald-900/50 dark:bg-emerald-950/30">
-      <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-900/50 dark:text-emerald-200">
+    <div className="mx-auto max-w-md rounded-xl border border-found/30 bg-found-muted p-6 text-center">
+      <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-found-muted text-found-foreground">
         <Check className="h-6 w-6" />
       </div>
-      <h2 className="mt-4 text-lg font-semibold text-biu-navy dark:text-zinc-100">
+      <h2 className="mt-4 text-lg font-semibold text-foreground">
         Listing created
       </h2>
-      <p className="mt-1 break-all text-sm text-zinc-600 dark:text-zinc-400">
-        ID{" "}
-        <span className="font-mono text-zinc-800 dark:text-zinc-200">{itemId}</span>
+      <p className="mt-1 break-all text-sm text-muted-foreground">
+        ID{""}
+        <span className="font-mono text-foreground">{itemId}</span>
       </p>
       <div className="mt-4 space-y-2">
         <button
@@ -232,14 +229,14 @@ function ItemReportSuccessView({ itemId, onCreateAnother }: SuccessProps) {
               toast.error("Could not copy link");
             }
           }}
-          className="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-zinc-300 bg-white px-4 py-2 text-sm font-medium text-biu-navy dark:border-zinc-600 dark:bg-zinc-900"
+          className="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-border bg-surface px-4 py-2 text-sm font-medium text-foreground"
         >
           <Link2 className="h-4 w-4" />
           {copied ? "Copied" : "Copy link to listing"}
         </button>
         <Link
           href={path}
-          className="block w-full rounded-lg bg-biu-gold py-2.5 text-sm font-semibold text-biu-navy"
+          className="block w-full rounded-lg bg-primary py-2.5 text-sm font-semibold text-primary-foreground"
         >
           View listing
         </Link>
@@ -247,7 +244,7 @@ function ItemReportSuccessView({ itemId, onCreateAnother }: SuccessProps) {
           <button
             type="button"
             onClick={onCreateAnother}
-            className="text-sm font-medium text-zinc-600 underline dark:text-zinc-400"
+            className="text-sm font-medium text-muted-foreground underline"
           >
             Create another
           </button>

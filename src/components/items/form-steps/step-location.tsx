@@ -6,7 +6,11 @@ import { Controller, useFormContext, useWatch } from "react-hook-form";
 import { Calendar } from "@/components/ui/calendar";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { SelectNative } from "@/components/ui/select-native";
 import { Textarea } from "@/components/ui/textarea";
 import { CAMPUS_BUILDINGS } from "@/lib/utils/constants";
@@ -32,7 +36,9 @@ export function StepLocation() {
         <SelectNative
           id="building"
           aria-invalid={!!errors.building}
-          className={cn(errors.building && "border-red-500 focus:ring-red-500/30")}
+          className={cn(
+            errors.building && "border-danger focus:ring-danger/30",
+          )}
           {...register("building")}
         >
           {CAMPUS_BUILDINGS.map((b) => (
@@ -42,7 +48,7 @@ export function StepLocation() {
           ))}
         </SelectNative>
         {errors.building ? (
-          <p className="mt-1 text-xs text-red-600 dark:text-red-400">
+          <p className="mt-1 text-xs text-danger">
             {errors.building.message as string}
           </p>
         ) : null}
@@ -57,20 +63,23 @@ export function StepLocation() {
           rows={3}
           placeholder="e.g. 2nd floor corridor near the elevator, east stairwell, Lab B-12"
           aria-invalid={!!errors.roomHint}
-          className={cn(errors.roomHint && "border-red-500 focus:ring-red-500/30")}
+          className={cn(
+            errors.roomHint && "border-danger focus:ring-danger/30",
+          )}
           {...register("roomHint")}
         />
         {errors.roomHint ? (
-          <p className="mt-1 text-xs text-red-600 dark:text-red-400">
+          <p className="mt-1 text-xs text-danger">
             {errors.roomHint.message as string}
           </p>
         ) : null}
       </div>
 
       <div>
-        <span className="mb-1.5 block text-sm font-medium text-zinc-700 dark:text-zinc-300">
-          {isLost ? "Date lost" : "Date found"}{" "}
-          <span className="text-red-500">*</span>
+        <span className="mb-1.5 block text-sm font-medium text-foreground">
+          {isLost ? "Date lost" : "Date found"}
+          {""}
+          <span className="text-danger">*</span>
         </span>
         <Controller
           name="eventDate"
@@ -81,12 +90,12 @@ export function StepLocation() {
                 <button
                   type="button"
                   className={cn(
-                    "inline-flex w-full max-w-xs items-center justify-start gap-2 rounded-lg border border-zinc-300 bg-white px-3 py-2 text-left text-sm dark:border-zinc-700 dark:bg-zinc-900",
-                    !field.value && "text-zinc-500",
-                    errors.eventDate && "border-red-500",
+                    "inline-flex w-full max-w-xs items-center justify-start gap-2 rounded-lg border border-border bg-surface px-3 py-2 text-left text-sm",
+                    !field.value && "text-muted-foreground",
+                    errors.eventDate && "border-danger",
                   )}
                 >
-                  <CalendarIcon className="h-4 w-4 shrink-0 text-biu-gold" />
+                  <CalendarIcon className="h-4 w-4 shrink-0 text-primary" />
                   {field.value
                     ? format(
                         field.value instanceof Date
@@ -115,7 +124,7 @@ export function StepLocation() {
           )}
         />
         {errors.eventDate ? (
-          <p className="mt-1 text-xs text-red-600 dark:text-red-400">
+          <p className="mt-1 text-xs text-danger">
             {errors.eventDate.message as string}
           </p>
         ) : null}
@@ -128,18 +137,21 @@ export function StepLocation() {
           </Label>
           <div className="relative">
             <Clock
-              className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-biu-gold"
+              className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-primary"
               aria-hidden
             />
             <Input
               id="timeApprox"
-              className={cn("pl-9", errors.timeApprox && "border-red-500 focus:ring-red-500/30")}
+              className={cn(
+                "pl-9",
+                errors.timeApprox && "border-danger focus:ring-danger/30",
+              )}
               placeholder="e.g. 2:30 PM, or between 12–1 PM"
               {...register("timeApprox")}
             />
           </div>
           {errors.timeApprox ? (
-            <p className="mt-1 text-xs text-red-600 dark:text-red-400">
+            <p className="mt-1 text-xs text-danger">
               {errors.timeApprox.message as string}
             </p>
           ) : null}
@@ -153,7 +165,7 @@ export function StepLocation() {
             id="foundDisposition"
             aria-invalid={!!errors.foundDisposition}
             className={cn(
-              errors.foundDisposition && "border-red-500 focus:ring-red-500/30",
+              errors.foundDisposition && "border-danger focus:ring-danger/30",
             )}
             {...register("foundDisposition", {
               setValueAs: (v: string) => (v === "" ? undefined : v),
@@ -169,7 +181,7 @@ export function StepLocation() {
             ))}
           </SelectNative>
           {errors.foundDisposition ? (
-            <p className="mt-1 text-xs text-red-600 dark:text-red-400">
+            <p className="mt-1 text-xs text-danger">
               {errors.foundDisposition.message as string}
             </p>
           ) : null}

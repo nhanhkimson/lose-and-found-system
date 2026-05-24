@@ -21,10 +21,7 @@ export type InboxItem = {
   createdAt: string;
 };
 
-const KIND_ICON: Record<
-  NotificationKind,
-  typeof MessageSquare
-> = {
+const KIND_ICON: Record<NotificationKind, typeof MessageSquare> = {
   SYSTEM: Bell,
   MATCH: Link2,
   CLAIM: Gavel,
@@ -106,14 +103,12 @@ export function NotificationsInbox({ initial }: NotificationsInboxProps) {
   return (
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <h1 className="text-2xl font-bold text-biu-navy dark:text-zinc-100">
-          Notifications
-        </h1>
+        <h1 className="text-2xl font-bold text-foreground">Notifications</h1>
         <button
           type="button"
           onClick={onMarkAll}
           disabled={pending || !items.some((i) => !i.read)}
-          className="rounded-lg border border-zinc-300 px-3 py-1.5 text-sm font-medium text-zinc-700 transition hover:bg-zinc-50 disabled:cursor-not-allowed disabled:opacity-50 dark:border-zinc-600 dark:text-zinc-200 dark:hover:bg-zinc-800"
+          className="rounded-lg border border-border px-3 py-1.5 text-sm font-medium text-foreground transition hover:bg-surface-muted disabled:cursor-not-allowed disabled:opacity-50"
         >
           Mark all as read
         </button>
@@ -124,7 +119,9 @@ export function NotificationsInbox({ initial }: NotificationsInboxProps) {
       <InboxGroup title="Older" items={byOlder} onRowClick={onRowClick} />
 
       {items.length === 0 ? (
-        <p className="text-sm text-zinc-500">You have no notifications yet.</p>
+        <p className="text-sm text-muted-foreground">
+          You have no notifications yet.
+        </p>
       ) : null}
     </div>
   );
@@ -142,10 +139,10 @@ function InboxGroup({
   if (items.length === 0) return null;
   return (
     <section>
-      <h2 className="mb-2 text-xs font-semibold uppercase tracking-wider text-zinc-500">
+      <h2 className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
         {title}
       </h2>
-      <ul className="divide-y divide-zinc-100 overflow-hidden rounded-xl border border-zinc-200/80 dark:divide-zinc-800 dark:border-zinc-800">
+      <ul className="divide-y divide-border-subtle overflow-hidden rounded-xl border border-border">
         {items.map((n) => {
           const Icon = KIND_ICON[n.kind] ?? Bell;
           return (
@@ -154,28 +151,28 @@ function InboxGroup({
                 type="button"
                 onClick={() => onRowClick(n)}
                 className={cn(
-                  "flex w-full gap-3 px-4 py-3 text-left transition hover:bg-zinc-50 dark:hover:bg-zinc-900/80",
-                  !n.read && "bg-biu-gold/5",
+                  "flex w-full gap-3 px-4 py-3 text-left transition hover:bg-surface-muted",
+                  !n.read && "bg-primary/5",
                 )}
               >
-                <span className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">
+                <span className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-surface-muted text-muted-foreground">
                   <Icon className="h-4 w-4" />
                   {!n.read ? (
                     <span
-                      className="absolute right-0 top-0 h-2 w-2 rounded-full bg-biu-gold"
+                      className="absolute right-0 top-0 h-2 w-2 rounded-full bg-primary"
                       aria-label="Unread"
                     />
                   ) : null}
                 </span>
                 <span className="min-w-0 flex-1">
-                  <span className="line-clamp-1 text-sm font-semibold text-biu-navy dark:text-zinc-100">
+                  <span className="line-clamp-1 text-sm font-semibold text-foreground">
                     {n.title}
                   </span>
-                  <span className="line-clamp-2 text-xs text-zinc-600 dark:text-zinc-400">
+                  <span className="line-clamp-2 text-xs text-muted-foreground">
                     {n.message}
                   </span>
                   <time
-                    className="mt-1 block text-xs text-zinc-400"
+                    className="mt-1 block text-xs text-subtle-foreground"
                     dateTime={n.createdAt}
                   >
                     {new Date(n.createdAt).toLocaleString()}

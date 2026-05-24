@@ -17,13 +17,13 @@ export default function ItemDetailLoading() {
           </div>
         </div>
         <aside className="space-y-4">
-          <div className="rounded-xl border border-zinc-200/80 bg-white p-5 dark:border-zinc-800 dark:bg-zinc-950">
+          <div className="rounded-xl border border-border bg-surface p-5">
             <Skeleton className="h-7 w-20 rounded-full" />
             <Skeleton className="mt-4 h-10 w-full rounded-lg" />
           </div>
         </aside>
       </div>
-      <div className="space-y-4 border-t border-zinc-100 pt-10 dark:border-zinc-800">
+      <div className="space-y-4 border-t border-border-subtle pt-10">
         <Skeleton className="h-6 w-40" />
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {["a", "b", "c"].map((k) => (

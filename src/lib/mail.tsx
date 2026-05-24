@@ -8,7 +8,10 @@ import { CATEGORY_LABEL } from "@/lib/utils/constants";
 import type { ItemCategory } from "@prisma/client";
 
 function getAppUrl(): string {
-  return (process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000").replace(/\/$/, "");
+  return (process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000").replace(
+    /\/$/,
+    "",
+  );
 }
 
 function getFrom(): string {
@@ -29,7 +32,10 @@ async function sendHtml(
   const resend = getResend();
   if (!resend) {
     if (process.env.NODE_ENV === "development") {
-      console.warn("[mail] RESEND_API_KEY is not set; skipping email:", subject);
+      console.warn(
+        "[mail] RESEND_API_KEY is not set; skipping email:",
+        subject,
+      );
     }
     return;
   }
@@ -109,11 +115,7 @@ export async function sendClaimRejectedEmail(params: {
       claimsUrl={claimsUrl}
     />,
   );
-  await sendHtml(
-    params.to,
-    `Update on your claim: ${params.itemTitle}`,
-    html,
-  );
+  await sendHtml(params.to, `Update on your claim: ${params.itemTitle}`, html);
 }
 
 export async function sendMatchFoundEmail(params: {
@@ -134,9 +136,5 @@ export async function sendMatchFoundEmail(params: {
       building={params.building}
     />,
   );
-  await sendHtml(
-    params.to,
-    `Possible match: ${params.matchItemTitle}`,
-    html,
-  );
+  await sendHtml(params.to, `Possible match: ${params.matchItemTitle}`, html);
 }

@@ -1,8 +1,8 @@
 # BIU Lost & Found System
 
-A production-focused campus lost-and-found platform built with Next.js App Router, Prisma, and PostgreSQL.
+BIU Lost & Found is a campus platform for reporting lost or found items, finding matches quickly, and helping students safely return belongings.
 
-This project helps students and staff report lost/found items, browse listings, submit claims, and manage notification workflows.
+It is built with Next.js App Router, Prisma, PostgreSQL, and Cloudinary.
 
 ## Live Links
 
@@ -10,16 +10,40 @@ This project helps students and staff report lost/found items, browse listings, 
 - API docs (local): `http://localhost:3000/api-docs`
 - OpenAPI JSON (local): `http://localhost:3000/api/openapi`
 
-## Core Features
+## Features
 
-- Lost and found item reporting with multi-step validated forms.
-- Image upload support via Cloudinary.
-- Public item browsing with filtering, search, and detail pages.
-- Claim submission flow with proof image support.
-- Real-time notification updates via SSE.
-- OpenAPI + Swagger UI documentation for REST endpoints.
-- Authentication with NextAuth (session-based).
-- Admin-capable moderation flows through role-aware logic.
+- **Lost & found posting**: Create clear reports with title, description, location, date, and category.
+- **Image upload**: Attach item photos via Cloudinary.
+- **Browse & filter**: Search items by keyword, type, category, status, and date.
+- **Claim workflow**: Submit a claim with proof details and optional proof images.
+- **Notifications**: Get in-app updates when actions happen.
+- **Dashboard**: Manage your own listings and claims in one place.
+- **Theme modes**: Switch between Light, Dark, and System.
+- **API docs**: Explore available REST endpoints in Swagger UI.
+
+## How to Use the System
+
+### For students / users
+
+1. Register or sign in.
+2. Open `Report lost` or `Report found`.
+3. Fill item details and upload photos.
+4. Publish the listing.
+5. Check your dashboard for updates.
+6. If you found your item in the list, open it and submit a claim.
+
+### For finders
+
+1. Browse recent listings.
+2. Open a matching item.
+3. Click claim action (`I Found It` or `It's Mine`).
+4. Provide proof and submit.
+
+### For admins/staff
+
+1. Monitor new claims and listings.
+2. Review claim details and proof information.
+3. Approve or reject based on verification policy.
 
 ## Tech Stack
 
@@ -110,6 +134,20 @@ pnpm dev
 
 Open `http://localhost:3000`.
 
+## UI & Theme
+
+The app uses a semantic design token system with automatic light/dark adaptation:
+
+| Token | Light | Dark | Usage |
+|-------|-------|------|-------|
+| Primary | Warm gold `#c9970c` | Bright gold `#e5b82e` | Buttons, links, accents |
+| Background | Soft blue-gray `#f3f6fc` | Deep navy `#0b1020` | Page background |
+| Surface | White | `#131b2e` | Cards, panels, inputs |
+| Lost | Coral red | Soft red | Lost item badges |
+| Found | Teal | Bright teal | Found item badges |
+
+Theme switcher (top bar): **Light** · **Dark** · **System**
+
 ## Available Scripts
 
 - `pnpm dev` - start development server
@@ -135,6 +173,11 @@ Current documented endpoints include:
 - `POST /api/uploads/signature`
 - `GET /api/openapi`
 - `GET/POST /api/auth/{nextauth}`
+
+Open API docs:
+
+- Swagger UI: `http://localhost:3000/api-docs`
+- OpenAPI JSON: `http://localhost:3000/api/openapi`
 
 ## Deployment (Vercel)
 

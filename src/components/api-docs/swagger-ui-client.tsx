@@ -5,15 +5,18 @@ import { useEffect } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import "swagger-ui-react/swagger-ui.css";
 
-const SwaggerUI = dynamic(() => import("swagger-ui-react").then((m) => m.default), {
-  ssr: false,
-  loading: () => (
-    <div className="p-6">
-      <Skeleton className="h-8 w-64" />
-      <Skeleton className="mt-4 h-96 w-full" />
-    </div>
-  ),
-});
+const SwaggerUI = dynamic(
+  () => import("swagger-ui-react").then((m) => m.default),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="p-6">
+        <Skeleton className="h-8 w-64" />
+        <Skeleton className="mt-4 h-96 w-full" />
+      </div>
+    ),
+  },
+);
 
 type SwaggerUIClientProps = {
   url: string;

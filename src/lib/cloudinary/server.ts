@@ -44,7 +44,9 @@ export function signCloudinaryParams(
   apiSecret: string,
 ): string {
   const payload = Object.entries(params)
-    .filter(([, value]) => value !== "" && value !== null && value !== undefined)
+    .filter(
+      ([, value]) => value !== "" && value !== null && value !== undefined,
+    )
     .sort(([a], [b]) => a.localeCompare(b))
     .map(([key, value]) => `${key}=${value}`)
     .join("&");

@@ -4,7 +4,11 @@ import { formatDistanceToNow } from "date-fns";
 import { Bell, ExternalLink } from "lucide-react";
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { cn } from "@/lib/utils/cn";
 import { useNotificationInbox } from "./notification-stream-context";
 
@@ -50,22 +54,20 @@ export function NotificationBell() {
       <PopoverTrigger asChild>
         <button
           type="button"
-          className="relative flex h-9 w-9 items-center justify-center rounded-lg text-zinc-600 outline-none transition hover:bg-zinc-100 focus-visible:ring-2 focus-visible:ring-biu-gold dark:text-zinc-400 dark:hover:bg-zinc-800"
+          className="relative flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground outline-none transition hover:bg-surface-muted focus-visible:ring-2 focus-visible:ring-primary"
           aria-label={`Notifications${unreadCount > 0 ? `, ${unreadCount} unread` : ""}`}
         >
           <Bell className="h-5 w-5" strokeWidth={2} />
           {unreadCount > 0 ? (
-            <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-red-500 px-0.5 text-[10px] font-bold text-white">
+            <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-danger-muted0 px-0.5 text-[10px] font-bold text-white">
               {unreadCount > 99 ? "99+" : unreadCount}
             </span>
           ) : null}
         </button>
       </PopoverTrigger>
       <PopoverContent align="end" className="p-0">
-        <div className="border-b border-zinc-200 px-3 py-2 dark:border-zinc-800">
-          <p className="text-sm font-semibold text-biu-navy dark:text-zinc-100">
-            Notifications
-          </p>
+        <div className="border-b border-border px-3 py-2">
+          <p className="text-sm font-semibold text-foreground">Notifications</p>
         </div>
         <ul
           className="max-h-72 overflow-y-auto p-0"
@@ -73,7 +75,7 @@ export function NotificationBell() {
           aria-live="polite"
         >
           {items.length === 0 ? (
-            <li className="px-3 py-6 text-center text-sm text-zinc-500">
+            <li className="px-3 py-6 text-center text-sm text-muted-foreground">
               No notifications yet.
             </li>
           ) : (
@@ -81,28 +83,30 @@ export function NotificationBell() {
               <li
                 key={n.id}
                 className={cn(
-                  "border-b border-zinc-100 px-3 py-2.5 last:border-0 dark:border-zinc-800",
-                  !n.read && "bg-biu-gold/5",
+                  "border-b border-border-subtle px-3 py-2.5 last:border-0",
+                  !n.read && "bg-primary/5",
                 )}
               >
                 <div className="flex items-start gap-2">
                   <span
                     className={cn(
                       "mt-1.5 h-2 w-2 shrink-0 rounded-full",
-                      n.read ? "bg-zinc-300 dark:bg-zinc-600" : "bg-biu-gold",
+                      n.read ? "bg-subtle-foreground/40" : "bg-primary",
                     )}
                     aria-label={n.read ? "Read" : "Unread"}
                     title={n.read ? "Read" : "Unread"}
                   />
                   <div className="min-w-0 flex-1">
-                    <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
+                    <p className="text-sm font-medium text-foreground">
                       {n.title}
                     </p>
-                    <p className="mt-0.5 line-clamp-2 text-xs text-zinc-600 dark:text-zinc-400">
+                    <p className="mt-0.5 line-clamp-2 text-xs text-muted-foreground">
                       {n.message}
                     </p>
-                    <p className="mt-1 text-xs text-zinc-400">
-                      {formatDistanceToNow(new Date(n.createdAt), { addSuffix: true })}
+                    <p className="mt-1 text-xs text-subtle-foreground">
+                      {formatDistanceToNow(new Date(n.createdAt), {
+                        addSuffix: true,
+                      })}
                     </p>
                   </div>
                 </div>
@@ -110,12 +114,12 @@ export function NotificationBell() {
             ))
           )}
         </ul>
-        <div className="flex flex-col gap-1 border-t border-zinc-200 p-2 dark:border-zinc-800">
+        <div className="flex flex-col gap-1 border-t border-border p-2">
           {unreadCount > 0 ? (
             <button
               type="button"
               onClick={() => void markAllRead()}
-              className="w-full rounded-md py-2 text-center text-sm font-medium text-biu-gold transition hover:bg-biu-gold/10"
+              className="w-full rounded-md py-2 text-center text-sm font-medium text-primary transition hover:bg-primary/10"
             >
               Mark all as read
             </button>
@@ -123,7 +127,7 @@ export function NotificationBell() {
           <Link
             href="/notifications"
             onClick={() => setOpen(false)}
-            className="flex items-center justify-center gap-1 rounded-md py-2 text-sm font-medium text-zinc-700 transition hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800"
+            className="flex items-center justify-center gap-1 rounded-md py-2 text-sm font-medium text-foreground transition hover:bg-surface-muted"
           >
             View all
             <ExternalLink className="h-3.5 w-3.5" aria-hidden />

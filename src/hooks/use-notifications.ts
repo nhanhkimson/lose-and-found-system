@@ -2,7 +2,10 @@
 
 import { useCallback, useEffect, useRef } from "react";
 import { useSession } from "next-auth/react";
-import { useNotificationStore, type InboxNotification } from "@/store/notification-store";
+import {
+  useNotificationStore,
+  type InboxNotification,
+} from "@/store/notification-store";
 
 type StreamPayload = {
   type: "unread" | "ping";
