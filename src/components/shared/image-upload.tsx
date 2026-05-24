@@ -1,26 +1,21 @@
 "use client";
 
-import { generateUploadDropzone } from "@uploadthing/react";
 import { Loader2, Upload, X } from "lucide-react";
 import Image from "next/image";
-import { useCallback, useId } from "react";
+import {
+  type ChangeEvent,
+  type DragEvent,
+  useCallback,
+  useId,
+  useRef,
+  useState,
+} from "react";
 import { toast } from "sonner";
-import type { OurFileRouter } from "@/lib/uploadthing";
+import { uploadImagesToCloudinary } from "@/lib/cloudinary/upload";
 import { cn } from "@/lib/utils/cn";
-
-const ItemImageDropzone = generateUploadDropzone<OurFileRouter>();
 
 const MAX_FILES = 5;
 const MAX_MB = 4;
-
-function pickFileUrl(f: unknown): string {
-  if (typeof f !== "object" || f === null) return "";
-  const o = f as Record<string, unknown>;
-  if (typeof o.ufsUrl === "string" && o.ufsUrl) return o.ufsUrl;
-  if (typeof o.url === "string" && o.url) return o.url;
-  if (typeof o.fileUrl === "string" && o.fileUrl) return o.fileUrl;
-  return "";
-}
 
 type ImageUploadProps = {
   value: string[];
@@ -31,8 +26,84 @@ type ImageUploadProps = {
 
 export function ImageUpload({ value, onChange, disabled, className }: ImageUploadProps) {
   const id = useId();
+  const inputRef = useRef<HTMLInputElement | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [isDragActive, setIsDragActive] = useState(false);
   const canAdd = value.length < MAX_FILES;
   const remaining = MAX_FILES - value.length;
+
+  const handleFiles = useCallback(
+    async (files: File[]) => {
+      if (disabled || files.length === 0 || !canAdd) return;
+
+      const allowedFiles = files.slice(0, remaining);
+      if (files.length > remaining) {
+        toast.error(`Only ${remaining} more image${remaining === 1 ? "" : "s"} allowed.`);
+      }
+
+      setIsUploading(true);
+      setUploadProgress(0);
+
+      try {
+        const urls = await uploadImagesToCloudinary(allowedFiles, {
+          onProgress: (completed, total) => {
+            if (total === 0) {
+              setUploadProgress(0);
+              return;
+            }
+            setUploadProgress(Math.round((completed / total) * 100));
+          },
+        });
+        if (urls.length > 0) {
+          onChange([...value, ...urls].slice(0, MAX_FILES));
+          toast.success(
+            `${urls.length} image${urls.length === 1 ? "" : "s"} uploaded.`,
+          );
+        }
+      } catch (error: unknown) {
+        const message =
+          error instanceof Error ? error.message : "Failed to upload image.";
+        toast.error(message);
+      } finally {
+        setIsUploading(false);
+      }
+    },
+    [canAdd, disabled, onChange, remaining, value],
+  );
+
+  const onPickFiles = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      const files = event.target.files ? Array.from(event.target.files) : [];
+      event.target.value = "";
+      void handleFiles(files);
+    },
+    [handleFiles],
+  );
+
+  const onDrop = useCallback(
+    (event: DragEvent<HTMLDivElement>) => {
+      event.preventDefault();
+      event.stopPropagation();
+      setIsDragActive(false);
+      void handleFiles(Array.from(event.dataTransfer.files));
+    },
+    [handleFiles],
+  );
+
+  const onDragOver = useCallback((event: DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    event.stopPropagation();
+    if (!disabled && !isUploading) {
+      setIsDragActive(true);
+    }
+  }, [disabled, isUploading]);
+
+  const onDragLeave = useCallback((event: DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    event.stopPropagation();
+    setIsDragActive(false);
+  }, []);
 
   const onRemove = useCallback(
     (url: string) => {
@@ -52,7 +123,7 @@ export function ImageUpload({ value, onChange, disabled, className }: ImageUploa
           {value.map((url) => (
             <li
               key={url}
-              className="group relative aspect-[4/3] overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-700"
+              className="group relative aspect-4/3 overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-700"
             >
               <Image
                 src={url}
@@ -77,67 +148,70 @@ export function ImageUpload({ value, onChange, disabled, className }: ImageUploa
       ) : null}
 
       {canAdd ? (
-        <ItemImageDropzone
-          endpoint="imageUploader"
-          disabled={disabled}
-          onClientUploadComplete={(res) => {
-            const next = res.map((f) => pickFileUrl(f)).filter(Boolean);
-            if (next.length === 0) return;
-            onChange([...value, ...next].slice(0, MAX_FILES));
+        <div
+          className={cn(
+            "w-full rounded-xl border-2 border-dashed border-zinc-300 bg-zinc-50/50 p-6 transition",
+            "dark:border-zinc-600 dark:bg-zinc-900/40",
+            !disabled && !isUploading && "cursor-pointer hover:border-biu-gold/60 hover:bg-biu-gold/5",
+            (disabled || isUploading) && "pointer-events-none opacity-70",
+            isDragActive && "border-biu-gold bg-biu-gold/10",
+          )}
+          onDrop={onDrop}
+          onDragOver={onDragOver}
+          onDragLeave={onDragLeave}
+          role="button"
+          aria-disabled={disabled || isUploading}
+          tabIndex={disabled ? -1 : 0}
+          onKeyDown={(event) => {
+            if (event.key === "Enter" || event.key === " ") {
+              event.preventDefault();
+              inputRef.current?.click();
+            }
           }}
-          onUploadError={(e) => {
-            toast.error(e.message);
-          }}
-          className="w-full"
-          appearance={{
-            container: (args) =>
-              cn(
-                "w-full cursor-pointer rounded-xl border-2 border-dashed border-zinc-300 bg-zinc-50/50 p-6 transition",
-                "hover:border-biu-gold/60 hover:bg-biu-gold/5",
-                "dark:border-zinc-600 dark:bg-zinc-900/40",
-                args.isUploading && "pointer-events-none opacity-70",
-                args.isDragActive && "border-biu-gold bg-biu-gold/10",
-              ),
-            label: () =>
-              "flex w-full flex-col items-center justify-center gap-2 text-sm text-zinc-600 dark:text-zinc-300",
-            allowedContent: () => "hidden",
-            uploadIcon: () => "h-8 w-8 text-biu-gold",
-          }}
-          content={{
-            uploadIcon: () => <Upload className="h-8 w-8 text-biu-gold" />,
-            label: (args) => (
-              <div className="w-full text-center">
-                {args.isUploading ? (
-                  <span className="inline-flex items-center gap-2">
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                    Uploading… {args.uploadProgress}%
-                  </span>
-                ) : args.isDragActive ? (
-                  "Drop to upload"
-                ) : (
-                  <span>
-                    Drag & drop, or click to add photos
-                    {remaining < MAX_FILES ? ` (${remaining} left)` : ""}
-                  </span>
-                )}
-                {args.isUploading ? (
+          onClick={() => inputRef.current?.click()}
+        >
+          <input
+            ref={inputRef}
+            type="file"
+            accept="image/jpeg,image/png"
+            multiple
+            disabled={disabled || isUploading}
+            className="hidden"
+            onChange={onPickFiles}
+          />
+          <div className="flex w-full flex-col items-center justify-center gap-2 text-sm text-zinc-600 dark:text-zinc-300">
+            <Upload className="h-8 w-8 text-biu-gold" />
+            <div className="w-full text-center">
+              {isUploading ? (
+                <span className="inline-flex items-center gap-2">
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  Uploading... {uploadProgress}%
+                </span>
+              ) : isDragActive ? (
+                "Drop to upload"
+              ) : (
+                <span>
+                  Drag & drop, or click to add photos
+                  {remaining < MAX_FILES ? ` (${remaining} left)` : ""}
+                </span>
+              )}
+              {isUploading ? (
+                <div
+                  className="mx-auto mt-3 h-1.5 w-full max-w-xs overflow-hidden rounded-full bg-zinc-200 dark:bg-zinc-700"
+                  role="progressbar"
+                  aria-valuenow={uploadProgress}
+                  aria-valuemin={0}
+                  aria-valuemax={100}
+                >
                   <div
-                    className="mx-auto mt-3 h-1.5 w-full max-w-xs overflow-hidden rounded-full bg-zinc-200 dark:bg-zinc-700"
-                    role="progressbar"
-                    aria-valuenow={args.uploadProgress}
-                    aria-valuemin={0}
-                    aria-valuemax={100}
-                  >
-                    <div
-                      className="h-full rounded-full bg-biu-gold transition-all"
-                      style={{ width: `${args.uploadProgress}%` }}
-                    />
-                  </div>
-                ) : null}
-              </div>
-            ),
-          }}
-        />
+                    className="h-full rounded-full bg-biu-gold transition-all"
+                    style={{ width: `${uploadProgress}%` }}
+                  />
+                </div>
+              ) : null}
+            </div>
+          </div>
+        </div>
       ) : null}
     </div>
   );

@@ -15,7 +15,6 @@ export function buildOpenApiDocument(baseUrl: string) {
     servers: [{ url: baseUrl }],
     tags: [
       { name: "Notifications", description: "In-app notification feed and read state" },
-      { name: "Upload", description: "Uploadthing file uploads" },
       { name: "Auth", description: "NextAuth.js handlers" },
     ],
     components: {
@@ -146,20 +145,6 @@ export function buildOpenApiDocument(baseUrl: string) {
             "200": { description: "text/event-stream" },
             "401": { description: "Unauthorized" },
           },
-        },
-      },
-      "/api/uploadthing": {
-        get: {
-          tags: ["Upload"],
-          summary: "Uploadthing handler (GET)",
-          description: "Reserved by the Uploadthing Next adapter.",
-          responses: { "200": { description: "See Uploadthing docs" } },
-        },
-        post: {
-          tags: ["Upload"],
-          summary: "Uploadthing handler (POST)",
-          description: "Multipart / JSON uploads as implemented by @uploadthing/next.",
-          responses: { "200": { description: "See Uploadthing docs" } },
         },
       },
       "/api/auth/{nextauth}": {

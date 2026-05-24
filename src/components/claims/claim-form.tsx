@@ -4,14 +4,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { type ReactNode, useState } from "react";
-import { useForm } from "react-hook-form";
+import { type ChangeEvent, type ReactNode, useRef, useState } from "react";
+import { useForm, useWatch } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import { createClaim } from "@/lib/actions/claim.actions";
+import { uploadImagesToCloudinary } from "@/lib/cloudinary/upload";
 import { cn } from "@/lib/utils/cn";
 import { STATUS_LABEL } from "@/lib/utils/constants";
-import { ClaimProofUploadButton } from "@/components/claims/claim-proof-upload-button";
 import { Sheet } from "@/components/ui/sheet";
 import type { ItemType, ItemStatus } from "@/types";
 
@@ -22,15 +22,6 @@ const claimFormSchema = z.object({
     .max(8000),
 });
 type FormValues = z.infer<typeof claimFormSchema>;
-
-function pickProofUrl(
-  f: { url?: string; ufsUrl?: string } & Record<string, unknown>,
-): string {
-  if (typeof f.ufsUrl === "string" && f.ufsUrl) return f.ufsUrl;
-  if (typeof f.url === "string" && f.url) return f.url;
-  if (typeof f.fileUrl === "string" && f.fileUrl) return f.fileUrl;
-  return "";
-}
 
 type ClaimFormShellProps = {
   item: {
@@ -74,19 +65,57 @@ type ClaimFormContentProps = {
 export function ClaimFormContent({ itemId, onSuccess }: ClaimFormContentProps) {
   const router = useRouter();
   const [proofUrls, setProofUrls] = useState<string[]>([]);
+  const [isUploadingProof, setIsUploadingProof] = useState(false);
+  const proofInputRef = useRef<HTMLInputElement | null>(null);
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
     clearErrors,
-    watch,
+    control,
   } = useForm<FormValues>({
     resolver: zodResolver(claimFormSchema),
     defaultValues: { message: "" },
   });
 
-  const messageLen = watch("message")?.length ?? 0;
+  const message = useWatch({ control, name: "message" });
+  const messageLen = message?.length ?? 0;
   const remaining = Math.max(0, 30 - messageLen);
+
+  const handleProofFiles = async (files: File[]) => {
+    if (files.length === 0) return;
+
+    const slotsLeft = 3 - proofUrls.length;
+    if (slotsLeft <= 0) return;
+
+    const toUpload = files.slice(0, slotsLeft);
+    if (files.length > slotsLeft) {
+      toast.error(`Only ${slotsLeft} more photo${slotsLeft === 1 ? "" : "s"} allowed.`);
+    }
+
+    setIsUploadingProof(true);
+    try {
+      const uploadedUrls = await uploadImagesToCloudinary(toUpload);
+      if (uploadedUrls.length > 0) {
+        setProofUrls((prev) => [...prev, ...uploadedUrls].slice(0, 3));
+        toast.success(
+          `${uploadedUrls.length} proof photo${uploadedUrls.length === 1 ? "" : "s"} uploaded.`,
+        );
+      }
+    } catch (error: unknown) {
+      const message =
+        error instanceof Error ? error.message : "Failed to upload proof photos.";
+      toast.error(message);
+    } finally {
+      setIsUploadingProof(false);
+    }
+  };
+
+  const onPickProofFiles = (event: ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files ? Array.from(event.target.files) : [];
+    event.target.value = "";
+    void handleProofFiles(files);
+  };
 
   const onSubmit = handleSubmit(async (data) => {
     clearErrors();
@@ -143,19 +172,31 @@ export function ClaimFormContent({ itemId, onSuccess }: ClaimFormContentProps) {
           Proof photos (optional, up to 3)
         </p>
         {proofUrls.length < 3 ? (
-          <ClaimProofUploadButton
-            endpoint="claimProof"
-            onClientUploadComplete={(res) => {
-              const next = res
-                .map((f) => pickProofUrl(f as { url?: string; ufsUrl?: string }))
-                .filter(Boolean);
-              if (next.length === 0) return;
-              setProofUrls((prev) => [...prev, ...next].slice(0, 3));
-            }}
-            onUploadError={(e) => {
-              toast.error(e.message);
-            }}
-          />
+          <div className="space-y-2">
+            <input
+              ref={proofInputRef}
+              type="file"
+              accept="image/jpeg,image/png"
+              multiple
+              className="hidden"
+              onChange={onPickProofFiles}
+            />
+            <button
+              type="button"
+              onClick={() => proofInputRef.current?.click()}
+              disabled={isUploadingProof}
+              className="inline-flex items-center justify-center rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm font-medium text-zinc-700 transition hover:bg-zinc-50 disabled:cursor-not-allowed disabled:opacity-60 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-200 dark:hover:bg-zinc-800"
+            >
+              {isUploadingProof ? (
+                <span className="inline-flex items-center gap-2">
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  Uploading...
+                </span>
+              ) : (
+                "Upload proof photos"
+              )}
+            </button>
+          </div>
         ) : null}
         {proofUrls.length > 0 ? (
           <ul className="mt-3 flex flex-wrap gap-2">
