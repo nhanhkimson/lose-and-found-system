@@ -13,8 +13,7 @@ export function buildOpenApiDocument(baseUrl: string): OpenApiDoc {
         title: "BIU Lost & Found API",
         version: "1.0.0",
         description:
-          "Auto-generated OpenAPI from route handlers under src/app/api." +
-          "Sign in on the same origin before using Try it out for cookie-based endpoints.",
+          "REST API for BIU Lost & Found. **Start here:** call `POST /api/auth/login` with email/password — the session cookie is set automatically for Try it out on this host. Seed password: `Password123!` (see `pnpm prisma db seed`).",
       },
       servers: [{ url: baseUrl }],
       tags: [
@@ -25,7 +24,7 @@ export function buildOpenApiDocument(baseUrl: string): OpenApiDoc {
           name: "Notifications",
           description: "In-app notification feed and read state",
         },
-        { name: "Auth", description: "NextAuth.js handlers" },
+        { name: "Auth", description: "Login, logout, and NextAuth handlers" },
       ],
       components: {
         securitySchemes: {
@@ -33,6 +32,8 @@ export function buildOpenApiDocument(baseUrl: string): OpenApiDoc {
             type: "apiKey",
             in: "cookie",
             name: "authjs.session-token",
+            description:
+              "Set automatically by `POST /api/auth/login` (or `__Secure-authjs.session-token` on HTTPS). You usually do not need to paste a value if login was called from Swagger on this site.",
           },
         },
         schemas: {
@@ -76,6 +77,43 @@ export function buildOpenApiDocument(baseUrl: string): OpenApiDoc {
               error: { type: "string" },
             },
             required: ["error"],
+          },
+          AuthLoginRequest: {
+            type: "object",
+            properties: {
+              email: {
+                type: "string",
+                format: "email",
+                example: "sok.sopheak.student@biu.edu.kh",
+              },
+              password: {
+                type: "string",
+                format: "password",
+                example: "Password123!",
+              },
+            },
+            required: ["email", "password"],
+          },
+          AuthLoginResponse: {
+            type: "object",
+            properties: {
+              ok: { type: "boolean", example: true },
+              message: { type: "string" },
+              user: {
+                type: "object",
+                properties: {
+                  id: { type: "string" },
+                  email: { type: "string", nullable: true },
+                  name: { type: "string", nullable: true },
+                  role: {
+                    type: "string",
+                    enum: ["STUDENT", "STAFF", "ADMIN"],
+                  },
+                },
+                required: ["id", "role"],
+              },
+            },
+            required: ["ok", "user", "message"],
           },
         },
       },

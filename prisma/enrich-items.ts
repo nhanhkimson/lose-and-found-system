@@ -45,7 +45,8 @@ const KEYWORD_IMAGE_SOURCES: ReadonlyArray<{
       "https://images.unsplash.com/photo-1563225409-127c18758bd5?auto=format&fit=crop&w=1400&q=80",
   },
   {
-    keywords: ["jacket", "windbreaker", "beanie", "clothing"],
+    keywords: ["jacket", "windbreaker",
+       "beanie", "clothing"],
     imageSource:
       "https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?auto=format&fit=crop&w=1400&q=80",
   },

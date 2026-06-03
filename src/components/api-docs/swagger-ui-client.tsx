@@ -55,6 +55,10 @@ export function SwaggerUIClient({ url }: SwaggerUIClientProps) {
         defaultModelsExpandDepth={1}
         tryItOutEnabled
         persistAuthorization
+        requestInterceptor={(req) => {
+          req.credentials = "include";
+          return req;
+        }}
       />
     </div>
   );

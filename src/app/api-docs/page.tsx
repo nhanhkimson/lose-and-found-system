@@ -18,12 +18,16 @@ export default function ApiDocsPage() {
               API reference (Swagger UI)
             </h1>
             <p className="text-sm text-muted-foreground">
-              Spec served from{" "}
+              Spec from{" "}
               <code className="rounded bg-surface-muted px-1.5 py-0.5 text-xs">
                 /api/openapi
               </code>
-              . “Try it out” only sends your browser&apos;s session cookies for
-              this origin; server actions are not listed here.
+              . Sign in via{" "}
+              <code className="rounded bg-surface-muted px-1.5 py-0.5 text-xs">
+                POST /api/auth/login
+              </code>{" "}
+              (Auth tag) — no need to use the web login page or paste cookies
+              manually.
             </p>
           </div>
           <Link

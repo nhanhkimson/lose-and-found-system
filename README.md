@@ -172,7 +172,8 @@ Current documented endpoints include:
 - `GET /api/notifications/sse`
 - `POST /api/uploads/signature`
 - `GET /api/openapi`
-- `GET/POST /api/auth/{nextauth}`
+- `POST /api/auth/login` — email/password (sets session cookie for Swagger)
+- `POST /api/auth/logout` — clear session cookie
 
 Open API docs:
 
