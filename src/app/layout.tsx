@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { AppProviders } from "@/components/providers/app-providers";
+import { APP_DESCRIPTION } from "@/lib/utils/constants";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -21,20 +22,17 @@ export const metadata: Metadata = {
     default: "BIU Lost & Found",
     template: "%s · BIU Lost & Found",
   },
-  description:
-    "Report and browse lost and found items on the Build Bright University campus.",
+  description: APP_DESCRIPTION,
   openGraph: {
     title: "BIU Lost & Found",
-    description:
-      "Report and browse lost and found items on the Build Bright University campus.",
+    description: APP_DESCRIPTION,
     type: "website",
     locale: "en",
   },
   twitter: {
     card: "summary_large_image",
     title: "BIU Lost & Found",
-    description:
-      "Report and browse lost and found items on the Build Bright University campus.",
+    description: APP_DESCRIPTION,
   },
 };
 

@@ -1,6 +1,11 @@
 import { AuthError } from "next-auth";
+import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import { auth, signIn } from "@/lib/auth";
+import {
+  mintSessionToken,
+  readSessionTokenFromCookies,
+} from "@/lib/auth/session-token";
 import { authLoginSchema } from "@/lib/validations/auth-login.schema";
 
 export async function POST(request: Request) {
@@ -41,8 +46,22 @@ export async function POST(request: Request) {
       );
     }
 
+    const cookieStore = await cookies();
+    let sessionToken = readSessionTokenFromCookies(cookieStore);
+    if (!sessionToken) {
+      sessionToken = await mintSessionToken({
+        sub: session.user.id,
+        id: session.user.id,
+        role: session.user.role,
+        email: session.user.email,
+        name: session.user.name,
+      });
+    }
+
     return NextResponse.json({
       ok: true,
+      sessionToken,
+      expiresIn: 30 * 24 * 60 * 60,
       user: {
         id: session.user.id,
         email: session.user.email,
@@ -50,7 +69,7 @@ export async function POST(request: Request) {
         role: session.user.role,
       },
       message:
-        "Session cookie set. Protected endpoints on this origin will use it automatically.",
+        "Use sessionToken as Authorization: Bearer <token> on mobile, or the session cookie in browsers.",
     });
   } catch (error) {
     const message =

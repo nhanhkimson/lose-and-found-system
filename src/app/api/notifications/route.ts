@@ -1,4 +1,4 @@
-import { auth } from "@/lib/auth";
+import { getApiSession } from "@/lib/auth/api-session";
 import { prisma } from "@/lib/prisma";
 import { NextResponse, type NextRequest } from "next/server";
 
@@ -43,7 +43,7 @@ const notificationSelect = {
 } as const;
 
 export async function GET(request: NextRequest) {
-  const session = await auth();
+  const session = await getApiSession(request);
   if (!session?.user?.id) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }

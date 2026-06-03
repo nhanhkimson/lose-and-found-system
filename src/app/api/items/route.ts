@@ -6,7 +6,7 @@ import {
 } from "@prisma/client";
 import { endOfDay, parseISO, startOfDay } from "date-fns";
 import { NextResponse, type NextRequest } from "next/server";
-import { auth } from "@/lib/auth";
+import { getApiSession } from "@/lib/auth/api-session";
 import { prisma } from "@/lib/prisma";
 import { PAGINATION } from "@/lib/utils/constants";
 import { itemReportFormSchema } from "@/lib/validations/item-report.schema";
@@ -164,7 +164,7 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: Request) {
   try {
-    const session = await auth();
+    const session = await getApiSession(request);
     if (!session?.user?.id) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }

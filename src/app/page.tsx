@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { getData } from "@/lib/actions/item.actions";
 import { auth } from "@/lib/auth";
-import { APP_DESCRIPTION, APP_NAME } from "@/lib/utils/constants";
+import { APP_DESCRIPTION, APP_NAME, UNIVERSITY_NAME } from "@/lib/utils/constants";
 import { ItemList } from "@/components/home/item-list";
 import { ThemeSwitcher } from "@/components/layout/theme-switcher";
 
@@ -14,7 +14,7 @@ export default async function Home() {
         <div className="mx-auto flex max-w-6xl flex-col gap-3 px-4 py-8 sm:px-6">
           <div className="flex items-center justify-between gap-3">
             <p className="text-xs font-semibold uppercase tracking-widest text-primary">
-              Build Bright University
+              {UNIVERSITY_NAME}
             </p>
             <ThemeSwitcher />
           </div>

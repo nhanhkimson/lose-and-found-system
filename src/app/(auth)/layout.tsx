@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
+import { UNIVERSITY_NAME } from "@/lib/utils/constants";
 
 export const metadata: Metadata = {
   title: "Account",
@@ -17,7 +18,7 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
           <span className="text-2xl tracking-tight">BIU</span>
         </div>
         <h1 className="text-xl font-semibold text-primary sm:text-2xl">
-          BELTEI International University
+          {UNIVERSITY_NAME}
         </h1>
         <p className="mt-1 text-sm text-muted-foreground">
           Lost &amp; Found sign in

@@ -1,6 +1,6 @@
 import { type ClaimType, Prisma } from "@prisma/client";
 import { NextResponse } from "next/server";
-import { auth } from "@/lib/auth";
+import { getApiSession } from "@/lib/auth/api-session";
 import { prisma } from "@/lib/prisma";
 import { createClaimInputSchema } from "@/lib/validations/claim.schema";
 
@@ -38,7 +38,7 @@ function mapItemTypeToClaimType(type: "LOST" | "FOUND"): ClaimType {
  */
 export async function POST(request: Request) {
   try {
-    const session = await auth();
+    const session = await getApiSession(request);
     if (!session?.user?.id) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }

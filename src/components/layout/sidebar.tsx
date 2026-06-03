@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import type { UserRole } from "@prisma/client";
+import { UNIVERSITY_NAME } from "@/lib/utils/constants";
 import { DashboardNavList } from "./dashboard-nav-list";
 
 type SidebarProps = {
@@ -23,7 +24,7 @@ export function Sidebar({ role }: SidebarProps) {
             Lost &amp; Found
           </p>
           <p className="truncate text-xs text-muted-foreground">
-            Build Bright University
+            {UNIVERSITY_NAME}
           </p>
         </div>
       </Link>

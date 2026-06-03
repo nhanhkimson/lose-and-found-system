@@ -1,9 +1,10 @@
 import type { ItemCategory, ItemStatus, ItemType } from "@prisma/client";
 
+export const UNIVERSITY_NAME = "Beltei International University";
+
 export const APP_NAME = "BIU Lost & Found";
 
-export const APP_DESCRIPTION =
-  "Report and browse lost and found items on the Build Bright University campus.";
+export const APP_DESCRIPTION = `Report and browse lost and found items on the ${UNIVERSITY_NAME} campus.`;
 
 /** Primary routes used across the app */
 export const ROUTES = {

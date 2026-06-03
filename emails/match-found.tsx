@@ -33,7 +33,7 @@ export default function MatchFoundEmail({
       <Body style={main}>
         <Container style={container}>
           <Section style={header}>
-            <Text style={brand}>Build Bright University</Text>
+            <Text style={brand}>Beltei International University</Text>
             <Heading as="h1" style={h1}>
               Possible match
             </Heading>

@@ -1,6 +1,7 @@
 import NextAuth from "next-auth";
 import { NextResponse } from "next/server";
 import { authBase, googleProvider } from "@/auth.config";
+import { withBearerSessionCookie } from "@/lib/auth/bearer-request";
 import {
   apiCorsPreflightResponse,
   applyApiCorsHeaders,
@@ -20,19 +21,20 @@ const { auth } = NextAuth({
 
 export default auth((req) => {
   const { pathname } = req.nextUrl;
+  const request = withBearerSessionCookie(req);
 
   if (isApiRoute(pathname)) {
-    if (req.method === "OPTIONS") {
-      return apiCorsPreflightResponse(req);
+    if (request.method === "OPTIONS") {
+      return apiCorsPreflightResponse(request);
     }
 
-    const res = NextResponse.next();
-    applyApiCorsHeaders(req, res);
+    const res = NextResponse.next({ request });
+    applyApiCorsHeaders(request, res);
     res.headers.set("x-pathname", pathname);
     return res;
   }
 
-  const res = NextResponse.next();
+  const res = NextResponse.next({ request });
   res.headers.set("x-pathname", pathname);
   return res;
 });

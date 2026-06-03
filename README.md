@@ -180,8 +180,11 @@ Current documented endpoints include:
 - `POST /api/uploads` — multipart image upload (Swagger file picker)
 - `POST /api/uploads/signature` — Cloudinary signed upload params
 - `GET /api/openapi`
-- `POST /api/auth/login` — email/password (sets session cookie for Swagger)
-- `POST /api/auth/logout` — clear session cookie
+- `POST /api/auth/login` — email/password; returns `sessionToken` (Bearer) + sets cookie for browsers
+- `GET /api/auth/session` — validate Bearer/cookie session
+- `POST /api/auth/logout` — clear session
+- `GET /api/profile` — current user profile + stats
+- `PATCH /api/profile` — update name, studentId, avatar URL
 
 Open API docs:
 
