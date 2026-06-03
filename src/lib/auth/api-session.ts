@@ -2,7 +2,10 @@ import { getToken } from "next-auth/jwt";
 import type { UserRole } from "@prisma/client";
 import type { Session } from "next-auth";
 import { auth } from "@/lib/auth";
-import { SESSION_COOKIE_NAMES, SESSION_TOKEN_SALT } from "@/lib/auth/session-token";
+import {
+  SESSION_COOKIE_NAMES,
+  SESSION_TOKEN_SALT,
+} from "@/lib/auth/session-cookie";
 
 function tokenToSession(
   token: Record<string, unknown> & { sub?: string },

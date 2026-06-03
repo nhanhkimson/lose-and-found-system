@@ -183,8 +183,9 @@ Current documented endpoints include:
 - `POST /api/auth/login` — email/password; returns `sessionToken` (Bearer) + sets cookie for browsers
 - `GET /api/auth/session` — validate Bearer/cookie session
 - `POST /api/auth/logout` — clear session
-- `GET /api/profile` — current user profile + stats
+- `GET /api/profile` — profile, stats, recent activity
 - `PATCH /api/profile` — update name, studentId, avatar URL
+- `POST /api/profile/password` — change password (credentials accounts)
 
 Open API docs:
 

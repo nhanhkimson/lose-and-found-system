@@ -1,10 +1,14 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2 } from "lucide-react";
+import { LayoutDashboard, Loader2, Package, FileCheck } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { RecentItems } from "@/components/dashboard/recent-items";
+import { ProfileAvatarUpload } from "@/components/profile/profile-avatar-upload";
+import { ProfilePasswordForm } from "@/components/profile/profile-password-form";
 import { ProfileStatsGrid } from "@/components/profile/profile-stats";
 import { updateProfileAction } from "@/lib/actions/profile.actions";
 import type { UserProfile } from "@/lib/actions/profile.actions";
@@ -18,11 +22,18 @@ type ProfileFormProps = {
   profile: UserProfile;
 };
 
+const QUICK_LINKS = [
+  { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/my-items", label: "My items", icon: Package },
+  { href: "/claims", label: "My claims", icon: FileCheck },
+] as const;
+
 export function ProfileForm({ profile }: ProfileFormProps) {
   const router = useRouter();
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors, isSubmitting, isDirty },
   } = useForm<ProfileUpdateInput>({
     resolver: zodResolver(profileUpdateSchema),
@@ -68,7 +79,7 @@ export function ProfileForm({ profile }: ProfileFormProps) {
             (profile.name?.[0] ?? profile.email?.[0] ?? "?").toUpperCase()
           )}
         </div>
-        <div>
+        <div className="min-w-0 flex-1">
           <h1 className="text-2xl font-bold text-foreground">
             {profile.name ?? "Your profile"}
           </h1>
@@ -86,6 +97,22 @@ export function ProfileForm({ profile }: ProfileFormProps) {
         </div>
       </div>
 
+      <nav
+        className="flex flex-wrap gap-2"
+        aria-label="Profile shortcuts"
+      >
+        {QUICK_LINKS.map(({ href, label, icon: Icon }) => (
+          <Link
+            key={href}
+            href={href}
+            className="inline-flex items-center gap-2 rounded-lg border border-border bg-surface px-3 py-2 text-sm font-medium text-foreground transition hover:border-primary/40 hover:bg-surface-muted"
+          >
+            <Icon className="h-4 w-4 text-primary" aria-hidden />
+            {label}
+          </Link>
+        ))}
+      </nav>
+
       <section>
         <h2 className="mb-3 text-sm font-semibold text-foreground">
           Your activity
@@ -93,12 +120,28 @@ export function ProfileForm({ profile }: ProfileFormProps) {
         <ProfileStatsGrid stats={profile.stats} />
       </section>
 
+      <RecentItems activity={profile.recentActivity} />
+
       <section className="rounded-xl border border-border bg-surface p-5">
         <h2 className="text-sm font-semibold text-foreground">Edit profile</h2>
         <p className="mt-1 text-sm text-muted-foreground">
           Update how you appear on listings and claims.
         </p>
         <form onSubmit={onSubmit} className="mt-5 space-y-4" noValidate>
+          <div>
+            <p className="mb-2 text-sm font-medium text-foreground">Profile photo</p>
+            <Controller
+              control={control}
+              name="image"
+              render={({ field }) => (
+                <ProfileAvatarUpload
+                  value={field.value}
+                  onChange={field.onChange}
+                  displayName={profile.name ?? profile.email ?? "?"}
+                />
+              )}
+            />
+          </div>
           <div>
             <label
               htmlFor="profile-name"
@@ -146,15 +189,15 @@ export function ProfileForm({ profile }: ProfileFormProps) {
           </div>
           <div>
             <label
-              htmlFor="profile-image"
+              htmlFor="profile-image-url"
               className="mb-1 block text-sm font-medium text-foreground"
             >
-              Avatar URL
+              Avatar URL (optional)
             </label>
             <input
-              id="profile-image"
+              id="profile-image-url"
               type="url"
-              placeholder="https://..."
+              placeholder="https://... or upload above"
               className={cn(
                 "w-full rounded-lg border border-border bg-input px-3 py-2 text-sm text-foreground outline-none ring-primary/40 focus:ring-2",
                 errors.image && "border-danger",
@@ -168,7 +211,7 @@ export function ProfileForm({ profile }: ProfileFormProps) {
             ) : null}
           </div>
           <p className="text-xs text-muted-foreground">
-            Email ({profile.email}) is managed by your account sign-in and
+            Email ({profile.email}) is managed by your sign-in provider and
             cannot be changed here.
           </p>
           <button
@@ -186,6 +229,16 @@ export function ProfileForm({ profile }: ProfileFormProps) {
             )}
           </button>
         </form>
+      </section>
+
+      <section className="rounded-xl border border-border bg-surface p-5">
+        <h2 className="text-sm font-semibold text-foreground">Security</h2>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Update your password for email sign-in.
+        </p>
+        <div className="mt-4">
+          <ProfilePasswordForm hasPassword={profile.hasPassword} />
+        </div>
       </section>
     </div>
   );

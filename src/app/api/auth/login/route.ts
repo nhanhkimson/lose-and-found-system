@@ -2,10 +2,8 @@ import { AuthError } from "next-auth";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import { auth, signIn } from "@/lib/auth";
-import {
-  mintSessionToken,
-  readSessionTokenFromCookies,
-} from "@/lib/auth/session-token";
+import { readSessionTokenFromCookies } from "@/lib/auth/session-cookie";
+import { mintSessionToken } from "@/lib/auth/mint-session-token";
 import { authLoginSchema } from "@/lib/validations/auth-login.schema";
 
 export async function POST(request: Request) {

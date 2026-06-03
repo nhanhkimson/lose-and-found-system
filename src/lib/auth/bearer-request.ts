@@ -1,6 +1,4 @@
-import {
-  SESSION_COOKIE_NAMES,
-} from "@/lib/auth/session-token";
+import { SESSION_COOKIE_NAMES } from "@/lib/auth/session-cookie";
 import type { NextRequest } from "next/server";
 import { NextRequest as NextRequestCtor } from "next/server";
 
