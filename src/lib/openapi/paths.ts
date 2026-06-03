@@ -288,10 +288,64 @@ export const apiPaths = {
       },
     },
   },
+  "/api/uploads": {
+    post: {
+      tags: ["Uploads"],
+      summary: "Upload image file (multipart)",
+      description:
+        "Upload a JPEG or PNG (max 4MB) via Swagger **Choose File**. Requires session from POST /api/auth/login. Returns Cloudinary `url` for use in item/claim payloads (`imageUrls`, `proofImageUrls`).",
+      security: cookieSec,
+      requestBody: {
+        required: true,
+        content: {
+          "multipart/form-data": {
+            schema: {
+              type: "object",
+              properties: {
+                file: {
+                  type: "string",
+                  format: "binary",
+                  description: "Image file (JPEG or PNG, max 4MB)",
+                },
+                folder: {
+                  type: "string",
+                  example: "biu-lost-found",
+                  description: "Optional Cloudinary folder override",
+                },
+              },
+              required: ["file"],
+            },
+          },
+        },
+      },
+      responses: {
+        "200": {
+          description: "Upload successful.",
+          content: {
+            [json]: {
+              schema: { $ref: "#/components/schemas/UploadImageResponse" },
+            },
+          },
+        },
+        "400": {
+          description: "Invalid file or validation error.",
+          content: {
+            [json]: {
+              schema: { $ref: "#/components/schemas/ErrorResponse" },
+            },
+          },
+        },
+        "401": err401,
+        "500": { description: "Cloudinary not configured or upload failed." },
+      },
+    },
+  },
   "/api/uploads/signature": {
     post: {
       tags: ["Uploads"],
-      summary: "Cloudinary signed upload params",
+      summary: "Cloudinary signed upload params (advanced)",
+      description:
+        "Returns signature fields for direct client → Cloudinary upload. For Swagger file upload, use POST /api/uploads instead.",
       security: cookieSec,
       requestBody: {
         content: {

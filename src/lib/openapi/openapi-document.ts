@@ -138,6 +138,21 @@ export function buildOpenApiDocument(baseUrl: string): OpenApiDoc {
           },
           required: ["ok", "user", "message"],
         },
+        UploadImageResponse: {
+          type: "object",
+          properties: {
+            ok: { type: "boolean", example: true },
+            url: {
+              type: "string",
+              format: "uri",
+              example: "https://res.cloudinary.com/example/image/upload/v1/sample.jpg",
+            },
+            fileName: { type: "string" },
+            size: { type: "integer" },
+            mimeType: { type: "string" },
+          },
+          required: ["ok", "url"],
+        },
       },
     },
     security: [{ cookieSession: [] }],

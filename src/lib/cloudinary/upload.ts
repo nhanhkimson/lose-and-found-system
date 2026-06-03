@@ -1,7 +1,9 @@
 "use client";
 
-const MAX_UPLOAD_SIZE_BYTES = 4 * 1024 * 1024;
-const ALLOWED_MIME_TYPES = new Set(["image/jpeg", "image/png"]);
+import {
+  validateUploadMimeType,
+  validateUploadSize,
+} from "@/lib/cloudinary/constants";
 
 type CloudinaryErrorPayload = {
   error?: {
@@ -28,13 +30,8 @@ function readCloudinaryPublicConfig(): {
 }
 
 function validateImageFile(file: File): void {
-  if (!ALLOWED_MIME_TYPES.has(file.type)) {
-    throw new Error("Only JPEG and PNG files are supported.");
-  }
-
-  if (file.size > MAX_UPLOAD_SIZE_BYTES) {
-    throw new Error("Each image must be 4MB or smaller.");
-  }
+  validateUploadMimeType(file.type);
+  validateUploadSize(file.size);
 }
 
 function parseCloudinaryError(payload: unknown, fallback: string): string {

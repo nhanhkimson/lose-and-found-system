@@ -177,7 +177,8 @@ Current documented endpoints include:
 - `POST /api/notifications/mark-read`
 - `GET /api/notifications/stream`
 - `GET /api/notifications/sse`
-- `POST /api/uploads/signature`
+- `POST /api/uploads` — multipart image upload (Swagger file picker)
+- `POST /api/uploads/signature` — Cloudinary signed upload params
 - `GET /api/openapi`
 - `POST /api/auth/login` — email/password (sets session cookie for Swagger)
 - `POST /api/auth/logout` — clear session cookie
