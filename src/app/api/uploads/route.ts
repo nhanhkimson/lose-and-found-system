@@ -44,8 +44,11 @@ export async function POST(request: Request) {
     const message =
       error instanceof Error ? error.message : "Image upload failed.";
     const isClientError =
-      message.includes("Only JPEG") ||
+      message.includes("Unsupported") ||
+      message.includes("too large") ||
       message.includes("4MB") ||
+      message.includes("25MB") ||
+      message.includes("empty") ||
       message.includes("Missing file");
     return NextResponse.json(
       { error: message },

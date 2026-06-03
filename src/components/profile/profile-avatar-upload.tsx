@@ -4,7 +4,8 @@ import { Loader2, Upload, X } from "lucide-react";
 import Image from "next/image";
 import { type ChangeEvent, useId, useRef, useState } from "react";
 import { toast } from "sonner";
-import { uploadImageToCloudinary } from "@/lib/cloudinary/upload";
+import { UPLOAD_ACCEPT_ATTRIBUTE } from "@/lib/cloudinary/constants";
+import { UPLOAD_HELP_TEXT, uploadImageToCloudinary } from "@/lib/cloudinary/upload";
 import { cn } from "@/lib/utils/cn";
 
 type ProfileAvatarUploadProps = {
@@ -75,7 +76,7 @@ export function ProfileAvatarUpload({
           ref={inputRef}
           id={id}
           type="file"
-          accept="image/jpeg,image/png,image/webp"
+          accept={UPLOAD_ACCEPT_ATTRIBUTE}
           className="sr-only"
           disabled={disabled || isUploading}
           onChange={onFileChange}
@@ -100,7 +101,7 @@ export function ProfileAvatarUpload({
             Remove photo
           </button>
         ) : null}
-        <p className="text-xs text-muted-foreground">JPEG or PNG, max 4MB</p>
+        <p className="text-xs text-muted-foreground">{UPLOAD_HELP_TEXT}</p>
       </div>
     </div>
   );

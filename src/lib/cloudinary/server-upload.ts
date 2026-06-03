@@ -1,7 +1,5 @@
-import {
-  validateUploadMimeType,
-  validateUploadSize,
-} from "@/lib/cloudinary/constants";
+import { validateUploadSize } from "@/lib/cloudinary/constants";
+import { prepareImageForUpload } from "@/lib/cloudinary/prepare-image";
 
 type CloudinaryUploadResponse = {
   secure_url?: string;
@@ -32,16 +30,22 @@ export async function uploadImageBufferToCloudinary(input: {
   fileName?: string;
   folder?: string;
 }): Promise<string> {
-  validateUploadMimeType(input.mimeType);
-  validateUploadSize(input.buffer.byteLength);
+  const prepared = await prepareImageForUpload({
+    buffer: input.buffer,
+    mimeType: input.mimeType,
+    fileName: input.fileName,
+  });
+  validateUploadSize(prepared.buffer.byteLength);
 
   const { cloudName, uploadPreset, folder } = readCloudinaryPublicUploadConfig();
   const targetFolder =
     input.folder?.trim() || folder?.trim() || "biu-lost-found";
 
-  const blob = new Blob([new Uint8Array(input.buffer)], { type: input.mimeType });
+  const blob = new Blob([new Uint8Array(prepared.buffer)], {
+    type: prepared.mimeType,
+  });
   const formData = new FormData();
-  formData.append("file", blob, input.fileName ?? "upload.jpg");
+  formData.append("file", blob, prepared.fileName);
   formData.append("upload_preset", uploadPreset);
   formData.append("folder", targetFolder);
 

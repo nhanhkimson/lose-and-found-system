@@ -9,7 +9,11 @@ import { useForm, useWatch } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import { createClaim } from "@/lib/actions/claim.actions";
-import { uploadImagesToCloudinary } from "@/lib/cloudinary/upload";
+import { UPLOAD_ACCEPT_ATTRIBUTE } from "@/lib/cloudinary/constants";
+import {
+  UPLOAD_HELP_TEXT,
+  uploadImagesToCloudinary,
+} from "@/lib/cloudinary/upload";
 import { cn } from "@/lib/utils/cn";
 import { STATUS_LABEL } from "@/lib/utils/constants";
 import { Sheet } from "@/components/ui/sheet";
@@ -182,7 +186,7 @@ export function ClaimFormContent({ itemId, onSuccess }: ClaimFormContentProps) {
             <input
               ref={proofInputRef}
               type="file"
-              accept="image/jpeg,image/png"
+              accept={UPLOAD_ACCEPT_ATTRIBUTE}
               multiple
               className="hidden"
               onChange={onPickProofFiles}
@@ -232,7 +236,7 @@ export function ClaimFormContent({ itemId, onSuccess }: ClaimFormContentProps) {
           </ul>
         ) : null}
         <p className="mt-1 text-xs text-muted-foreground">
-          JPEG or PNG, max 4MB each
+          {UPLOAD_HELP_TEXT}
         </p>
       </div>
 

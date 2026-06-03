@@ -1,85 +1,47 @@
 "use client";
 
 import {
+  UPLOAD_HELP_TEXT,
+  validateUploadInputSize,
   validateUploadMimeType,
-  validateUploadSize,
 } from "@/lib/cloudinary/constants";
-
-type CloudinaryErrorPayload = {
-  error?: {
-    message?: string;
-  };
-};
-
-function readCloudinaryPublicConfig(): {
-  cloudName: string;
-  uploadPreset: string;
-  folder?: string;
-} {
-  const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
-  const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
-  const folder = process.env.NEXT_PUBLIC_CLOUDINARY_FOLDER;
-
-  if (!cloudName || !uploadPreset) {
-    throw new Error(
-      "Cloudinary is not configured. Add NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME and NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET.",
-    );
-  }
-
-  return { cloudName, uploadPreset, folder };
-}
 
 function validateImageFile(file: File): void {
   validateUploadMimeType(file.type);
-  validateUploadSize(file.size);
+  validateUploadInputSize(file.size);
 }
 
-function parseCloudinaryError(payload: unknown, fallback: string): string {
-  if (typeof payload !== "object" || payload === null) return fallback;
-  const maybePayload = payload as CloudinaryErrorPayload;
-  if (
-    typeof maybePayload.error?.message === "string" &&
-    maybePayload.error.message
-  ) {
-    return maybePayload.error.message;
-  }
-  return fallback;
-}
+type UploadApiResponse = {
+  ok?: boolean;
+  url?: string;
+  error?: string;
+};
 
+/**
+ * Upload via POST /api/uploads so the server can convert/compress any image type.
+ */
 export async function uploadImageToCloudinary(file: File): Promise<string> {
   validateImageFile(file);
-  const { cloudName, uploadPreset, folder } = readCloudinaryPublicConfig();
 
   const formData = new FormData();
-  formData.append("file", file);
-  formData.append("upload_preset", uploadPreset);
-  if (folder) {
-    formData.append("folder", folder);
-  }
+  formData.append("file", file, file.name || "upload");
 
-  const response = await fetch(
-    `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
-    {
-      method: "POST",
-      body: formData,
-    },
-  );
+  const response = await fetch("/api/uploads", {
+    method: "POST",
+    body: formData,
+    credentials: "include",
+  });
 
-  const payload: unknown = await response.json();
+  const payload = (await response.json()) as UploadApiResponse;
   if (!response.ok) {
-    throw new Error(parseCloudinaryError(payload, "Image upload failed."));
+    throw new Error(payload.error ?? "Image upload failed.");
   }
 
-  if (typeof payload !== "object" || payload === null) {
-    throw new Error("Image upload failed.");
-  }
-
-  const secureUrl = (payload as { secure_url?: unknown }).secure_url;
-  if (typeof secureUrl !== "string" || secureUrl.length === 0) {
+  if (typeof payload.url !== "string" || payload.url.length === 0) {
     throw new Error("Image upload succeeded but URL is missing.");
   }
 
-  return secureUrl;
+  return payload.url;
 }
 
 export async function uploadImagesToCloudinary(
@@ -97,3 +59,5 @@ export async function uploadImagesToCloudinary(
 
   return urls;
 }
+
+export { UPLOAD_HELP_TEXT };

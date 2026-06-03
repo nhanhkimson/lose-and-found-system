@@ -11,11 +11,16 @@ import {
   useState,
 } from "react";
 import { toast } from "sonner";
-import { uploadImagesToCloudinary } from "@/lib/cloudinary/upload";
+import {
+  UPLOAD_HELP_TEXT,
+  uploadImagesToCloudinary,
+} from "@/lib/cloudinary/upload";
+import { UPLOAD_ACCEPT_ATTRIBUTE } from "@/lib/cloudinary/constants";
 import { cn } from "@/lib/utils/cn";
 
 const MAX_FILES = 5;
 const MAX_MB = 4;
+const INPUT_MAX_MB = 25;
 
 type ImageUploadProps = {
   value: string[];
@@ -125,7 +130,8 @@ export function ImageUpload({
   return (
     <div className={cn("space-y-3", className)}>
       <p id={`${id}-help`} className="text-xs text-muted-foreground">
-        Up to {MAX_FILES} images, {MAX_MB}MB each. JPEG or PNG.
+        Up to {MAX_FILES} images. {UPLOAD_HELP_TEXT} (max {INPUT_MAX_MB}MB
+        original, {MAX_MB}MB after compress).
       </p>
 
       {value.length > 0 ? (
@@ -185,7 +191,7 @@ export function ImageUpload({
           <input
             ref={inputRef}
             type="file"
-            accept="image/jpeg,image/png"
+            accept={UPLOAD_ACCEPT_ATTRIBUTE}
             multiple
             disabled={disabled || isUploading}
             className="hidden"
