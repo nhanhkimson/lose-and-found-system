@@ -3,43 +3,6 @@ import { NextResponse } from "next/server";
 import { auth, signIn } from "@/lib/auth";
 import { authLoginSchema } from "@/lib/validations/auth-login.schema";
 
-/**
- * @swagger
- * /api/auth/login:
- *   post:
- *     tags: [Auth]
- *     summary: Sign in with email and password
- *     description: |
- *       Sets the NextAuth session cookie on this origin (for Swagger "Try it out" and API clients).
- *       Use seed users such as `sok.sopheak.student@biu.edu.kh` with password `Password123!` after `pnpm prisma db seed`.
- *       After a 200 response, call protected endpoints on the same host; the browser stores the cookie automatically.
- *     security: []
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/AuthLoginRequest'
- *     responses:
- *       200:
- *         description: Signed in; session cookie set (Set-Cookie).
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/AuthLoginResponse'
- *       400:
- *         description: Validation error.
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
- *       401:
- *         description: Invalid email or password.
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
- */
 export async function POST(request: Request) {
   try {
     const payload: unknown = await request.json();

@@ -117,6 +117,13 @@ NEXT_PUBLIC_CLOUDINARY_FOLDER="biu-lost-found"
 
 # Cloudinary server signing (for /api/uploads/signature)
 CLOUDINARY_URL="cloudinary://<api_key>:<api_secret>@<cloud-name>"
+
+# API CORS (for mobile / external clients)
+# Enabled by default; allows all origins by default.
+API_CORS_ENABLED=true
+API_CORS_ALLOW_ALL=true
+# When API_CORS_ALLOW_ALL=false, comma-separated allowed origins:
+# API_CORS_ORIGINS="https://belteiloseandfound.vercel.app,http://localhost:3000"
 ```
 
 ### 3) Run database migration and seed
@@ -179,6 +186,24 @@ Open API docs:
 
 - Swagger UI: `http://localhost:3000/api-docs`
 - OpenAPI JSON: `http://localhost:3000/api/openapi`
+
+### CORS (mobile / external clients)
+
+| Variable | Default | Meaning |
+|----------|---------|---------|
+| `API_CORS_ENABLED` | `true` | Send CORS headers on `/api/*` |
+| `API_CORS_ALLOW_ALL` | `true` | `Access-Control-Allow-Origin: *` |
+| `API_CORS_ORIGINS` | (empty) | When `API_CORS_ALLOW_ALL=false`, comma-separated allowlist |
+
+Restrict to specific origins:
+
+```env
+API_CORS_ENABLED=true
+API_CORS_ALLOW_ALL=false
+API_CORS_ORIGINS=https://belteiloseandfound.vercel.app,http://localhost:3000
+```
+
+Disable CORS: `API_CORS_ENABLED=false`.
 
 ## Deployment (Vercel)
 
