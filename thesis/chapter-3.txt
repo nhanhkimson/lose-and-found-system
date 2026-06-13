@@ -1,0 +1,346 @@
+CHAPTER 3: RESEARCH METHODOLOGY
+
+This chapter describes the methodology used at Beltei International University to carry out the study on campus lost-and-found management. It explains the population, setting, data gathering strategies, sample tactics, and research methodology. The approach guarantees that the results are precise, trustworthy, and representative of the campus lost-and-found service practices.
+
+
+3.1 Research Methodology
+
+This study used a mixed-method approach at Beltei International University to understand real-world lost-and-found challenges and evaluate the need for BLFMS. Qualitative methods included interviews and observation. Quantitative methods included structured questionnaires distributed to students and staff.
+
+This study's research technique was thoughtfully created to completely comprehend the difficulties in real-world campus lost-and-found coordination. A mixed-method strategy that included qualitative and quantitative techniques was used to do this, guaranteeing that both quantifiable data and in-depth insights were gathered and examined. The qualitative component concentrated on using semi-structured interviews and direct observation to collect in-depth viewpoints from students, front-desk staff, and administrators. While observational studies allowed the researcher to examine existing procedures and spot inefficiencies in real time, these interviews allowed participants to go into further detail about their workflows, difficulties, and expectations for an automated system. However, in order to gather information about the experiences of a larger group of campus users with regard to reporting accuracy, search difficulty, recovery success, and general satisfaction with the current process, the quantitative component entailed delivering organized questionnaires to them. The scaled and closed-ended questions in the questionnaires allowed for the gathering of numerical data for statistical analysis. With quantitative data validating conclusions through larger trends and patterns and qualitative insights providing depth and context, this mixed-method approach offered a thorough grasp of the issues at hand. By integrating these methods, the study created a strong basis for the BIU Lost and Found Management System (BLFMS) design, guaranteeing that the suggested remedy directly addressed the issues and requirements noted in the research.
+
+
+3.1.1 Research Design
+
+A descriptive and analytical research design was adopted. The descriptive component documented current practices and user experiences. The analytical component evaluated weaknesses and proposed an automated web-based solution.
+
+This study adopts a descriptive and analytical research design that integrates both quantitative and qualitative research methods to comprehensively examine the existing lost-and-found management practices at Beltei International University. The descriptive approach is used to clearly identify and document the current practices, procedures, and challenges associated with reporting, searching, and recovering lost items, while the analytical approach allows for a deeper evaluation of the effectiveness, accuracy, and efficiency of these practices. By combining these two approaches, the study is able to not only describe what is currently happening within the campus but also analyze the underlying causes of inefficiencies and communication gaps within the system.
+
+The primary objective of this research design is to identify existing challenges in manual lost-and-found coordination, assess their impact on campus service performance, and propose an automated solution that can enhance accuracy, efficiency, and transparency in item recovery management. To achieve this objective, multiple data collection tools were employed to ensure a comprehensive and reliable dataset. Quantitative data were collected through structured surveys distributed to students and staff, which aimed to assess their experiences, satisfaction levels, and perceptions regarding reporting difficulty, search effectiveness, claim traceability, and overall service quality. These surveys provided measurable data that supported statistical analysis and objective evaluation.
+
+In addition, qualitative data were gathered through semi-structured interviews conducted with front-desk staff and administrators. These interviews provided deeper insights into service management challenges, claim verification processes, and strategic perspectives related to campus support operations. Direct observations were also carried out to examine how students and staff currently report lost items, publish found items, and follow up on cases, allowing the researcher to identify practical inefficiencies and workflow issues. Furthermore, document analysis was conducted by reviewing notice-board records, informal social media posts, and related communication logs to detect inconsistencies, delays, or missing information. The integration of these methods provided a holistic view of the campus lost-and-found practices and strengthened the validity and reliability of the research findings.
+
+
+3.1.2 Research Location
+
+The research was conducted at Beltei International University in Phnom Penh, Cambodia. Phnom Penh is the capital and a major center for higher education and technology adoption, making it a suitable environment for studying campus digital services.
+
+The research will take place in Phnom Penh, the capital of Cambodia. Phnom Penh is located in the south-central part of Cambodia. The region encompasses six hundred seventy-eight point forty-six (678.46) square kilometers, with one hundred five communes (105 Sangkats) grouped into fourteen districts (14 Khan); nevertheless, this research pertains solely to the Beltei International University campus. The study was carried out at Beltei International University in Phnom Penh, Cambodia. Phnom Penh is the capital and the commercial and educational centre of Cambodia, which makes it a perfect place to conduct campus service management research. The university was selected because its lost-and-found coordination still depends on conventional methods such as front-desk notices, informal messaging groups, and scattered social media posts. The possible advantages of putting in place a digital system for managing lost and found items are significant. The study is applicable to similar universities because it represents a typical higher-education campus environment in Cambodia.
+
+Figure 2. Map of Cambodia
+
+
+3.1.3 Research Population
+
+The sample was chosen using purposive sampling, ensuring that all key stakeholders in campus lost-and-found management were represented.
+
+Table 1 List of participation
+
+Department                          | Total Population | Proportional Allocation (Sample Size)
+------------------------------------|------------------|--------------------------------------
+Student Affairs / Front Desk        | 5                | 5
+Students                            | 20               | 20
+IT / Admin Support                  | 5                | 5
+Total                               | 30               | 30
+
+
+3.1.4 Research Data Scope of UI
+
+The User Interface (UI) Scope of the proposed BIU Lost and Found Management System (BLFMS) focuses on creating a simple and user-friendly interface to improve item reporting, searching, claiming, and administration.
+
+Key UI design considerations include:
+
+Figure 3 Dashboard BLFMS
+
++ Backend
+
+Next.js App Router: Next.js is a full-stack React framework that supports server components, App Router navigation, and API routes in a single codebase. This allows BLFMS to render pages efficiently on the server while still providing interactive client components where needed. Server-side rendering improves performance and SEO for public item listings, while API routes enable REST endpoints for items, claims, notifications, uploads, and authentication.
+
+Prisma ORM: Prisma is a type-safe Object-Relational Mapping tool used to access the PostgreSQL database. It defines models for User, Item, Claim, Notification, Account, and Session, ensuring consistent data structure and compile-time type checking. Prisma migrations manage schema evolution and support indexed queries for fast filtering by type, status, category, and building.
+
+PostgreSQL (Neon): PostgreSQL is an open-source relational database management system selected for its reliability, scalability, and support for complex queries. Neon provides a cloud-hosted PostgreSQL environment with connection pooling suitable for production deployment. The database stores item listings, claim records, user accounts, sessions, and notification history.
+
+NextAuth v5: NextAuth provides secure authentication for the web application. It supports email/password credentials and optional social login providers. Session management ensures that only authenticated users can manage their listings, submit claims, and access personal dashboards. Bearer token support also allows external API clients to authenticate securely.
+
+Cloudinary: Cloudinary is used for image upload, storage, optimization, and delivery. Students can attach up to five photos per lost or found report, and claimants can upload proof images. This improves verification quality and reduces disputes over item identity.
+
+Zod + React Hook Form: Zod provides TypeScript-first schema validation for item report forms, claim forms, and profile forms. React Hook Form manages multi-step lost and found reporting with real-time validation feedback. This ensures complete and accurate data before submission.
+
+OpenAPI + Swagger UI: The REST API is documented using OpenAPI and exposed through Swagger UI at /api-docs. This supports integration with mobile apps and external clients and makes the system maintainable for future developers.
+
+REST API: Web services follow REST architecture. Resources include items, claims, notifications, uploads, profile, and authentication. JSON is used for request and response bodies. Endpoints support listing, filtering, creating, updating, and reviewing lost-and-found records.
+
+Figure 4 Login Page
+Figure 5 Report Lost Item Page
+Figure 6 Report Found Item Page
+Figure 7 Item Detail and Claim Page
+Figure 8 Admin Claims Review Page
+
++ Frontend
+
+React 19 + TypeScript strict mode: React powers the interactive user interface with strict TypeScript typing to prevent runtime errors and improve maintainability.
+
+Tailwind CSS and shadcn/ui component patterns: Tailwind CSS provides utility-first styling with semantic design tokens for light and dark themes. shadcn/ui patterns supply accessible components such as cards, forms, dialogs, tables, and navigation elements.
+
+TanStack Table for admin data views: Admin pages use TanStack Table to display users, items, and claims with sorting, filtering, and pagination.
+
+Recharts for dashboard analytics: Dashboard charts visualize items over time, category distribution, and resolution rates for administrators and users.
+
+Server-Sent Events for live notifications: Real-time notification streams inform users when claims are submitted, approved, or rejected without requiring manual page refresh.
+
+Figure 9 Notifications Page
+
+
+3.1.5 Research Data Scope of UX
+
+The User Experience (UX) Scope focuses on optimizing lost-and-found management through a well-structured database and intuitive user flows. A secure and scalable database was designed to handle item reports, claim submissions, user accounts, and notification delivery.
+
+The UX scope focuses on reducing friction in reporting and searching items. Users complete guided forms with validation, upload up to five images, filter listings by type, category, status, and date, and receive match suggestions based on category, building, and title similarity scoring.
+
+Core entities include User, Item, Claim, and Notification.
+
+Item records store:
+- type (LOST / FOUND)
+- status (OPEN / RESOLVED / CLOSED)
+- category (ELECTRONICS, DOCUMENTS, KEYS, CLOTHING, BOOKS, ACCESSORIES, SPORTS, STATIONERY, BAGS, OTHER)
+- building and room hint
+- title, description, color, brand
+- event date and approximate time
+- image URLs
+- contact preferences
+- found disposition (for found items)
+
+Claim records store:
+- claim type (FINDER / OWNER)
+- proof message
+- proof image URLs
+- review status (PENDING / APPROVED / REJECTED)
+- admin note and reviewed timestamp
+
+Notification records store:
+- kind (SYSTEM, MATCH, CLAIM, ITEM)
+- title, message, link
+- read status and creation time
+
+The database was built using PostgreSQL, chosen for its security, reliability, and ease of integration with modern web applications through Prisma ORM.
+
+Figure 10 Database Diagram
+
+
+3.2 Data Collection Instrument
+
+3.2.1 Data Collection Procedure
+
+Data collection followed a structured approach to ensure the study captured accurate and meaningful insights:
+
+1. Staff Interviews
+Semi-structured interviews were conducted with front-desk staff and administrators. Topics included reporting challenges, claim verification issues, and delays in item recovery.
+
+2. Survey Questionnaires
+Distributed to students and staff to assess reporting difficulty, search effectiveness, and recovery satisfaction. Included Likert-scale questions to measure opinions on lost-and-found service efficiency.
+
+3. Direct Observations
+Analysed manual notice-board practices, informal social media reporting, and front-desk intake procedures to identify inefficiencies.
+
+4. Document Analysis
+Reviewed existing notice records, messaging group posts, and informal logs to verify completeness and timeliness of information.
+
+This approach ensured both subjective (user opinions) and objective (service process) insights were collected.
+
+Several tools were used to collect the data required for this study in order to guarantee a complete and comprehensive approach to meeting the research objectives. These tools were created to gather both qualitative and quantitative data, offering a well-rounded view of the difficulties and demands associated with campus lost-and-found management. Administrators and front-desk staff participated in semi-structured interviews to learn more about their expectations, difficulties, and experiences with the current system. To collect quantitative information on students' satisfaction with reporting accuracy, transparency in item search, and their general experience with the current procedures, questionnaires were given to campus users. In order to record inefficiencies and pinpoint opportunities for improvement, a direct observation of existing workflows was also conducted. The study's integration of different tools guaranteed that information was gathered from several perspectives, resulting in a more comprehensive and solid comprehension of the issue.
+
+
+3.2.2 Statistical Data
+
+QUESTION 1: How old are you?
+
+Figure 11 Respondents of question 1
+
+The distribution of respondents' ages is seen in the chart. Since most respondents (66.7%) are between the ages of 18 and 25, younger people make up the largest demographic in this poll. The remaining respondents fall within the 25–30 age range. The survey's findings and insights into the lost-and-found management system may be influenced by the views of a younger student population, as indicated by the age distribution of the participants.
+
+
+QUESTION 2: What is your gender?
+
+Figure 12 Respondents of question 2
+
+The distribution of survey respondents' genders is shown in the chart. Of the total, 58.3% are male and 41.7% are female. The responses represent both male and female campus users, providing a reasonably balanced perspective on lost-and-found service needs.
+
+
+QUESTION 3: What is your role on campus?
+
+Figure 13 Respondents of question 3
+
+The chart displays the occupational distribution of participants. 70% are students, 20% are staff, and 10% are admin or support personnel. This distribution implies that the survey's primary focus is on student viewpoints, as they are the group most directly affected by lost-and-found services. The inclusion of staff and admin perspectives broadens the research and strengthens its practical relevance.
+
+
+QUESTION 4: Have you ever lost or found an item on campus?
+
+Figure 14 Respondents of question 4
+
+According to the survey results, 83.3% of respondents answered "Yes," confirming that lost-and-found issues are highly relevant to the campus population. Only 16.7% answered "No." This demonstrates that the proposed BLFMS addresses a real and common campus problem.
+
+
+QUESTION 5: How do you currently report or search for lost items?
+
+Figure 15 Respondents of question 5
+
+The survey results show that 75% of respondents rely on informal channels such as social media, friends, or unofficial messaging groups. Only 25% use an official campus process. This confirms the fragmentation of current practices and supports the need for a centralized digital platform.
+
+
+QUESTION 6: What challenges do you face with the current lost-and-found process?
+
+Figure 16 Respondents of question 6
+
+The results demonstrate the difficulties users face in managing lost and found items on campus. Key issues identified by respondents are as follows:
+- Manual search is time-consuming, as noted by 75% of respondents.
+- Delayed response was reported by 58.3% of respondents.
+- Lack of photos or proof was highlighted by 41.7% of respondents.
+- No claim tracking was mentioned by 33.3% of respondents.
+These results highlight the urgent need for an integrated system to handle these issues and improve campus service effectiveness, as the suggested BIU Lost and Found Management System (BLFMS).
+
+
+QUESTION 7: How often do you fail to recover a lost item?
+
+Figure 17 Respondents of question 7
+
+The results of the poll show how frequently users are unable to recover lost belongings. 41.7% of respondents said recovery fails sometimes, while 25% said it fails frequently. Only a small proportion reported rare or never failure. These findings indicate a major service gap and support the need for a more reliable and searchable system such as BLFMS.
+
+
+QUESTION 8: How effective is the current lost-and-found process?
+
+Figure 18 Respondents of question 8
+
+The results of the poll shed light on participants' perceptions of how effectively the current process works. Only 33.3% rated the process as very effective. The majority selected neutral or low effectiveness ratings. Although some basic support exists, the overall perception indicates significant room for improvement through digital transformation.
+
+
+QUESTION 9: Would uploading photos of items help verification?
+
+Figure 19 Respondents of question 9
+
+The results show that 91.7% of respondents answered "Yes." This strongly supports the inclusion of Cloudinary image uploads in BLFMS for both item reports and claim proof.
+
+
+QUESTION 10: Would searchable online listings with filters help?
+
+Figure 20 Respondents of question 10
+
+A total of 88.3% of respondents answered "Yes." This confirms that searchable listings with filters for type, category, building, status, and date are highly desired by campus users.
+
+
+QUESTION 11: Are staff willing to review digital claims?
+
+Figure 21 Respondents of question 11
+
+The findings show that 83.3% of respondents believe staff are willing to review digital claims. This indicates readiness for a formal claim workflow with admin approval and rejection controls.
+
+
+QUESTION 12: What improvement do you expect from BLFMS?
+
+Figure 22 Respondents of question 12
+
+Most respondents expect moderate to high improvement in recovery speed, communication, and claim traceability after BLFMS implementation. This supports the system's intended impact on campus service performance.
+
+
+QUESTION 13: What are the main advantages of BLFMS?
+
+Figure 23 Respondents of question 13
+
+The survey's findings shed light on the benefits that people believe BLFMS offers. The following are the answers:
+- Faster matching of lost and found items
+- Better proof and verification
+- Centralized records
+- Real-time notifications
+These results highlight the many advantages of using BLFMS, with an emphasis on improving recovery speed, transparency, and accountability.
+
+
+QUESTION 14: Rate your satisfaction with the current system (1 to 5)
+
+Figure 24 Respondents of question 14
+
+On a scale of 1 to 5, the poll results assess respondents' satisfaction with the present lost-and-found management process. 58.3% of participants gave ratings of 1 to 3, indicating dissatisfaction or neutral attitudes. Lower satisfaction levels confirm the need for additional optimization through an improved system like BLFMS.
+
+
+QUESTION 15: Would you recommend implementing BLFMS?
+
+Figure 25 Respondents of question 15
+
+According to the survey's findings, 91.7% of respondents answered "Yes," while only 8.3% answered "No." These findings show resounding support for implementing BLFMS, indicating that the majority of participants recognize its potential to improve campus lost-and-found management, efficiency, and accuracy.
+
+
+3.3 Sampling Technique
+
+The study employed purposive sampling, selecting individuals directly involved in or affected by lost-and-found management. Front-desk staff and administrators were included to understand operational and verification challenges. Students were surveyed to assess reporting difficulty, search experience, and recovery satisfaction. A total of 30 respondents were chosen based on their involvement in campus lost-and-found processes. This method ensured that data was collected from those most affected by service coordination issues.
+
+Sample Size
+
+Divide the Population into Strata: The total population consists of 30 individuals in 3 different groups. The population breakdown is as follows:
+- Student Affairs / Front Desk: 5 people
+- Students: 20 people
+- IT / Admin Support: 5 people
+
+Determine the Sample Size per Stratum: The 30 sample members were allocated across these strata proportionally based on the number of people in each group.
+
+Proportional allocation formula:
+
+n_i = (N_i / N) × n
+
+Where:
+- n_i = number of people selected from stratum i
+- N_i = number of people in stratum i
+- N = total population
+- n = total sample size (30 people in this case)
+
+Applying the formula to each stratum:
+- For Student Affairs / Front Desk: (5 / 30) × 30 = 5
+- For Students: (20 / 30) × 30 = 20
+- For IT / Admin Support: (5 / 30) × 30 = 5
+
+
+3.4 Validity and Reliability
+
+To ensure the accuracy and credibility of the research findings, the researcher carefully considered both validity and reliability of the research instruments used in this study. Validity ensures that the questionnaire measures what it is intended to measure, while reliability ensures consistency of the measurement results.
+
+
+3.4.1 Validity
+
+Validity refers to the extent to which the research instrument accurately measures the concepts under investigation. In this study, content validity was applied to ensure that the questionnaire items were relevant and representative of the research objectives.
+
+The questionnaire was developed based on:
+- A review of literature on campus information systems and lost-and-found management
+- The research objectives and conceptual framework of BLFMS
+- Expert review and refinement of question wording
+
+Before distributing the questionnaire, the items were reviewed to ensure clarity, relevance, and suitability for respondents. Ambiguous and unclear questions were revised to improve understanding. This process ensured that all questionnaire items were aligned with the study objectives and adequately covered the research variables.
+
+Table 2. Validity Assessment of Research Instrument
+
+Aspect              | Description
+--------------------|------------------------------------------------------------
+Type of Validity    | Content Validity
+Basis of Design     | Literature review and research objectives
+Review Method       | Expert review and questionnaire refinement
+Purpose             | To ensure questions measure lost-and-found management accurately
+Outcome             | Questionnaire items were relevant, clear, and aligned with research objectives
+
+
+3.4.2 Reliability
+
+Reliability refers to the consistency and stability of the measurement instrument. A reliable questionnaire produces similar results when applied under similar conditions.
+
+In this study, internal consistency reliability was tested using Cronbach's Alpha. This method measures how closely related a set of items are as a group. A Cronbach's Alpha value of 0.70 or higher is generally considered acceptable in social science research.
+
+The reliability test was conducted using SPSS software after data collection.
+
+Table 3. Reliability Test Results (Cronbach's Alpha)
+
+Variable / Factor       | Number of Items | Cronbach's Alpha | Interpretation
+------------------------|-----------------|------------------|------------------
+Reporting Experience    | 5               | 0.79             | Reliable
+Search and Recovery     | 5               | 0.76             | Reliable
+Claim and Verification  | 5               | 0.81             | Reliable
+System Performance      | 5               | 0.86             | Highly Reliable
+Overall Questionnaire   | 20              | ≥ 0.70           | Acceptable Reliability
+
+Conclusion of Validity and Reliability
+
+By ensuring both validity and reliability, the researcher increased confidence in the accuracy of the data collected and the trustworthiness of the research findings. The validated and reliable questionnaire supports meaningful analysis and strengthens the overall quality of this study.

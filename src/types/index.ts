@@ -38,6 +38,7 @@ export type ItemDetail = Item;
 export const itemListSelect = {
   id: true,
   type: true,
+  status: true,
   title: true,
   category: true,
   building: true,

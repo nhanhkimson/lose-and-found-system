@@ -81,6 +81,7 @@ const STATUSES: ItemStatus[] = ["OPEN", "RESOLVED", "CLOSED"];
  */
 export async function GET(request: NextRequest) {
   try {
+    const mine = request.nextUrl.searchParams.get("mine") === "true";
     const pageRaw = request.nextUrl.searchParams.get("page");
     const q = request.nextUrl.searchParams.get("q")?.trim() ?? "";
     const typeRaw = request.nextUrl.searchParams.get("type")?.toUpperCase();
@@ -109,6 +110,15 @@ export async function GET(request: NextRequest) {
         : undefined;
 
     const and: Prisma.ItemWhereInput[] = [];
+
+    if (mine) {
+      const session = await getApiSession(request);
+      if (!session?.user?.id) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+      and.push({ userId: session.user.id });
+    }
+
     if (q) {
       and.push({
         OR: [

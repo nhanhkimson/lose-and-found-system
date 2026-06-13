@@ -21,6 +21,9 @@
 /build
 
 # misc
+.thesis-venv/
+survayTool/.venv/
+survayTool/.pw-browsers/
 .DS_Store
 *.pem
 

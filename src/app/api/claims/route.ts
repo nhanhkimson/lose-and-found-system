@@ -1,7 +1,8 @@
-import { type ClaimType, Prisma } from "@prisma/client";
-import { NextResponse } from "next/server";
+import { type ClaimStatus, type ClaimType, Prisma } from "@prisma/client";
+import { NextResponse, type NextRequest } from "next/server";
 import { getApiSession } from "@/lib/auth/api-session";
 import { prisma } from "@/lib/prisma";
+import { PAGINATION } from "@/lib/utils/constants";
 import { createClaimInputSchema } from "@/lib/validations/claim.schema";
 
 function mapItemTypeToClaimType(type: "LOST" | "FOUND"): ClaimType {
@@ -36,6 +37,79 @@ function mapItemTypeToClaimType(type: "LOST" | "FOUND"): ClaimType {
  * 401:
  * description: Unauthorized.
  */
+const CLAIM_STATUSES: ClaimStatus[] = ["PENDING", "APPROVED", "REJECTED"];
+
+/**
+ * GET /api/claims — current user's claims (paginated).
+ */
+export async function GET(request: NextRequest) {
+  try {
+    const session = await getApiSession(request);
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const page = Math.max(
+      1,
+      Number.parseInt(request.nextUrl.searchParams.get("page") ?? "1", 10) || 1,
+    );
+    const statusRaw = request.nextUrl.searchParams
+      .get("status")
+      ?.toUpperCase();
+    const statusFilter: ClaimStatus | undefined =
+      statusRaw && CLAIM_STATUSES.includes(statusRaw as ClaimStatus)
+        ? (statusRaw as ClaimStatus)
+        : undefined;
+
+    const pageSize = PAGINATION.defaultPageSize;
+    const where: Prisma.ClaimWhereInput = {
+      userId: session.user.id,
+      ...(statusFilter ? { status: statusFilter } : {}),
+    };
+
+    const [total, claims] = await Promise.all([
+      prisma.claim.count({ where }),
+      prisma.claim.findMany({
+        where,
+        orderBy: { createdAt: "desc" },
+        skip: (page - 1) * pageSize,
+        take: pageSize,
+        select: {
+          id: true,
+          status: true,
+          type: true,
+          message: true,
+          proofImageUrls: true,
+          adminNote: true,
+          createdAt: true,
+          reviewedAt: true,
+          item: {
+            select: {
+              id: true,
+              title: true,
+              type: true,
+              status: true,
+              imageUrl: true,
+            },
+          },
+        },
+      }),
+    ]);
+
+    return NextResponse.json({
+      claims,
+      total,
+      page,
+      pageSize,
+      totalPages: Math.max(1, Math.ceil(total / pageSize)),
+    });
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : "Failed to fetch claims.";
+    return NextResponse.json({ error: message }, { status: 500 });
+  }
+}
+
 export async function POST(request: Request) {
   try {
     const session = await getApiSession(request);
