@@ -21,10 +21,35 @@ TITLE = (
 SHORT_TITLE = "Build a Digital Lost & Found System"
 SYSTEM_ACRONYM = "DLFS"
 ORG = "BELTEI International University"
-SAMPLE_SIZE = 200
+SAMPLE_SIZE = 230
+GOOGLE_FORM_URL = (
+    "https://docs.google.com/forms/d/e/1FAIpQLSdUNzeq_a1WyzGIk1rZ3T352yGHpd5ZQ3jbm-LdWPrgUwk-4Q/viewform"
+)
 OUTPUT = Path(__file__).resolve().parents[1] / "thesis" / "Nhanh-Kimson-Thesis-2026.docx"
 OUTPUT_APPLICATIONS = Path("/Applications/Nhanh Kimson.docx")
+CHAPTER3_TXT = Path(__file__).resolve().parents[1] / "thesis" / "chapter-3.txt"
+CHAPTER4_TXT = Path(__file__).resolve().parents[1] / "thesis" / "chapter-4.txt"
 FIGURE_1 = Path(__file__).resolve().parents[1] / "thesis" / "figures" / "figure-1-conceptual-framework.png"
+
+import sys
+
+_THESIS_DIR = Path(__file__).resolve().parents[1] / "thesis"
+if str(_THESIS_DIR) not in sys.path:
+    sys.path.insert(0, str(_THESIS_DIR))
+from chapter_4_sections import (  # noqa: E402
+    CHAPTER4_INTRO,
+    EXAMINER_SUMMARY,
+    HYPOTHESES_CLOSING,
+    HYPOTHESES_DETAILED,
+    HYPOTHESES_INTRO,
+    HYPOTHESIS_TABLE,
+    SECTION_4_1_INTRO,
+    SECTION_4_2_INTRO,
+    SECTION_4_3_INTRO,
+    SOLUTION_BLOCKS,
+    STRENGTHS_BLOCKS,
+    WEAKNESSES_BLOCKS,
+)
 
 
 def set_doc_defaults(doc: Document) -> None:
@@ -86,6 +111,85 @@ def ensure_thesis_figures() -> None:
 
     script = Path(__file__).parent / "generate-framework-diagram.py"
     subprocess.run([sys.executable, str(script)], check=True)
+
+
+def _table_to_text(table) -> str:
+    lines: list[str] = []
+    for row in table.rows:
+        cells = [cell.text.strip().replace("\n", " ") for cell in row.cells]
+        lines.append(" | ".join(cells))
+    return "\n".join(lines)
+
+
+def export_chapter3_txt(doc: Document) -> None:
+    from docx.oxml.table import CT_Tbl
+    from docx.oxml.text.paragraph import CT_P
+    from docx.table import Table
+    from docx.text.paragraph import Paragraph
+
+    header = (
+        "================================================================================\n"
+        "UPDATED — synced from scripts/generate-thesis.py\n"
+        f"System: {SYSTEM_ACRONYM} | Sample: {SAMPLE_SIZE} respondents | Author: {AUTHOR}\n"
+        "================================================================================\n"
+    )
+    lines: list[str] = [header.rstrip(), ""]
+    in_ch3 = False
+
+    for child in doc.element.body:
+        if isinstance(child, CT_P):
+            para = Paragraph(child, doc)
+            text = para.text.strip()
+            if text == "CHAPTER 3: RESEARCH METHODOLOGY":
+                in_ch3 = True
+            if in_ch3 and text in ("CHAPTER 4: DATA ANALYSIS", "CHAPTER 4 DATA ANALYSIS"):
+                break
+            if in_ch3 and text:
+                lines.append(text)
+                lines.append("")
+        elif isinstance(child, CT_Tbl) and in_ch3:
+            lines.append(_table_to_text(Table(child, doc)))
+            lines.append("")
+
+    CHAPTER3_TXT.write_text("\n".join(lines).rstrip() + "\n", encoding="utf-8")
+    print(f"Chapter 3 exported: {CHAPTER3_TXT}")
+
+
+def export_chapter4_txt(doc: Document) -> None:
+    from docx.oxml.table import CT_Tbl
+    from docx.oxml.text.paragraph import CT_P
+    from docx.table import Table
+    from docx.text.paragraph import Paragraph
+
+    header = (
+        "================================================================================\n"
+        "UPDATED — synced from scripts/generate-thesis.py\n"
+        f"System: {SYSTEM_ACRONYM} | Sample: {SAMPLE_SIZE} respondents | Author: {AUTHOR}\n"
+        "================================================================================\n"
+    )
+    lines: list[str] = [header.rstrip(), ""]
+    in_ch4 = False
+
+    for child in doc.element.body:
+        if isinstance(child, CT_P):
+            para = Paragraph(child, doc)
+            text = para.text.strip()
+            if text == "CHAPTER 4 DATA ANALYSIS" or text == "CHAPTER 4: DATA ANALYSIS":
+                in_ch4 = True
+            if in_ch4 and (
+                text.startswith("CHAPTER 5")
+                or text == "CHAPTER 5: RESEARCH FINDINGS AND DISCUSSIONS"
+            ):
+                break
+            if in_ch4 and text:
+                lines.append(text)
+                lines.append("")
+        elif isinstance(child, CT_Tbl) and in_ch4:
+            lines.append(_table_to_text(Table(child, doc)))
+            lines.append("")
+
+    CHAPTER4_TXT.write_text("\n".join(lines).rstrip() + "\n", encoding="utf-8")
+    print(f"Chapter 4 exported: {CHAPTER4_TXT}")
 
 
 def build_front_matter(doc: Document) -> None:
@@ -277,8 +381,9 @@ def build_contents(doc: Document) -> None:
         ("3.1.1 Research Design", "12"),
         ("3.1.2 Research Location", "12"),
         ("3.1.3 Research Population", "14"),
-        ("3.1.4 Research Data Scope of UI", "15"),
-        ("3.1.5 Research Data Scope of UX", "19"),
+        ("3.1.4 Research Data Scope of Database", "15"),
+        ("3.1.5 Research Data Scope of UI", "17"),
+        ("3.1.6 Research Data Scope of UX", "21"),
         ("3.2 Data Collection Instrument", "20"),
         ("3.2.1 Data Collection Procedure", "20"),
         ("3.2.2 Statistical Data", "21"),
@@ -286,9 +391,18 @@ def build_contents(doc: Document) -> None:
         ("3.4 Validity and Reliability", "32"),
         ("CHAPTER 4: DATA ANALYSIS", "34"),
         ("4.1 Analysis of the Strengths", "34"),
-        ("4.2 Analysis of Weaknesses", "36"),
-        ("4.3 Solution(s) Dealing with the Weaknesses", "36"),
-        ("CHAPTER 5: RESEARCH FINDINGS AND DISCUSSIONS", "41"),
+        ("4.1.1 Effectiveness of the Current Lost and Found Practices", "34"),
+        ("4.1.2 Communication and Awareness Initiatives", "35"),
+        ("4.1.3 Monitoring and Reporting Practices", "36"),
+        ("4.2 Analysis of Weaknesses", "37"),
+        ("4.2.1 Dependence on Manual and Fragmented Processes", "37"),
+        ("4.2.2 Poor Searchability and Incomplete Item Details", "38"),
+        ("4.2.3 Delayed Communication and Weak Claim Verification", "39"),
+        ("4.3 Solution(s) Dealing with the Weaknesses", "40"),
+        ("4.3.1 Implementation of DLFS", "40"),
+        ("4.3.2 Integration, Training, and Real-Time Reporting", "41"),
+        ("4.3.3 System Monitoring, Customization, and Feedback Mechanisms", "42"),
+        ("CHAPTER 5: RESEARCH FINDINGS AND DISCUSSIONS", "43"),
         ("CHAPTER 6: CONCLUSION AND RECOMMENDATIONS", "44"),
         ("REFERENCES", "46"),
         ("APPENDICES A: Geography", "47"),
@@ -333,7 +447,7 @@ def build_lists(doc: Document) -> None:
         "Figure 8 Admin Claims Review Page",
         "Figure 9 Notifications Page",
         "Figure 10 Database Diagram",
-        "Figure 11–27 Survey response charts (Questions 1–11, 15–20)",
+        "Figure 11–30 Survey response charts (Questions 1–20)",
     ]
     for f in figures:
         doc.add_paragraph(f)
@@ -374,38 +488,109 @@ def build_chapter1(doc: Document) -> None:
         doc,
         "In university environments, the loss of personal belongings is a common and stressful "
         "occurrence for students, faculty, and staff. Items such as student identification cards, "
-        "mobile phones, wallets, keys, laptops, and academic materials are frequently misplaced or "
-        "lost on campus. Without an organized and accessible system to report and reclaim these "
-        "items, the recovery process becomes frustrating, time-consuming, and often unsuccessful.",
+        "mobile phones, wallets, keys, laptops, textbooks, USB drives, calculators, and headphones "
+        "are frequently misplaced or lost on campus. Without an organized and accessible system to "
+        "report and reclaim these items, the recovery process becomes frustrating, time-consuming, "
+        "and often unsuccessful. For students in particular, losing essential belongings can disrupt "
+        "daily attendance, delay access to classrooms and laboratories, prevent entry to examinations "
+        "when ID cards are missing, and create unnecessary financial pressure when replacements must "
+        "be purchased at short notice.",
+    )
+    add_body(
+        doc,
+        "Lost-and-found management is not merely an administrative task; it is a core student support "
+        "function that reflects how well an institution cares for the daily wellbeing of its community. "
+        "When students believe that the university provides reliable channels for recovering personal "
+        "property, they develop greater trust in campus services. Conversely, when items remain lost "
+        "despite being found by others, frustration grows and the perceived quality of student support "
+        "declines. Effective lost-and-found coordination therefore contributes directly to student "
+        "satisfaction, campus safety culture, and the overall reputation of the institution.",
     )
     add_body(
         doc,
         f"At {ORG} (BIU), the current approach to managing lost and found items relies on informal "
-        "methods such as verbal announcements, social media posts, Telegram groups, and physical "
-        "bulletin boards. These channels are inadequate and inconsistent because they lack structured "
-        "search, centralized records, and a formal claim verification process. When important belongings "
-        "are not recovered quickly, students experience academic disruption, financial loss, stress, "
-        "and reduced confidence in campus support services.",
+        "methods such as verbal announcements, social media posts, Telegram groups, Facebook pages, "
+        "class group chats, and physical bulletin boards at the student center and front desk. These "
+        "channels are inadequate and inconsistent because they lack structured search, centralized "
+        "records, timestamped case history, standardized item categories, and a formal claim "
+        "verification process. Information posted in one channel may never reach the owner who is "
+        "checking a different platform. When important belongings are not recovered quickly, students "
+        "experience academic disruption, financial loss, stress, and reduced confidence in campus "
+        "support services. Staff members also spend additional time answering repeated inquiries, "
+        "checking handwritten logs, and coordinating returns without a single authoritative system "
+        "of record.",
+    )
+    add_body(
+        doc,
+        f"Common loss locations at {ORG} include classrooms, computer laboratories, the library, "
+        "cafeteria areas, stairways, parking zones, and sports facilities. Items are most frequently "
+        "misplaced during transitions between classes, when students move quickly and leave belongings "
+        "on desks or benches. Found items may remain unclaimed for weeks because there is no central "
+        "register linking finders to owners. In many cases, honest finders wish to return items but "
+        "do not know the correct reporting procedure, while owners search multiple informal channels "
+        "without success. This gap between intention and outcome demonstrates the urgent need for a "
+        "structured digital solution.",
     )
     add_body(
         doc,
         "The evolution of technology has brought about new solutions to long-standing problems in "
         "educational institutions. Digital platforms, web applications, and database management "
         "systems have transformed administrative and student service functions across universities "
-        "worldwide. A Digital Lost & Found System (DLFS) represents a practical and effective "
-        "application of these technologies, enabling users to electronically report lost or found "
-        "items, search through categorized listings, upload photos as evidence, and communicate "
-        "securely to arrange item recovery (Johnson, 2021).",
+        "worldwide, including enrollment, library services, examination scheduling, fee payment, "
+        "and campus announcements. A Digital Lost & Found System (DLFS) represents a practical and "
+        "effective application of these technologies, enabling users to electronically report lost "
+        "or found items, search through categorized listings, upload photos as evidence, receive "
+        "automated match suggestions, and communicate securely to arrange item recovery (Johnson, "
+        "2021). Such systems align with the broader trend of campus digital transformation, where "
+        "services that were once handled manually are moved to transparent, searchable, and auditable "
+        "online platforms.",
+    )
+    add_body(
+        doc,
+        "Compared with manual methods, a web-based lost-and-found platform offers several clear "
+        "advantages. First, all reports are stored in one database rather than scattered across "
+        "social media threads. Second, users can filter listings by item type, category, building, "
+        "date, and keyword, dramatically reducing search time. Third, photo uploads improve "
+        "identification accuracy and support fair claim verification. Fourth, administrators can "
+        "track case status from open to resolved, measure recovery performance, and identify "
+        "recurring problem areas on campus. Fifth, notifications alert users when potential matches "
+        "appear or when claim decisions are made, eliminating the need to manually recheck multiple "
+        "channels every day.",
+    )
+    add_body(
+        doc,
+        f"In Cambodia, higher education institutions are increasingly adopting information technology "
+        f"to improve service delivery and meet the expectations of digitally connected students. "
+        f"Young adults entering university today routinely use smartphones, social applications, and "
+        f"online services in their daily lives. They reasonably expect campus administrative services "
+        f"to offer similar convenience and reliability. As {ORG} expands its programs in Information "
+        f"Technology, Business, Engineering, and Languages, the volume of daily campus activity—and "
+        f"the number of personal items carried onto campus—continues to increase. A centralized "
+        f"lost-and-found platform is therefore not only a convenience feature but also a necessary "
+        f"component of modern campus infrastructure that supports student welfare, operational "
+        f"efficiency, and institutional reputation.",
     )
     add_body(
         doc,
         f"This research explores the development and implementation of a web-based {SHORT_TITLE} "
-        f"tailored specifically for {ORG}. The system is designed to address the inefficiencies of "
-        "the current manual process by providing a centralized, accessible, and user-friendly platform. "
-        "It allows students and staff to submit reports of lost or found items with descriptions and "
-        "photos, enables keyword and category-based search functionality, supports match suggestions "
-        "based on item metadata, and facilitates claim submission with proof review by administrators "
-        "(Miller, 2023).",
+        f"({SYSTEM_ACRONYM}) tailored specifically for {ORG}. The system is designed to address the "
+        "inefficiencies of the current manual process by providing a centralized, accessible, and "
+        "user-friendly platform. It allows students and staff to submit reports of lost or found "
+        "items with descriptions and photos, enables keyword and category-based search functionality, "
+        "supports match suggestions based on item metadata such as category, building, and event date, "
+        "and facilitates claim submission with proof review by administrators (Miller, 2023). By "
+        "replacing fragmented communication with a single trusted channel, DLFS reduces duplicate "
+        "posts, improves accountability, and creates a clear audit trail from report to resolution.",
+    )
+    add_body(
+        doc,
+        f"The proposed {SYSTEM_ACRONYM} serves three primary stakeholder groups. For students and "
+        "staff who lose items, the system provides a reliable place to report losses and monitor "
+        "progress. For finders, it offers a simple and responsible way to submit found property "
+        "without relying on informal posts that may be overlooked. For administrators and student "
+        "affairs personnel, it delivers dashboards, claim review tools, and analytics that support "
+        "efficient case management and evidence-based planning. Each group benefits from the same "
+        "centralized data source, ensuring consistency and reducing miscommunication.",
     )
     add_body(
         doc,
@@ -415,8 +600,20 @@ def build_chapter1(doc: Document) -> None:
         "university environment. By automating item registration and tracking, the system reduces "
         "the burden on administrative staff while empowering users to take an active role in managing "
         "their lost belongings. Furthermore, it provides administrators with data insights on item "
-        "trends, peak loss periods, and recovery rates, supporting evidence-based decision-making "
-        "(Baker, 2023).",
+        "trends, peak loss periods, category distribution, and recovery rates, supporting "
+        "evidence-based decision-making for campus security and student affairs planning (Baker, 2023).",
+    )
+    add_body(
+        doc,
+        "From a software engineering perspective, the proposed system demonstrates how modern "
+        "full-stack web development can solve a real campus problem using structured data models, "
+        "secure authentication, validated forms, image storage, REST APIs, and role-based dashboards. "
+        "The project applies industry-standard tools including Next.js, React, TypeScript, Prisma, "
+        "PostgreSQL, NextAuth, Cloudinary, Zod validation, TanStack Table, Recharts, and OpenAPI "
+        "documentation, ensuring that the solution is scalable, maintainable, and suitable for future "
+        "extension such as mobile applications, Khmer language support, or SMS and email notifications. "
+        "The development follows best practices in user experience design, including responsive layouts, "
+        "accessible components, and real-time notification streams.",
     )
     add_body(
         doc,
@@ -424,9 +621,23 @@ def build_chapter1(doc: Document) -> None:
         "effectiveness in improving recovery rates and user satisfaction. Studies show that digital "
         "lost and found platforms with photo upload capabilities, real-time notifications, and "
         "claim verification mechanisms significantly outperform traditional paper-based approaches "
-        f"(Nguyen, 2024). This research aims to analyze the specific needs of BIU, design a system "
-        "that meets those needs, and evaluate its benefits from the perspectives of both students "
-        "and staff.",
+        f"(Nguyen, 2024). Survey research conducted as part of this study further confirms that BIU "
+        f"students and staff strongly support adoption of a centralized platform and prefer features "
+        f"such as photo evidence, searchable listings, and formal claim workflows. These findings "
+        f"validate the direction of the {SYSTEM_ACRONYM} project and provide empirical support for "
+        "campus deployment.",
+    )
+    add_body(
+        doc,
+        f"This research aims to analyze the specific needs of BIU through mixed-method investigation "
+        f"including surveys, interviews, observation, and document analysis; design a system that "
+        f"meets those needs; implement a production-ready web application; and evaluate its benefits "
+        f"from the perspectives of students, staff, and administration. The study contributes both "
+        f"practical value for {ORG} and academic value for the field of campus information systems "
+        f"by demonstrating how a well-designed {SYSTEM_ACRONYM} can transform an overlooked manual "
+        "process into an efficient digital service. The remainder of this chapter presents the research "
+        "problem, objectives, research questions, significance, scope, limitations, and layout of "
+        "the study.",
     )
 
     add_heading(doc, "1.2 Research Problem", level=2)
@@ -601,7 +812,7 @@ def build_chapter1(doc: Document) -> None:
         f"weaknesses such as manual processes, delayed response, lack of photo evidence, scattered "
         f"information, and absence of claim tracking are highlighted. The chapter also proposes "
         f"suitable solutions to address these weaknesses through the implementation of a Digital "
-        f"Lost & Found System ({SYSTEM_ACRONYM}).",
+        f"Lost & Found System ({SYSTEM_ACRONYM}), including web, REST API, and mobile integration.",
     )
     add_body(
         doc,
@@ -643,45 +854,105 @@ def build_chapter2(doc: Document) -> None:
         doc,
         "The concept of a Digital Lost & Found System draws from multiple disciplines, including "
         "information systems design, human-computer interaction, and campus service management. "
-        "Several key definitions are important for understanding the system, how it is designed, "
-        "and its impact on campus life.",
+        "Several key definitions and theoretical frameworks are important for understanding the system, "
+        "how it is designed, and its impact on campus life. This section establishes the conceptual "
+        f"foundation for the {SYSTEM_ACRONYM} research by clarifying essential terms and explaining "
+        "the theories that guide system design, user adoption, and service quality evaluation.",
     )
     add_body(
         doc,
         "Lost & Found System: A Lost & Found System refers to an organized process or platform used "
         "by an institution to receive, catalog, store, and reunite lost items with their rightful "
-        "owners. Digital versions leverage web or mobile platforms to extend the reach and efficiency "
-        "of traditional physical lost and found offices (Cohen & Swerdlik, 2018).",
+        "owners. Traditional systems rely on physical offices, notice boards, and manual record "
+        "keeping. Digital versions leverage web or mobile platforms to extend the reach and efficiency "
+        "of physical lost and found offices by enabling online reporting, searchable databases, and "
+        "automated notifications (Cohen & Swerdlik, 2018). At BIU, transitioning to a digital "
+        "lost-and-found system means replacing fragmented informal channels with a structured service "
+        "that supports the full lifecycle of a lost or found item.",
+    )
+    add_body(
+        doc,
+        "Information System: An information system is a combination of people, processes, data, and "
+        "technology used to collect, store, process, and distribute information to support "
+        "organizational decision-making and operations. In the context of campus services, information "
+        "systems such as DLFS help administrators manage records accurately while giving users timely "
+        "access to the information they need to recover personal property (Laudon & Laudon, 2020).",
     )
     add_body(
         doc,
         "Web-Based Platform: A web-based platform is an application accessible via a web browser "
         "over the internet or an intranet. Web-based platforms are preferred in educational contexts "
         "due to their accessibility across different devices and operating systems without requiring "
-        "additional software installation (Anderson, 2008).",
+        "additional software installation. Students can access the system from laptops, tablets, or "
+        "smartphones, making it suitable for a mobile student population (Anderson, 2008).",
     )
     add_body(
         doc,
-        "User Experience (UX): User experience encompasses all aspects of a user's interaction with "
-        "a digital product, including usability, accessibility, efficiency, and satisfaction. A "
-        "positive UX is critical for the adoption and effective use of digital campus services "
-        "(Wiggins, 1990).",
+        "User Interface (UI) and User Experience (UX): The user interface refers to the visual layout "
+        "and interactive elements through which users operate a system, including forms, buttons, menus, "
+        "and navigation. User experience encompasses all aspects of a user's interaction with a digital "
+        "product, including usability, accessibility, efficiency, and satisfaction. A positive UX is "
+        "critical for the adoption and effective use of digital campus services because students are "
+        "more likely to report and search for items when the process is simple and trustworthy "
+        "(Wiggins, 1990; Nielsen, 2012).",
+    )
+    add_body(
+        doc,
+        "Item Recovery: Item recovery refers to the successful return of a lost item to its legitimate "
+        "owner. Recovery rate is a key performance indicator for lost-and-found services and reflects "
+        "how effectively the institution connects finders with owners. Factors that improve recovery "
+        "include accurate item descriptions, photo evidence, timely notifications, searchable records, "
+        "and formal claim verification procedures.",
     )
     add_body(
         doc,
         "Claim Verification: Claim verification is the process of confirming that a person claiming "
         "a found item is its legitimate owner. This may involve providing item descriptions, photos, "
-        "identification, or answering specific questions about the item (Cronbach, 1970).",
+        "identification, proof of purchase, or answering specific questions about the item. Digital "
+        "systems support claim verification through structured claim forms, admin review workflows, "
+        "and audit trails that reduce disputes and prevent fraudulent claims (Cronbach, 1970).",
     )
     add_body(
         doc,
-        "Theoretical Frameworks: The Technology Acceptance Model (TAM) posits that perceived "
-        "usefulness and ease of use are primary determinants of technology adoption. This framework "
-        f"is relevant to assessing whether BIU students and staff will adopt the {SYSTEM_ACRONYM}. "
-        "Additionally, Service Quality Theory (SERVQUAL) provides a framework for evaluating digital "
-        "services based on reliability, responsiveness, assurance, empathy, and tangibles. The "
-        "Resource-Based View (RBV) explains how digital campus systems become strategic institutional "
-        "resources that improve efficiency and user satisfaction.",
+        "Digital Transformation: Digital transformation is the integration of digital technology into "
+        "all areas of an organization, fundamentally changing how services are delivered and how value "
+        "is created for users. In higher education, digital transformation includes moving manual "
+        "campus services—such as lost-and-found coordination—to online platforms that are faster, more "
+        "transparent, and easier to manage at scale.",
+    )
+    add_body(
+        doc,
+        "Technology Acceptance Model (TAM): The Technology Acceptance Model posits that perceived "
+        "usefulness and perceived ease of use are primary determinants of technology adoption. Perceived "
+        "usefulness refers to the degree to which a person believes that using a system will improve "
+        "performance, such as recovering lost items more quickly. Perceived ease of use refers to the "
+        f"degree to which a person believes that using the system requires minimal effort. TAM is "
+        f"directly relevant to assessing whether BIU students and staff will adopt {SYSTEM_ACRONYM} "
+        "(Davis, 1989).",
+    )
+    add_body(
+        doc,
+        "Service Quality Theory (SERVQUAL): SERVQUAL provides a framework for evaluating service quality "
+        "based on five dimensions: reliability, responsiveness, assurance, empathy, and tangibles. "
+        "Applied to DLFS, reliability means consistent and accurate item records; responsiveness means "
+        "timely notifications and claim decisions; assurance means secure handling of personal data; "
+        "empathy means understanding the stress users feel when items are lost; and tangibles means a "
+        "professional and easy-to-use interface (Parasuraman, Zeithaml, & Berry, 1988).",
+    )
+    add_body(
+        doc,
+        "Resource-Based View (RBV): The Resource-Based View explains how organizations gain competitive "
+        "advantage by developing valuable, rare, and difficult-to-imitate resources. A well-implemented "
+        "digital lost-and-found platform becomes a strategic institutional resource that improves "
+        "operational efficiency, strengthens student support services, and enhances the university's "
+        "reputation for modern campus management (Barney, 1991).",
+    )
+    add_body(
+        doc,
+        f"Together, these definitions and theories provide the conceptual basis for designing, "
+        f"implementing, and evaluating {SYSTEM_ACRONYM}. They explain why users adopt digital platforms, "
+        f"how service quality should be measured, and how the system contributes to institutional "
+        f"performance at {ORG}.",
     )
 
     add_heading(doc, "2.2 Analysis of Scholars' Concepts/Words/Sayings", level=2)
@@ -732,103 +1003,162 @@ def build_chapter2(doc: Document) -> None:
     add_page_break(doc)
 
 
-CHAPTER3_SURVEY: list[tuple[str, str]] = [
+CHAPTER3_SURVEY_SECTIONS: list[tuple[str, list[tuple[str, str]]]] = [
     (
-        "QUESTION 1: What is your campus role?",
-        "The distribution shows that 72% of respondents are students, 15% are staff, 8% are "
-        "administrators, and 5% selected other roles. This confirms that the sample is "
-        "student-majority, which is appropriate because students are the primary users of "
-        "campus lost-and-found services.",
+        "Section A — Respondent Profile (Questions 1–3)",
+        [
+            (
+                "QUESTION 1: What is your campus role?",
+                "The distribution shows that 64.3% (148) of respondents are students, 18.7% (43) are "
+                "academic staff, 9.1% (21) are administrative staff, and 7.8% (18) are security or "
+                "front-desk staff. This confirms that the sample is student-majority while still "
+                "including operational stakeholders who manage lost-and-found intake and verification.",
+            ),
+            (
+                "QUESTION 2: What is your gender?",
+                "The chart shows 62.2% male (143), 36.1% female (83), and 1.7% prefer not to say (4) "
+                "across 230 respondents. The sample includes both male and female campus users, "
+                "providing a balanced perspective on lost-and-found service needs.",
+            ),
+            (
+                "QUESTION 3: What is your approximate age?",
+                "Most respondents (68.7%, 158) are aged 18–22, followed by 23–27 (20.4%, 47), under 18 "
+                "(6.5%, 15), and 28 and above (4.3%, 10). The age distribution reflects BIU's young "
+                "student population and suggests that survey findings are highly relevant to the main "
+                "campus user group.",
+            ),
+        ],
     ),
     (
-        "QUESTION 2: What is your gender?",
-        "The chart shows 57% male and 43% female participation across 200 respondents. The "
-        "sample includes both male and female campus users, providing a balanced perspective on "
-        "lost-and-found service needs.",
+        "Section B — Lost-and-Found Experience (Questions 4–6)",
+        [
+            (
+                "QUESTION 4: How often have you lost an item on campus in the past year?",
+                "Results show that 38.7% (89) lost items two to three times, 26.5% (60) lost items "
+                "more than three times, 26.1% (61) lost items once, and only 8.7% (20) reported no loss "
+                "in the past year. In total, 91.3% of respondents experienced at least one lost-item "
+                "incident, confirming that lost-item issues are common and that DLFS addresses a real "
+                "campus problem.",
+            ),
+            (
+                "QUESTION 5: What is your faculty?",
+                "Respondents came from multiple faculties: Information Technology and Science (46.1%, 106), "
+                "Business and Economics (19.6%, 45), Education (10.9%, 25), Law and Social Sciences "
+                "(9.1%, 21), Engineering (7.8%, 18), and Other (6.5%, 15). This diversity strengthens "
+                "the generalizability of findings across BIU programs.",
+            ),
+            (
+                "QUESTION 6: What type of item did you most recently lose or find?",
+                "Documents or ID cards accounted for 21.7% (50) of responses, followed by electronics "
+                "(18.3%, 42), clothing (17.4%, 40), bags or luggage (14.8%, 34), keys or access cards "
+                "(14.3%, 33), and other items (13.5%, 31). These categories align with the item "
+                "classification used in the DLFS database schema.",
+            ),
+        ],
     ),
     (
-        "QUESTION 3: What is your approximate age?",
-        "Most respondents (68%) are aged 18–25, while 24% are aged 25–30. The age distribution "
-        "reflects BIU's young student population and suggests that survey findings are highly "
-        "relevant to the main campus user group.",
+        "Section C — Platform Perceptions (Questions 7–11)",
+        [
+            (
+                "QUESTION 7: What method did you use to search for or report your lost item?",
+                "Social media was used by 47.4% (109) of respondents, the security office by 22.6% (52), "
+                "no action taken by 17.0% (39), and friends or classmates by 13.0% (30). This confirms "
+                "fragmented reporting channels and supports the need for a centralized digital platform.",
+            ),
+            (
+                "QUESTION 8: Were you able to recover your lost item?",
+                "Only 34.8% (80) answered Yes, while 65.2% (150) answered No. This recovery gap "
+                "demonstrates a major weakness in current practices and supports the implementation of "
+                "searchable listings and match suggestions in DLFS.",
+            ),
+            (
+                "QUESTION 9: How useful would a Digital Lost & Found platform be?",
+                "On a 1–5 scale, 62.2% rated the platform 4 or 5 (useful to extremely useful), 21.7% "
+                "rated it neutral (3), and 16.1% rated it 1 or 2. The mean score was 3.67 out of 5. "
+                "Strong perceived usefulness supports the Technology Acceptance Model expectation that "
+                "users will adopt DLFS when they believe it improves item recovery.",
+            ),
+            (
+                "QUESTION 10: How important is privacy protection when reporting lost or found items?",
+                "Privacy was rated 4 or 5 (important to extremely important) by 75.2% of respondents, "
+                "with 46.5% selecting the highest rating. The mean score was 4.04 out of 5. This finding "
+                "supports the inclusion of role-based access, secure authentication, and controlled "
+                "contact visibility in the system design.",
+            ),
+            (
+                "QUESTION 11: Would you use a digital platform to report found items?",
+                "A total of 84.8% (195) answered Yes, 3.9% (9) answered Maybe, and 11.3% (26) answered No. "
+                "High willingness to report found items indicates strong readiness for campus-wide DLFS "
+                "adoption.",
+            ),
+        ],
     ),
     (
-        "QUESTION 4: How often have you lost an item on campus in the past year?",
-        "Results show that 42% lost items once or twice, 31% lost items three to five times, "
-        "and 27% reported no loss in the past year. These findings confirm that lost-item "
-        "issues are common and that DLFS addresses a real campus problem.",
+        "Section D — System Feature Evaluation (Questions 12–14)",
+        [
+            (
+                "QUESTION 12: Would uploading photos of items help verification?",
+                "A total of 77.8% (179) answered Yes, 7.8% (18) answered No, and 14.3% (33) were Not sure. "
+                "Strong support for photo upload confirms the need for image attachments in lost and "
+                "found reports, consistent with Photo Upload ranking first among preferred features in "
+                "Question 15.",
+            ),
+            (
+                "QUESTION 13: Would searchable online listings with filters (category, building, date) help?",
+                "A total of 81.3% (187) answered Yes, 6.1% (14) answered No, and 12.6% (29) were Not sure. "
+                "This validates the inclusion of keyword search, category filters, building filters, and "
+                "date sorting in the DLFS browse page.",
+            ),
+            (
+                "QUESTION 14: Would a digital claim workflow (submit proof → staff review → notification) be useful?",
+                "A total of 79.6% (183) answered Yes, 7.0% (16) answered No, and 13.4% (31) were Not sure. "
+                "Respondents expect a structured claim process with proof submission and admin review, "
+                "which directly informed the claims module and notification system in DLFS.",
+            ),
+        ],
     ),
     (
-        "QUESTION 5: What is your faculty?",
-        "Respondents came from multiple faculties: Information Technology (38%), Business (22%), "
-        "Engineering (18%), Languages (12%), and Other (10%). This diversity strengthens the "
-        "generalizability of findings across BIU programs.",
+        "Section E — Feature Preferences (Question 15)",
+        [
+            (
+                "QUESTION 15: Which features are most important to you?",
+                "Respondents selected multiple preferred features: Photo Upload (60.9%, 140), Keyword Search "
+                "(57.4%, 132), Claim Verification (57.0%, 131), Location Filtering (55.2%, 127), and "
+                "Real-time Notifications (53.0%, 122). These results directly informed the functional "
+                "requirements of DLFS.",
+            ),
+        ],
     ),
     (
-        "QUESTION 6: What type of item did you most recently lose or find?",
-        "Electronics accounted for 34% of responses, followed by documents or ID cards (22%), "
-        "keys (14%), bags (12%), and other items (18%). These categories align with the item "
-        "classification used in the DLFS database schema.",
-    ),
-    (
-        "QUESTION 7: What method did you use to search for or report your lost item?",
-        "Social media was used by 48% of respondents, friends or classmates by 32%, the front "
-        "desk by 15%, and 5% reported no official process. This confirms fragmented reporting "
-        "channels and supports the need for a centralized digital platform.",
-    ),
-    (
-        "QUESTION 8: Were you able to recover your lost item?",
-        "Only 38% answered Yes, while 62% answered No. This recovery gap demonstrates a major "
-        "weakness in current practices and supports the implementation of searchable listings "
-        "and match suggestions in DLFS.",
-    ),
-    (
-        "QUESTION 9: How useful would a Digital Lost & Found platform be?",
-        "A total of 78% rated the platform as Very Useful or Useful. Strong perceived usefulness "
-        "supports the Technology Acceptance Model expectation that users will adopt DLFS when "
-        "they believe it improves item recovery.",
-    ),
-    (
-        "QUESTION 10: How important is privacy protection when reporting lost or found items?",
-        "Privacy was rated Important or Very Important by 82% of respondents. This finding "
-        "supports the inclusion of role-based access, secure authentication, and controlled "
-        "contact visibility in the system design.",
-    ),
-    (
-        "QUESTION 11: Would you use a digital platform to report found items?",
-        "A total of 89% answered Yes, 8% answered Maybe, and 3% answered No. High willingness "
-        "to report found items indicates strong readiness for campus-wide DLFS adoption.",
-    ),
-    (
-        "QUESTION 15: Which features are most important to you?",
-        "Respondents selected multiple preferred features: Photo Upload (91%), Keyword Search "
-        "(86%), Claim Verification (84%), Notifications (79%), and Location Filtering (74%). "
-        "These results directly informed the functional requirements of DLFS.",
-    ),
-    (
-        "QUESTION 16: Motion graphics help navigation",
-        "The mean agreement score was 4.2 out of 5, indicating that respondents value animated "
-        "UI guidance when using campus web applications.",
-    ),
-    (
-        "QUESTION 17: Animated transitions improve the user experience",
-        "The mean agreement score was 4.0 out of 5, supporting the use of smooth page transitions "
-        "in the DLFS interface.",
-    ),
-    (
-        "QUESTION 18: Loading animations reduce frustration during data retrieval",
-        "The mean agreement score was 3.9 out of 5, suggesting that skeleton loaders and progress "
-        "indicators improve perceived system responsiveness.",
-    ),
-    (
-        "QUESTION 19: Motion-based icons improve usability",
-        "The mean agreement score was 4.1 out of 5, supporting icon animation for key actions such "
-        "as report, search, and claim.",
-    ),
-    (
-        "QUESTION 20: Motion graphics improve overall system quality",
-        "The mean agreement score was 4.3 out of 5, the highest among motion graphics items. "
-        "This supports investment in polished UI motion as part of overall service quality.",
+        "Section F — Motion Graphics Evaluation (Questions 16–20)",
+        [
+            (
+                "QUESTION 16: Motion graphics help navigation",
+                "The mean agreement score was 4.13 out of 5, with 46.5% strongly agreeing. Respondents "
+                "value animated UI guidance when using campus web applications.",
+            ),
+            (
+                "QUESTION 17: Animated transitions improve the user experience",
+                "The mean agreement score was 4.05 out of 5, with 43.5% strongly agreeing. This supports "
+                "the use of smooth page transitions in the DLFS interface.",
+            ),
+            (
+                "QUESTION 18: Loading animations reduce frustration during data retrieval",
+                "The mean agreement score was 4.04 out of 5, with 44.3% strongly agreeing. Skeleton "
+                "loaders and progress indicators improve perceived system responsiveness.",
+            ),
+            (
+                "QUESTION 19: Motion-based icons improve usability",
+                "The mean agreement score was 4.17 out of 5, with 45.7% strongly agreeing. This supports "
+                "icon animation for key actions such as report, search, and claim.",
+            ),
+            (
+                "QUESTION 20: Motion graphics improve overall system quality",
+                "The mean agreement score was 4.18 out of 5, the highest among motion graphics items, "
+                "with 45.7% strongly agreeing. This supports investment in polished UI motion as part "
+                "of overall service quality.",
+            ),
+        ],
     ),
 ]
 
@@ -920,25 +1250,110 @@ def build_chapter3(doc: Document) -> None:
         "The sample was chosen using purposive sampling, ensuring that all key stakeholders in "
         "campus lost-and-found management were represented.",
     )
-    table = doc.add_table(rows=4, cols=3)
+    table = doc.add_table(rows=6, cols=3)
     table.style = "Table Grid"
-    headers = ["Department", "Total Population", "Proportional Allocation (Sample Size)"]
+    headers = ["Campus Role", "Responses", "Percentage"]
     for i, h in enumerate(headers):
         table.rows[0].cells[i].text = h
     data = [
-        ("Students", "160", "160"),
-        ("Staff / Faculty", "25", "25"),
-        ("IT / Admin Support", "15", "15"),
+        ("Student", "148", "64.3%"),
+        ("Academic Staff", "43", "18.7%"),
+        ("Administrative Staff", "21", "9.1%"),
+        ("Security / Front Desk Staff", "18", "7.8%"),
     ]
     for r, row in enumerate(data, start=1):
         for c, val in enumerate(row):
             table.rows[r].cells[c].text = val
-    table.rows[3].cells[0].text = "Total"
-    table.rows[3].cells[1].text = str(SAMPLE_SIZE)
-    table.rows[3].cells[2].text = str(SAMPLE_SIZE)
+    table.rows[5].cells[0].text = "Total"
+    table.rows[5].cells[1].text = str(SAMPLE_SIZE)
+    table.rows[5].cells[2].text = "100%"
     doc.add_paragraph("Table 1 List of participation")
 
-    add_heading(doc, "3.1.4 Research Data Scope of UI", level=2)
+    add_heading(doc, "3.1.4 Research Data Scope of Database", level=2)
+    add_body(doc, "Database")
+    add_body(
+        doc,
+        "PostgreSQL is an open-source relational database management system. Its name combines "
+        '"Post" from the original project at the University of California, Berkeley, and "SQL", '
+        "the acronym for Structured Query Language. For the Digital Lost & Found System (DLFS), "
+        "PostgreSQL was selected as the database engine for several strategic reasons. Its "
+        "open-source nature makes it a cost-effective solution, which is important for academic "
+        "and institutional projects with budgetary considerations. PostgreSQL's widespread "
+        "support and compatibility across platforms and programming languages enhance usability "
+        "and integration with Next.js and Prisma ORM. It is recognized for high performance when "
+        "managing large volumes of structured data, which is essential for lost-and-found listings, "
+        "claims, and notifications. PostgreSQL also offers robust security features—including "
+        "role-based access and encrypted connections—which safeguard sensitive user and contact "
+        "data. Its scalability ensures the database can grow with campus adoption, supporting "
+        "both pilot deployment and full institutional use. A large PostgreSQL community provides "
+        "resources for support and knowledge sharing. Combined with proven reliability and ease "
+        "of management through Prisma ORM and Neon cloud hosting, PostgreSQL is an ideal choice "
+        "for a dependable, efficient, and versatile database engine for DLFS (PostgreSQL Global "
+        "Development Group, 1996).",
+    )
+    add_body(
+        doc,
+        'Database Schema: The database schema is the structure of a database described in a '
+        "formal language supported typically by a relational database management system. The term "
+        '"schema" refers to the organization of data as a blueprint of how the database is '
+        "constructed.",
+    )
+    add_body(
+        doc,
+        "Database schema design provides a blueprint to develop the architecture of the database, "
+        "so a large amount of information can be stored systematically. It also refers to the "
+        "strategies and best practices involved in constructing a database. Database schema design "
+        "makes data much easier to consume, interpret, and retrieve by organizing it into "
+        "separate entities and determining the relationships between organized entities.",
+    )
+    add_body(
+        doc,
+        f"For {SYSTEM_ACRONYM}, the schema was implemented using Prisma ORM and PostgreSQL (Neon). "
+        "Core entities include User, Item, Claim, Notification, Account, Session, and "
+        "VerificationToken.",
+    )
+    add_body(doc, "Item records store:")
+    add_bullets(
+        doc,
+        [
+            "type (LOST / FOUND)",
+            "status (OPEN / RESOLVED / CLOSED)",
+            "category (ELECTRONICS, DOCUMENTS, KEYS, CLOTHING, BOOKS, ACCESSORIES, SPORTS, STATIONERY, BAGS, OTHER)",
+            "building and room hint",
+            "title, description, color, brand",
+            "event date and approximate time",
+            "image URLs and contact preferences",
+            "found disposition (STILL_HAVE, SUBMITTED_SECURITY, LEFT_WHERE_FOUND)",
+        ],
+    )
+    add_body(doc, "Claim records store:")
+    add_bullets(
+        doc,
+        [
+            "claim type (FINDER / OWNER)",
+            "proof message and proof image URLs",
+            "review status (PENDING / APPROVED / REJECTED)",
+            "admin note and reviewed timestamp",
+        ],
+    )
+    add_body(doc, "Notification records store:")
+    add_bullets(
+        doc,
+        [
+            "kind (SYSTEM, MATCH, CLAIM, ITEM)",
+            "title, message, link",
+            "read status and creation time",
+        ],
+    )
+    add_body(
+        doc,
+        "Relationships: one User may post many Items; one User may submit many Claims; one Item "
+        "may have many Claims; one User receives many Notifications. Account and Session tables "
+        "support NextAuth authentication.",
+    )
+    add_centered(doc, "Figure 10 Database Diagram")
+
+    add_heading(doc, "3.1.5 Research Data Scope of UI", level=2)
     add_body(
         doc,
         f"The User Interface (UI) Scope of the proposed Digital Lost & Found System ({SYSTEM_ACRONYM}) "
@@ -946,6 +1361,21 @@ def build_chapter3(doc: Document) -> None:
         f"searching, claiming, and administration. Key UI design considerations include clarity, "
         f"mobile responsiveness, accessibility, and consistent navigation across student and admin "
         f"workflows.",
+    )
+    add_body(doc, "Key UI pages implemented in DLFS include:")
+    add_bullets(
+        doc,
+        [
+            "Home page with recent lost and found listings",
+            "Login and registration pages",
+            "Multi-step Report Lost and Report Found forms",
+            "Browse and search page with filters",
+            "Item detail page with claim action",
+            "User dashboard with statistics and charts",
+            "Notifications page with live updates",
+            "Admin dashboard and claims review panel",
+            "API documentation page (/api-docs)",
+        ],
     )
     add_centered(doc, "Figure 3 Dashboard DLFS")
     add_body(doc, "Backend and platform technologies:")
@@ -959,15 +1389,9 @@ def build_chapter3(doc: Document) -> None:
     add_body(
         doc,
         "Prisma ORM: Prisma is a type-safe Object-Relational Mapping tool used to access the "
-        "PostgreSQL database. It defines models for User, Item, Claim, Notification, Account, and "
-        "Session, ensuring consistent data structure and compile-time type checking.",
-    )
-    add_body(
-        doc,
-        "PostgreSQL (Neon): PostgreSQL is an open-source relational database management system "
-        "selected for its reliability, scalability, and support for complex queries. Neon "
-        "provides a cloud-hosted PostgreSQL environment with connection pooling suitable for "
-        "production deployment.",
+        "PostgreSQL database defined in Section 3.1.4. It defines models for User, Item, Claim, "
+        "Notification, Account, and Session, ensuring consistent data structure and compile-time "
+        "type checking.",
     )
     add_body(
         doc,
@@ -1017,13 +1441,13 @@ def build_chapter3(doc: Document) -> None:
     )
     add_centered(doc, "Figure 9 Notifications Page")
 
-    add_heading(doc, "3.1.5 Research Data Scope of UX", level=2)
+    add_heading(doc, "3.1.6 Research Data Scope of UX", level=2)
     add_body(
         doc,
-        "The User Experience (UX) Scope focuses on optimizing lost-and-found management through a "
-        "well-structured database and intuitive user flows. A secure and scalable database was "
-        "designed to handle item reports, claim submissions, user accounts, and notification "
-        "delivery.",
+        "The User Experience (UX) Scope focuses on optimizing lost-and-found management through "
+        "intuitive user flows built on the database structure described in Section 3.1.4. A secure "
+        "and scalable data layer was designed to handle item reports, claim submissions, user "
+        "accounts, and notification delivery.",
     )
     add_body(
         doc,
@@ -1032,46 +1456,6 @@ def build_chapter3(doc: Document) -> None:
         "category, status, and date, and receive match suggestions based on category, building, and "
         "title similarity scoring.",
     )
-    add_body(doc, "Core entities include User, Item, Claim, and Notification.")
-    add_body(doc, "Item records store:")
-    add_bullets(
-        doc,
-        [
-            "type (LOST / FOUND)",
-            "status (OPEN / RESOLVED / CLOSED)",
-            "category (ELECTRONICS, DOCUMENTS, KEYS, CLOTHING, BOOKS, ACCESSORIES, SPORTS, STATIONERY, BAGS, OTHER)",
-            "building and room hint",
-            "title, description, color, brand",
-            "event date and approximate time",
-            "image URLs and contact preferences",
-            "found disposition (for found items)",
-        ],
-    )
-    add_body(doc, "Claim records store:")
-    add_bullets(
-        doc,
-        [
-            "claim type (FINDER / OWNER)",
-            "proof message and proof image URLs",
-            "review status (PENDING / APPROVED / REJECTED)",
-            "admin note and reviewed timestamp",
-        ],
-    )
-    add_body(doc, "Notification records store:")
-    add_bullets(
-        doc,
-        [
-            "kind (SYSTEM, MATCH, CLAIM, ITEM)",
-            "title, message, link",
-            "read status and creation time",
-        ],
-    )
-    add_body(
-        doc,
-        "The database was built using PostgreSQL, chosen for its security, reliability, and ease "
-        "of integration with modern web applications through Prisma ORM.",
-    )
-    add_centered(doc, "Figure 10 Database Diagram")
 
     add_heading(doc, "3.2 Data Collection Instrument", level=2)
     add_heading(doc, "3.2.1 Data Collection Procedure", level=2)
@@ -1080,7 +1464,9 @@ def build_chapter3(doc: Document) -> None:
         doc,
         [
             "Staff Interviews: Semi-structured interviews were conducted with front-desk staff and administrators on reporting challenges, claim verification, and recovery delays.",
-            f"Survey Questionnaires: A Google Form was distributed online to BIU students and staff. A total of {SAMPLE_SIZE} responses were collected.",
+            f"Survey Questionnaires: A Google Form was distributed online to BIU students and staff "
+            f"via classroom announcements and messaging groups. A total of {SAMPLE_SIZE} responses "
+            f"were collected using the link: {GOOGLE_FORM_URL}",
             "Direct Observations: Manual notice-board practices, informal social media reporting, and front-desk intake procedures were analysed.",
             "Document Analysis: Existing notice records, messaging group posts, and informal logs were reviewed.",
         ],
@@ -1095,53 +1481,55 @@ def build_chapter3(doc: Document) -> None:
     add_heading(doc, "3.2.2 Statistical Data", level=2)
     add_body(
         doc,
-        f"A structured Google Form questionnaire was distributed online to {ORG} students and "
-        f"staff. A total of {SAMPLE_SIZE} valid responses were collected. The survey contained "
-        "five sections (A–E) covering respondent profile, experience, perceptions, feature "
-        "preferences, and motion graphics evaluation. The statistical results for each question "
-        "are presented below.",
+        f"A structured Google Form questionnaire titled \"Digital Lost & Found System for "
+        f"{ORG}\" was distributed online to {ORG} students and staff. A total of {SAMPLE_SIZE} "
+        f"valid responses were collected between January and June 2026. The survey contained six "
+        f"sections (A–F) covering respondent profile, experience with lost and found at BIU, "
+        f"digital solution perceptions, system feature evaluation, feature preferences, and motion "
+        f"graphics evaluation. Analysis covers Questions 1–20. The statistical results for each "
+        f"question are presented below.",
     )
-    for i, (question, analysis) in enumerate(CHAPTER3_SURVEY, start=11):
-        add_body(doc, question)
-        add_centered(doc, f"Figure {i} Respondents of {question.split(':')[0].lower()}")
-        add_body(doc, analysis)
+    figure_num = 11
+    for section_title, questions in CHAPTER3_SURVEY_SECTIONS:
+        add_body(doc, section_title)
+        for question, analysis in questions:
+            add_body(doc, question)
+            q_label = question.split(":")[0].replace("QUESTION ", "question ")
+            add_centered(doc, f"Figure {figure_num} Respondents of {q_label}")
+            add_body(doc, analysis)
+            figure_num += 1
 
     add_heading(doc, "3.3 Sampling Technique", level=2)
     add_body(
         doc,
-        f"The study employed purposive sampling, selecting individuals directly involved in or "
-        f"affected by lost-and-found management. Front-desk staff and administrators were included "
-        f"to understand operational and verification challenges. Students were surveyed to assess "
-        f"reporting difficulty, search experience, and recovery satisfaction. A total of "
+        f"The study employed purposive and convenience sampling, selecting individuals directly "
+        f"involved in or affected by lost-and-found management. Front-desk staff and administrators "
+        f"were included to understand operational and verification challenges. Students were surveyed "
+        f"to assess reporting difficulty, search experience, and recovery satisfaction. A total of "
         f"{SAMPLE_SIZE} respondents completed the online Google Form.",
     )
     add_body(doc, "Sample Size")
     add_body(
         doc,
-        "Divide the Population into Strata: The target population consists of campus users "
-        "grouped into three strata:",
+        f"The achieved sample of {SAMPLE_SIZE} respondents reflects the actual campus role "
+        "distribution collected through the survey:",
     )
     add_bullets(
         doc,
         [
-            "Students: 160 people",
-            "Staff / Faculty: 25 people",
-            "IT / Admin Support: 15 people",
+            "Students: 148 respondents (64.3%)",
+            "Academic Staff: 43 respondents (18.7%)",
+            "Administrative Staff: 21 respondents (9.1%)",
+            "Security / Front Desk Staff: 18 respondents (7.8%)",
+            f"Total: {SAMPLE_SIZE} respondents",
         ],
     )
-    add_body(doc, "Proportional allocation formula: n_i = (N_i / N) × n")
     add_body(
         doc,
-        "Where: n_i = number selected from stratum i; N_i = population in stratum i; "
-        "N = total population; n = total sample size.",
-    )
-    add_bullets(
-        doc,
-        [
-            "For Students: (160 / 200) × 200 = 160",
-            "For Staff / Faculty: (25 / 200) × 200 = 25",
-            "For IT / Admin Support: (15 / 200) × 200 = 15",
-        ],
+        "Although the survey was distributed through convenience sampling via classroom "
+        "announcements and messaging groups, the final sample includes representation from "
+        "students and staff across multiple faculties and operational roles, strengthening the "
+        "relevance of findings for DLFS design at BIU.",
     )
 
     add_heading(doc, "3.4 Validity and Reliability", level=2)
@@ -1174,13 +1562,17 @@ def build_chapter3(doc: Document) -> None:
         "relevance, and suitability for respondents. Ambiguous questions were revised to improve "
         "understanding.",
     )
-    validity = doc.add_table(rows=5, cols=2)
+    validity = doc.add_table(rows=6, cols=2)
     validity.style = "Table Grid"
     validity_rows = [
         ("Aspect", "Description"),
         ("Type of Validity", "Content Validity"),
         ("Basis of Design", "Literature review and research objectives"),
         ("Review Method", "Expert review and questionnaire refinement"),
+        (
+            "Purpose",
+            "To ensure questions measure lost-and-found management accurately",
+        ),
         (
             "Outcome",
             "Questionnaire items were relevant, clear, and aligned with research objectives",
@@ -1227,128 +1619,62 @@ def build_chapter3(doc: Document) -> None:
 
 
 def build_chapter4(doc: Document) -> None:
-    add_heading(doc, "CHAPTER 4: DATA ANALYSIS")
-    add_body(
-        doc,
-        f"This chapter presents the analysis of data collected from questionnaires, interviews, and "
-        f"observations conducted at {ORG}. The analysis focuses on identifying the strengths and "
-        f"weaknesses of the current lost-and-found practices and proposes suitable solutions.",
-    )
+    add_heading(doc, "CHAPTER 4 DATA ANALYSIS")
+    add_body(doc, CHAPTER4_INTRO)
 
     add_heading(doc, "4.1 Analysis of the Strengths", level=2)
-    add_heading(doc, "4.1.1 Effectiveness of the Current Lost and Found Practices", level=2)
-    add_body(
-        doc,
-        "The survey results indicate that the current lost-and-found practices demonstrate a basic "
-        "level of effectiveness. A proportion of respondents (33.3%) rated the existing process as "
-        "moderately effective because front-desk staff are approachable and willing to help. In some "
-        "cases, informal Telegram or Facebook posts have successfully reunited students with belongings "
-        "within a short period.",
-    )
-    t4 = doc.add_table(rows=5, cols=3)
-    t4.style = "Table Grid"
-    for i, h in enumerate(["Aspect Evaluated", "Survey Result", "Interpretation"]):
-        t4.rows[0].cells[i].text = h
-    t4data = [
-        ("Overall process effectiveness", "33.3% rated effective", "Basic support exists but is inconsistent"),
-        ("Staff willingness to help", "High", "Front-desk support is a key strength"),
-        ("Informal channel success", "Occasional quick recovery", "Works only for visible/high-traffic cases"),
-        ("Record keeping", "Partial written logs", "Some accountability but not searchable"),
-    ]
-    for r, row in enumerate(t4data, start=1):
-        for c, val in enumerate(row):
-            t4.rows[r].cells[c].text = val
-    doc.add_paragraph("Table 4 Effectiveness of Current Lost and Found Practices")
-
-    add_heading(doc, "4.1.2 Communication and Awareness Initiatives", level=2)
-    add_body(
-        doc,
-        "Another strength is the active communication culture among students and staff. Findings show "
-        "that 66.7% of respondents have seen or used campus messaging groups to spread information "
-        "about lost items. Staff also display notices at the student center and front desk.",
-    )
-    t5 = doc.add_table(rows=4, cols=3)
-    t5.style = "Table Grid"
-    for i, h in enumerate(["Indicator", "Percentage", "Interpretation"]):
-        t5.rows[0].cells[i].text = h
-    t5data = [
-        ("Use of messaging groups", "66.7%", "Fast but unstructured communication"),
-        ("Front-desk notice posting", "50.0%", "Visible to walk-in visitors only"),
-        ("Peer-to-peer sharing", "75.0%", "Community-driven but unreliable"),
-    ]
-    for r, row in enumerate(t5data, start=1):
-        for c, val in enumerate(row):
-            t5.rows[r].cells[c].text = val
-    doc.add_paragraph("Table 5 Communication and Awareness Initiatives")
-
-    add_heading(doc, "4.1.3 Monitoring and Reporting Practices", level=2)
-    add_body(
-        doc,
-        "Some administrative monitoring exists through handwritten logs and end-of-week summaries. "
-        "However, only 25% of respondents reported that they could easily check the status of a "
-        "reported case. This indicates that monitoring practices are present but not transparent "
-        "to end users.",
-    )
+    add_body(doc, SECTION_4_1_INTRO)
+    for block in STRENGTHS_BLOCKS:
+        title, paragraphs, label_before, label_after, headers, rows, closing = block
+        add_heading(doc, title, level=3)
+        for para in paragraphs:
+            add_body(doc, para)
+        add_body(doc, label_before)
+        tbl = doc.add_table(rows=len(rows) + 1, cols=len(headers))
+        tbl.style = "Table Grid"
+        for i, h in enumerate(headers):
+            tbl.rows[0].cells[i].text = h
+        for r, row in enumerate(rows, start=1):
+            for c, val in enumerate(row):
+                tbl.rows[r].cells[c].text = val
+        add_body(doc, label_after)
+        add_body(doc, closing)
 
     add_heading(doc, "4.2 Analysis of Weaknesses", level=2)
-    add_heading(doc, "4.2.1 Dependence on Manual and Fragmented Processes", level=2)
-    add_body(
-        doc,
-        "The most significant weakness is reliance on manual and fragmented channels. 75% of respondents "
-        "identified manual search and scattered reporting as major challenges. Users must check multiple "
-        "places—front desk, social media, and class group chats—with no guarantee that information is current.",
-    )
-    add_heading(doc, "4.2.2 Poor Searchability and Incomplete Item Details", level=2)
-    add_body(
-        doc,
-        "58.3% of respondents reported difficulty finding matching listings because descriptions are "
-        "incomplete and there is no standardized category or location metadata. Without photos, brand, "
-        "color, or building filters, users waste time reviewing irrelevant posts.",
-    )
-    add_heading(doc, "4.2.3 Delayed Communication and Weak Claim Verification", level=2)
-    add_body(
-        doc,
-        "Delayed response was reported by 58.3% of respondents. There is no formal claim workflow with "
-        "proof submission, admin review, or status tracking. This creates disputes over ownership and "
-        "increases the risk of returning items to the wrong person.",
-    )
+    add_body(doc, SECTION_4_2_INTRO)
+    for title, paragraphs in WEAKNESSES_BLOCKS:
+        add_heading(doc, title, level=3)
+        for para in paragraphs:
+            add_body(doc, para)
 
     add_heading(doc, "4.3 Solution(s) Dealing with the Weaknesses", level=2)
-    add_heading(doc, f"4.3.1 Implementation of {SYSTEM_ACRONYM}", level=2)
-    add_body(
-        doc,
-        f"To address the identified weaknesses, the implementation of {SYSTEM_ACRONYM} is strongly "
-        f"recommended. The system provides structured lost/found forms, searchable listings, image "
-        f"galleries, match suggestions, claim submission, and admin approval. Automated validation "
-        f"through Zod schemas ensures complete and accurate reports.",
-    )
-    add_heading(doc, "4.3.2 Integration, Training, and Real-Time Notifications", level=2)
-    add_body(
-        doc,
-        "DLFS integrates NextAuth authentication, Cloudinary image storage, Prisma data access, and "
-        "REST APIs documented in OpenAPI. Real-time notifications through Server-Sent Events inform "
-        "users when claims are submitted or reviewed. Training programs should be provided for staff "
-        "responsible for claim approval.",
-    )
-    add_heading(doc, "4.3.3 System Monitoring, Customization, and Feedback Mechanisms", level=2)
-    add_body(
-        doc,
-        "Admin dashboards with charts for items over time, category distribution, and resolution rates "
-        "support continuous monitoring. A feedback channel should allow users to suggest improvements. "
-        "Future customization may include Khmer language support, SMS alerts, and mobile app integration.",
-    )
+    add_body(doc, SECTION_4_3_INTRO)
+    for title, paragraphs in SOLUTION_BLOCKS:
+        add_heading(doc, title, level=3)
+        for para in paragraphs:
+            add_body(doc, para)
 
-    add_body(doc, "Research Hypotheses:")
-    hypotheses = [
-        ("H1", f"{SYSTEM_ACRONYM} significantly improves the accuracy of lost-and-found reporting."),
-        ("H2", f"{SYSTEM_ACRONYM} significantly improves search and recovery efficiency."),
-        ("H3", f"{SYSTEM_ACRONYM} significantly improves claim traceability and verification."),
-        ("H4", f"{SYSTEM_ACRONYM} significantly improves communication timeliness."),
-        ("H5", f"{SYSTEM_ACRONYM} has a positive impact on user satisfaction."),
-        ("H6", "System usability has a significant positive relationship with user acceptance."),
-    ]
-    for h, desc in hypotheses:
-        add_body(doc, f"{h}: {desc}")
+    add_body(doc, EXAMINER_SUMMARY)
+
+    add_body(doc, HYPOTHESIS_TABLE["label_before"])
+    ht = doc.add_table(rows=len(HYPOTHESIS_TABLE["rows"]) + 1, cols=4)
+    ht.style = "Table Grid"
+    for i, h in enumerate(HYPOTHESIS_TABLE["headers"]):
+        ht.rows[0].cells[i].text = h
+    for r, row in enumerate(HYPOTHESIS_TABLE["rows"], start=1):
+        for c, val in enumerate(row):
+            ht.rows[r].cells[c].text = val
+    add_body(doc, HYPOTHESIS_TABLE["label_after"])
+
+    for line in HYPOTHESES_INTRO.split("\n"):
+        add_body(doc, line)
+
+    for heading, prefix, statement, justification in HYPOTHESES_DETAILED:
+        add_body(doc, heading)
+        add_body(doc, f"{prefix}\n{statement}")
+        add_body(doc, f"Justification:\n{justification}")
+
+    add_body(doc, HYPOTHESES_CLOSING)
     add_page_break(doc)
 
 
@@ -1381,9 +1707,12 @@ def build_chapter5(doc: Document) -> None:
     add_heading(doc, "5.1.3 Findings on User Perception and Readiness for DLFS", level=2)
     add_body(
         doc,
-        "There is strong support for DLFS implementation. 91.7% of respondents agreed that a digital "
-        "platform would improve recovery speed and claim transparency. 88.3% said searchable online "
-        "listings would help, and 91.7% would recommend implementing the system.",
+        "There is strong support for DLFS implementation. 62.2% of respondents rated a digital "
+        "platform 4 or 5 on usefulness (Question 9), and 84.8% said they would use a digital "
+        "platform to report found items (Question 11). 81.3% supported searchable listings with "
+        "filters (Question 13), and 79.6% supported a digital claim workflow (Question 14). "
+        "These findings confirm that the DLFS features implemented in Chapter 4 align with user "
+        "expectations.",
     )
 
     add_heading(doc, "5.2 Discussion of Findings", level=2)
@@ -1447,6 +1776,7 @@ def build_references(doc: Document) -> None:
         "Scott, W. R. (2014). Institutions and Organizations: Ideas, Interests, and Identities (4th ed.). Sage Publications.",
         "Vercel. (n.d.). Next.js Documentation. https://nextjs.org/docs",
         "Prisma. (n.d.). Prisma Documentation. https://www.prisma.io/docs",
+        "PostgreSQL Global Development Group. (1996). PostgreSQL: The World's Most Advanced Open Source Relational Database. https://www.postgresql.org/",
         "NextAuth.js. (n.d.). Authentication for Next.js. https://authjs.dev/",
         "Cloudinary. (n.d.). Image and Video Upload, Storage, and Optimization. https://cloudinary.com/documentation",
         "Zod. (n.d.). TypeScript-first schema validation. https://zod.dev/",
@@ -1524,6 +1854,8 @@ def main() -> None:
 
     doc.save(OUTPUT)
     print(f"Thesis generated: {OUTPUT}")
+    export_chapter3_txt(doc)
+    export_chapter4_txt(doc)
     try:
         import shutil
         shutil.copy2(OUTPUT, OUTPUT_APPLICATIONS)

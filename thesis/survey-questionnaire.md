@@ -83,6 +83,8 @@
 - Effective
 - Very effective
 
+## Section C: Digital Solution (continued)
+
 **Q12. Would uploading photos of items help verification?**
 - Yes
 - No
@@ -98,7 +100,11 @@
 - No
 - Not sure
 
-**Q15. What advantages do you expect from a BIU Lost & Found web system?** (Select all that apply)
+---
+
+## Section D: Feature Preferences
+
+**Q15. Which features are most important to you?** (Select all that apply)
 - Faster matching of lost and found items
 - Better proof and verification
 - Centralized records
@@ -126,5 +132,5 @@
 
 1. Export Google Form responses to Google Sheets
 2. Create charts (pie/bar) for each closed-ended question
-3. Insert charts into thesis as Figure 11–25
+3. Insert charts into thesis as **Figure 11–30** (Questions 1–20)
 4. Update statistical paragraphs in Chapter 3 if your real data differs from the draft

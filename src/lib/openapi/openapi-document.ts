@@ -121,6 +121,11 @@ export function buildOpenApiDocument(baseUrl: string): OpenApiDoc {
           type: "object",
           properties: {
             ok: { type: "boolean", example: true },
+            sessionToken: {
+              type: "string",
+              description: "Bearer token for mobile clients",
+            },
+            expiresIn: { type: "integer", example: 2592000 },
             message: { type: "string" },
             user: {
               type: "object",
@@ -132,11 +137,53 @@ export function buildOpenApiDocument(baseUrl: string): OpenApiDoc {
                   type: "string",
                   enum: ["STUDENT", "STAFF", "ADMIN"],
                 },
+                image: { type: "string", nullable: true },
+                studentId: { type: "string", nullable: true },
               },
               required: ["id", "role"],
             },
           },
           required: ["ok", "user", "message"],
+        },
+        AuthRegisterRequest: {
+          type: "object",
+          properties: {
+            name: { type: "string", minLength: 2 },
+            email: { type: "string", format: "email" },
+            studentId: { type: "string" },
+            password: { type: "string", minLength: 8 },
+            confirmPassword: { type: "string", minLength: 8 },
+          },
+          required: ["name", "email", "password", "confirmPassword"],
+        },
+        FirebaseAuthRequest: {
+          type: "object",
+          properties: {
+            idToken: {
+              type: "string",
+              description: "Firebase Auth ID token from the mobile client",
+            },
+            studentId: { type: "string" },
+            name: { type: "string" },
+          },
+          required: ["idToken"],
+        },
+        AuthSessionResponse: {
+          type: "object",
+          properties: {
+            ok: { type: "boolean" },
+            user: {
+              type: "object",
+              properties: {
+                id: { type: "string" },
+                email: { type: "string", nullable: true },
+                name: { type: "string", nullable: true },
+                role: { type: "string" },
+                image: { type: "string", nullable: true },
+              },
+            },
+            profile: { type: "object" },
+          },
         },
         UploadImageResponse: {
           type: "object",

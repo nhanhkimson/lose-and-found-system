@@ -1,5 +1,7 @@
 import bcrypt from "bcryptjs";
 import { NextResponse } from "next/server";
+import { mintSessionToken } from "@/lib/auth/mint-session-token";
+import { setSessionCookieOnResponse } from "@/lib/auth/set-session-cookie";
 import { prisma } from "@/lib/prisma";
 import { registerSchema } from "@/lib/validations/auth.schema";
 
@@ -41,10 +43,37 @@ export async function POST(request: Request) {
         studentId: trimmedStudent ? trimmedStudent : null,
         password: hashed,
       },
-      select: { id: true, email: true, name: true },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        image: true,
+        studentId: true,
+      },
     });
 
-    return NextResponse.json({ ok: true, user }, { status: 201 });
+    const sessionToken = await mintSessionToken({
+      sub: user.id,
+      id: user.id,
+      role: user.role,
+      email: user.email,
+      name: user.name,
+    });
+
+    const response = NextResponse.json(
+      {
+        ok: true,
+        sessionToken,
+        expiresIn: 30 * 24 * 60 * 60,
+        user,
+        message:
+          "Account created. Use sessionToken as Authorization: Bearer <token> on mobile.",
+      },
+      { status: 201 },
+    );
+    setSessionCookieOnResponse(response, sessionToken);
+    return response;
   } catch (error) {
     const message =
       error instanceof Error ? error.message : "Registration failed.";

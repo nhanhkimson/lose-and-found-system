@@ -107,6 +107,13 @@ NEXT_PUBLIC_APP_URL="http://localhost:3000"
 GOOGLE_CLIENT_ID=""
 GOOGLE_CLIENT_SECRET=""
 
+# Firebase Admin (mobile Facebook / Firebase token exchange at POST /api/auth/firebase)
+FIREBASE_PROJECT_ID="biu-lose-and-found"
+FIREBASE_CLIENT_EMAIL=""
+FIREBASE_PRIVATE_KEY=""
+# Or paste the full service account JSON on one line:
+# FIREBASE_SERVICE_ACCOUNT_JSON='{"type":"service_account",...}'
+
 # Optional email
 RESEND_API_KEY=""
 
@@ -181,8 +188,12 @@ Current documented endpoints include:
 - `POST /api/uploads/signature` — Cloudinary signed upload params
 - `GET /api/openapi`
 - `POST /api/auth/login` — email/password; returns `sessionToken` (Bearer) + sets cookie for browsers
+- `POST /api/auth/register` — create account; returns `sessionToken` for mobile
+- `POST /api/auth/firebase` — exchange Firebase ID token for `sessionToken` (mobile Facebook)
 - `GET /api/auth/session` — validate Bearer/cookie session
 - `POST /api/auth/logout` — clear session
+- `GET /api/claims` — list signed-in user's claims
+- `GET /api/dashboard` — stats, matches, activity
 - `GET /api/profile` — profile, stats, recent activity
 - `PATCH /api/profile` — update name, studentId, avatar URL
 - `POST /api/profile/password` — change password (credentials accounts)

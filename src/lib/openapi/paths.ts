@@ -78,6 +78,104 @@ export const apiPaths = {
       },
     },
   },
+  "/api/auth/register": {
+    post: {
+      tags: ["Auth"],
+      summary: "Register (email + password)",
+      description:
+        "Creates a PostgreSQL user and returns `sessionToken` for mobile Bearer auth.",
+      security: [],
+      requestBody: {
+        required: true,
+        content: {
+          [json]: {
+            schema: { $ref: "#/components/schemas/AuthRegisterRequest" },
+          },
+        },
+      },
+      responses: {
+        "201": {
+          description: "Account created; session token returned.",
+          content: {
+            [json]: {
+              schema: { $ref: "#/components/schemas/AuthLoginResponse" },
+            },
+          },
+        },
+        "400": {
+          description: "Validation error or email already exists.",
+          content: {
+            [json]: {
+              schema: { $ref: "#/components/schemas/ErrorResponse" },
+            },
+          },
+        },
+      },
+    },
+  },
+  "/api/auth/firebase": {
+    post: {
+      tags: ["Auth"],
+      summary: "Exchange Firebase ID token for DLFS session",
+      description:
+        "Mobile Facebook sign-in: send Firebase `idToken` after client Firebase Auth. Returns the same `sessionToken` shape as POST /api/auth/login.",
+      security: [],
+      requestBody: {
+        required: true,
+        content: {
+          [json]: {
+            schema: { $ref: "#/components/schemas/FirebaseAuthRequest" },
+          },
+        },
+      },
+      responses: {
+        "200": {
+          description: "Session minted for linked Prisma user.",
+          content: {
+            [json]: {
+              schema: { $ref: "#/components/schemas/AuthLoginResponse" },
+            },
+          },
+        },
+        "401": {
+          description: "Invalid Firebase token.",
+          content: {
+            [json]: {
+              schema: { $ref: "#/components/schemas/ErrorResponse" },
+            },
+          },
+        },
+        "503": {
+          description: "Firebase Admin not configured on server.",
+          content: {
+            [json]: {
+              schema: { $ref: "#/components/schemas/ErrorResponse" },
+            },
+          },
+        },
+      },
+    },
+  },
+  "/api/auth/session": {
+    get: {
+      tags: ["Auth"],
+      summary: "Validate session",
+      description:
+        "Returns current user and profile summary when Bearer token or session cookie is valid.",
+      security: cookieSec,
+      responses: {
+        "200": {
+          description: "Active session.",
+          content: {
+            [json]: {
+              schema: { $ref: "#/components/schemas/AuthSessionResponse" },
+            },
+          },
+        },
+        "401": err401,
+      },
+    },
+  },
   "/api/items": {
     get: {
       tags: ["Items"],
@@ -100,6 +198,12 @@ export const apiPaths = {
         },
         { name: "dateFrom", in: "query", schema: { type: "string", format: "date" } },
         { name: "dateTo", in: "query", schema: { type: "string", format: "date" } },
+        {
+          name: "mine",
+          in: "query",
+          schema: { type: "boolean", default: false },
+          description: "When true, returns only the signed-in user's listings (requires auth).",
+        },
       ],
       responses: {
         "200": { description: "Paginated item list." },
@@ -188,6 +292,18 @@ export const apiPaths = {
     },
   },
   "/api/claims": {
+    get: {
+      tags: ["Claims"],
+      summary: "List my claims",
+      security: cookieSec,
+      parameters: [
+        { name: "page", in: "query", schema: { type: "integer", minimum: 1, default: 1 } },
+      ],
+      responses: {
+        "200": { description: "Paginated claims for the signed-in user." },
+        "401": err401,
+      },
+    },
     post: {
       tags: ["Claims"],
       summary: "Create claim",
@@ -284,6 +400,84 @@ export const apiPaths = {
       security: cookieSec,
       responses: {
         "200": { description: "SSE stream." },
+        "401": err401,
+      },
+    },
+  },
+  "/api/dashboard": {
+    get: {
+      tags: ["Dashboard"],
+      summary: "User dashboard",
+      description: "Stats, match suggestions, and recent activity for the signed-in user.",
+      security: cookieSec,
+      responses: {
+        "200": { description: "Dashboard payload." },
+        "401": err401,
+      },
+    },
+  },
+  "/api/profile": {
+    get: {
+      tags: ["Profile"],
+      summary: "Get profile",
+      security: cookieSec,
+      responses: {
+        "200": { description: "Profile with stats and recent activity." },
+        "401": err401,
+      },
+    },
+    patch: {
+      tags: ["Profile"],
+      summary: "Update profile",
+      security: cookieSec,
+      requestBody: {
+        required: true,
+        content: {
+          [json]: {
+            schema: {
+              type: "object",
+              properties: {
+                name: { type: "string", minLength: 2 },
+                studentId: { type: "string", maxLength: 50 },
+                image: { type: "string" },
+              },
+              required: ["name", "studentId", "image"],
+            },
+          },
+        },
+      },
+      responses: {
+        "200": { description: "Updated profile." },
+        "400": { description: "Validation error." },
+        "401": err401,
+      },
+    },
+  },
+  "/api/profile/password": {
+    post: {
+      tags: ["Profile"],
+      summary: "Change password",
+      description: "Credentials accounts only.",
+      security: cookieSec,
+      requestBody: {
+        required: true,
+        content: {
+          [json]: {
+            schema: {
+              type: "object",
+              properties: {
+                currentPassword: { type: "string" },
+                newPassword: { type: "string", minLength: 8 },
+                confirmPassword: { type: "string" },
+              },
+              required: ["currentPassword", "newPassword", "confirmPassword"],
+            },
+          },
+        },
+      },
+      responses: {
+        "200": { description: "Password updated." },
+        "400": { description: "Validation error." },
         "401": err401,
       },
     },

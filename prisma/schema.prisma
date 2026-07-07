@@ -70,6 +70,8 @@ model Claim {
 
 model User {
   id            String         @id @default(cuid())
+  /// Linked Firebase Auth UID (mobile Facebook / legacy Firebase sign-in)
+  firebaseUid   String?        @unique
   name          String?
   email         String?        @unique
   emailVerified DateTime?
